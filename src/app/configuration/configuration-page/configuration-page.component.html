@@ -1,0 +1,12 @@
+<div [@routerTransition]>
+  <div class="container-fluid position-relative pt-3">
+    <tabset>
+      <tab [heading]="'Content' | localize" class="pt-3 px-2">
+        <app-content-configuration></app-content-configuration>
+      </tab>
+      <tab [heading]="'Menu' | localize" class="pt-3 px-2">
+        <app-menu-configuration></app-menu-configuration>
+      </tab>
+    </tabset>
+  </div>
+</div>

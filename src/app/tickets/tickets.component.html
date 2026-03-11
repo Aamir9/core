@@ -1,0 +1,477 @@
+<h4 class="font-weight-bold">Filters</h4>
+<div class="row mt-3">
+  <div class="col-md-6 col-12">
+    <div class="form-group d-flex flex-column">
+      <!-- <label class="col-form-label" for="name">
+        {{ "Customer" | localize }}
+      </label> -->
+      <ng-select
+        id="customer"
+        name="customer"
+        type="text"
+        class="form-control"
+        placeholder="Select Customer"
+        style="padding: 0 0.75rem"
+        [(ngModel)]="customerId"
+        (ngModelChange)="onCustomerChange($event)"
+        #CustomerModel="ngModel"
+        #CustomerEl
+      >
+        <ng-option *ngFor="let customer of customers" [value]="customer.id">
+          {{ customer.name }}
+        </ng-option>
+      </ng-select>
+    </div>
+  </div>
+  <!-- <div class="col-md-3 col-12">
+    <p class="text-bold m-0 mb-2">{{ "Site" | localize }}</p>
+    <select
+      class="form-control"
+      name="subcustomeTypeId"
+      id="subcustomeTypeId"
+      [(ngModel)]="subCustomerId"
+    >
+      <option *ngFor="let item of subCustomers" [value]="item.id">
+        {{ item.name }}
+      </option>
+    </select>
+  </div> -->
+  <div class="col-md-6 col-12 d-flex align-items-end form-group">
+    <input
+      type="text"
+      class="form-control mr-3"
+      name="keyword"
+      [placeholder]="'SearchWithThreeDot' | localize"
+      [(ngModel)]="keyword"
+      (ngModelChange)="getDataPage(1)"
+    />
+    <button type="button" class="btn btn-primary" (click)="getDataPage(1)">
+      {{ "Search" | localize }}
+    </button>
+  </div>
+</div>
+<!-- Filters End -->
+
+<!-- Actions -->
+<div class="row my-4">
+  <div class="col-md-6 col-12 d-flex align-items-end justify-content-start">
+    <button
+      type="button"
+      class="btn btn-primary mr-3"
+      [routerLink]="['/app/activity/create']"
+    >
+      <i class="fa fa-plus-square "></i>
+      {{ "Create" | localize }}
+    </button>&nbsp;
+    <button
+      type="button"
+      class="btn btn-outline-secondary "
+      (click)="collapseAll()"
+    >
+      {{ "Collapse All" | localize }}
+    </button>&nbsp;&nbsp;
+    <button
+      type="button"
+      class="btn btn-outline-secondary "
+      (click)="expandAll()"
+    >
+      {{ "Expand All" | localize }}
+    </button>
+  </div>
+  <div class="col-md-6 col-12 p-2 d-flex  flex-column justify-content-end">
+    <div class="d-flex align-items-center justify-content-end">
+      <p class="m-0 mr-3">Only show open</p>
+      <div class="toggle-switch">
+        <input
+          type="checkbox"
+          id="showResultSubEntries"
+          class="toggle-input"
+          [(ngModel)]="onlyShowOpen"
+        />
+        <label for="showResultSubEntries" class="toggle-label m-0"></label>
+      </div>
+    </div>
+    <!-- <div class="d-flex align-items-center justify-content-end">
+      <p class="mr-3">Show result parents</p>
+      <div class="toggle-switch">
+        <input type="checkbox" id="showResultParents" class="toggle-input" />
+        <label for="showResultParents" class="toggle-label"></label>
+      </div>
+    </div> -->
+  </div>
+</div>
+<!-- Actions end -->
+
+<!-- Table -->
+<div class="table-container mt-3">
+  <div class="table-responsive">
+    <table class="table parent-table" [busy]="isTableLoading">
+      <thead>
+        <tr>
+          <th>{{ "#" | localize }}</th>
+          <th>{{ "Type" | localize }}</th>
+          <th style="width: 300px">{{ "Title" | localize }}</th>
+          <th>{{ "Employee/Group" | localize }}</th>
+          <th>{{ "Product" | localize }}</th>
+          <th>{{ "Serial No." | localize }}</th>
+          <th>{{ "Time" | localize }}</th>
+          <!-- <th>{{ "Status" | localize }}</th> -->
+          <th>{{ "Actions" | localize }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container
+          *ngFor="
+            let ticket of tickets
+              | paginate
+                : {
+                    id: 'server',
+                    itemsPerPage: pageSize,
+                    currentPage: pageNumber,
+                    totalItems: totalItems
+                  }
+          "
+        >
+          <tr [ngClass]="{ 'table-row-active': ticket.isExpanded }">
+            <td>
+              <div
+                class="table-cell d-flex align-items-center justify-content-start font-weight-bold"
+              >
+                <a (click)="ticket.isExpanded = !ticket.isExpanded">
+                  <i
+                    title="View Sub Customers"
+                    *ngIf="!ticket.isExpanded"
+                    class="fas fa-chevron-down mr-2 pointer"
+                  ></i>
+                  <i
+                    title="View Sub Customers"
+                    *ngIf="ticket.isExpanded"
+                    class="fas fa-chevron-up mr-2 pointer"
+                  ></i>
+                </a>
+                {{ ticket.id }}
+              </div>
+            </td>
+            <td>Ticket</td>
+            <td>
+              {{ ticket.comment }}
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+              {{ ticket.date | date : "dd/MM/yyyy" }}
+            </td>
+            <!-- <td>
+              {{ ticket.status }}
+            </td> -->
+            <td>
+              <span dropdown class="table-action" container="body">
+                <a
+                  href
+                  id="button-basic"
+                  dropdownToggle
+                  aria-controls="dropdown-basic"
+                  (click)="(false)"
+                >
+                  <i class="fas fa-ellipsis-h table-action-menu-icon"></i>
+                </a>
+                <ul
+                  id="dropdown-basic"
+                  *dropdownMenu
+                  class="dropdown-menu dropdown-menu-right table-action-menu"
+                  role="menu"
+                  aria-labelledby="button-basic"
+                >
+                  <li class="disabled" role="menuitem">
+                    <a class="dropdown-item disabled table-action-menu-header">
+                      <span class="text-secondary">Actions</span>
+                      <i
+                        class="fas fa-ellipsis-h table-action-menu-icon-active"
+                      ></i
+                    ></a>
+                  </li>
+                  <li role="menuitem">
+                    <a
+                      class="dropdown-item table-action-menu-item"
+                      [routerLink]="['/app/activity/edit']"
+                      [queryParams]="{
+                        type: 'Ticket',
+                        id: ticket.id,
+                        mode: 'edit'
+                      }"
+                      ><i class="fas fa-eye"></i>View Details</a
+                    >
+                  </li>
+                </ul>
+              </span>
+            </td>
+          </tr>
+          <ng-container *ngIf="ticket.isExpanded">
+            <tr
+              *ngIf="ticket?.notes?.length == 0 && ticket?.faults.length == 0"
+            >
+              <td colspan="12" class="text-center">No Faults or Notes Found</td>
+            </tr>
+            <tr
+              *ngIf="ticket?.notes?.length > 0 || ticket?.faults?.length > 0"
+              style="box-shadow: none"
+            >
+              <td colspan="12" class="p-0 border-0">
+                <div class="table-responsive" style="overflow-x: visible">
+                  <table class="table child-table">
+                    <tbody>
+                      <tr *ngFor="let note of ticket.notes">
+                        <td style="padding-left: 33px">{{ note.id }}</td>
+                        <td>Note</td>
+                        <td>{{ note.title }}</td>
+                        <td>Employees/Groups</td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          {{ note.creationTime | date : "dd/MM/yyyy" }}
+                        </td>
+                        <!-- <td>{{ note.status }}</td> -->
+                        <td>
+                          <span dropdown class="table-action" container="body">
+                            <a
+                              href
+                              id="button-basic"
+                              dropdownToggle
+                              aria-controls="dropdown-basic"
+                              (click)="(false)"
+                            >
+                              <i
+                                class="fas fa-ellipsis-h table-action-menu-icon"
+                              ></i>
+                            </a>
+                            <ul
+                              id="dropdown-basic"
+                              *dropdownMenu
+                              class="dropdown-menu dropdown-menu-right table-action-menu"
+                              role="menu"
+                              aria-labelledby="button-basic"
+                            >
+                              <li class="disabled" role="menuitem">
+                                <a
+                                  class="dropdown-item disabled table-action-menu-header"
+                                >
+                                  <span class="text-secondary">Actions</span>
+                                  <i
+                                    class="fas fa-ellipsis-h table-action-menu-icon-active"
+                                  ></i
+                                ></a>
+                              </li>
+                              <li role="menuitem">
+                                <a
+                                  class="dropdown-item table-action-menu-item"
+                                  [routerLink]="['/app/activity/edit']"
+                                  [queryParams]="{
+                                    type: 'Note',
+                                    id: ticket.id,
+                                    noteId: note.id,
+                                    customerId: customerId,
+                                    subCustomerId: subCustomerId
+                                  }"
+                                  ><i class="fas fa-eye"></i>View Details</a
+                                >
+                              </li>
+                            </ul>
+                          </span>
+                        </td>
+                      </tr>
+                      <tr *ngFor="let fault of ticket.faults">
+                        <td style="padding-left: 33px">{{ fault.id }}</td>
+                        <td>Fault</td>
+                        <td>{{ fault.comment }}</td>
+                        <td>Employees/Groups</td>
+                        <td>{{ fault.productItem?.name }}</td>
+                        <td>{{ fault.productItem?.serialNumber }}</td>
+                        <td>
+                          {{ fault.creationTime | date : "dd/MM/yyyy" }}
+                        </td>
+                        <!-- <td>{{ fault.status }}</td> -->
+                        <td>
+                          <span dropdown class="table-action" container="body">
+                            <a
+                              href
+                              id="button-basic"
+                              dropdownToggle
+                              aria-controls="dropdown-basic"
+                              (click)="(false)"
+                            >
+                              <i
+                                class="fas fa-ellipsis-h table-action-menu-icon"
+                              ></i>
+                            </a>
+                            <ul
+                              id="dropdown-basic"
+                              *dropdownMenu
+                              class="dropdown-menu dropdown-menu-right table-action-menu"
+                              role="menu"
+                              aria-labelledby="button-basic"
+                            >
+                              <li class="disabled" role="menuitem">
+                                <a
+                                  class="dropdown-item disabled table-action-menu-header"
+                                >
+                                  <span class="text-secondary">Actions</span>
+                                  <i
+                                    class="fas fa-ellipsis-h table-action-menu-icon-active"
+                                  ></i
+                                ></a>
+                              </li>
+                              <li role="menuitem">
+                                <a
+                                  class="dropdown-item table-action-menu-item"
+                                  [routerLink]="['/app/activity/edit']"
+                                  [queryParams]="{
+                                    type: 'Fault',
+                                    id: ticket.id,
+                                    faultId: fault.id,
+                                    customerId: customerId,
+                                    subCustomerId: subCustomerId
+                                  }"
+                                  ><i class="fas fa-eye"></i>View Details</a
+                                >
+                              </li>
+                            </ul>
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card-footer table-card-footer bg-light border mb-5">
+  <div class="row">
+    <div class="col-sm-4 col-12 text-sm-left text-center">
+      <button class="btn btn-secondary" (click)="refresh()">
+        <i class="fas fa-redo-alt"></i>
+      </button>
+    </div>
+    <div class="col-sm-4 col-12 text-center">
+      <p class="mb-0 my-2">
+        {{ "TotalRecordsCount" | localize : totalItems }}
+      </p>
+    </div>
+    <div class="col-sm-4 col-12">
+      <div class="float-sm-right m-auto">
+        <abp-pagination-controls id="server" (pageChange)="getDataPage($event)">
+        </abp-pagination-controls>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [@routerTransition] *ngIf="false">
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-6">
+          <h1>{{ "Tickets" | localize }}</h1>
+        </div>
+        <!-- <div class="col-6 text-right" >
+               <a href="javascript:;" class="btn bg-blue" (click)="showCreateOrEditTicketDialog()">
+                 <i class="fa fa-plus-square"></i>
+                 {{ "Create" | localize }}
+               </a>
+             </div> -->
+      </div>
+    </div>
+  </section>
+  <section class="content px-2">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table
+              class="table table-striped table-bordered"
+              [busy]="isTableLoading"
+            >
+              <thead class="bg-light">
+                <tr>
+                  <th>{{ "Ticket Number" | localize }}</th>
+                  <th>{{ "Email" | localize }}</th>
+                  <th>{{ "Date" | localize }}</th>
+                  <th>{{ "Ticket Status" | localize }}</th>
+                  <th>{{ "Your Status" | localize }}</th>
+                  <th *ngIf="isDisplayCloseFaultButton" style="width: 310px">
+                    {{ "Actions" | localize }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let item of tickets
+                      | paginate
+                        : {
+                            id: 'server',
+                            itemsPerPage: pageSize,
+                            currentPage: pageNumber,
+                            totalItems: totalItems
+                          }
+                  "
+                >
+                  <td>{{ item.ticketNumber }}</td>
+                  <td>{{ item.email }}</td>
+                  <td>{{ item.date | date }}</td>
+                  <td>{{ item.status }}</td>
+                  <td>{{ ticketUserStatus(item) }}</td>
+                  <td *ngIf="isDisplayCloseFaultButton">
+                    <a
+                      href="javascript:;"
+                      class="btn bg-primary mr-1"
+                      (click)="viewDetail(item)"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a
+                      href="javascript:;"
+                      class="btn bg-info mr-1"
+                      (click)="showCreateOrEditTicketDialog(item)"
+                    >
+                      <i class="fas fa-users"></i>
+                      {{ "Assign" | localize }}
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer table-card-footer bg-light border-top">
+          <div class="row">
+            <div class="col-sm-4 col-12 text-sm-left text-center">
+              <button class="btn btn-secondary" (click)="refresh()">
+                <i class="fas fa-redo-alt"></i>
+              </button>
+            </div>
+            <div class="col-sm-4 col-12 text-center">
+              <p class="mb-0 my-2">
+                {{ "TotalRecordsCount" | localize : totalItems }}
+              </p>
+            </div>
+            <div class="col-sm-4 col-12">
+              <div class="float-sm-right m-auto">
+                <abp-pagination-controls
+                  id="server"
+                  (pageChange)="getDataPage($event)"
+                >
+                </abp-pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

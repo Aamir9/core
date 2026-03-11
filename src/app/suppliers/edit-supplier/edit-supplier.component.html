@@ -1,0 +1,132 @@
+<form autocomplete="off" #supplierForm="ngForm" (ngSubmit)="save()">
+
+    <abp-modal-header [title]="'CreateSupplier' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="modal-body">
+      
+        <div class="row">
+     
+                <div class="col-md-6">
+                    <div class="form-group d-flex flex-column required">
+                        <label class="col-form-label" for="name">
+                            {{ "UserName" | localize }}
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" name="UserName" id="UserName" required
+                                [(ngModel)]="supplierModel.userName" #userNameModel="ngModel" #userNameKindEl />
+                            <abp-validation-summary [control]="userNameModel" [controlEl]="userNameKindEl"></abp-validation-summary>
+                        </div>
+                    </div>
+                </div>
+        
+
+            <div class="col-md-6">
+                <div class="form-group d-flex flex-column required">
+                    <label class="col-form-label" for="name">
+                        {{ "Name" | localize }}
+                    </label>
+                    <div>
+                        <input type="text" class="form-control" name="Name" id="Name" required
+                            [(ngModel)]="supplierModel.name" #nameModel="ngModel" #nameKindEl />
+                        <abp-validation-summary [control]="nameModel" [controlEl]="nameKindEl"></abp-validation-summary>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            
+                <div class="col-md-6">
+                    <div class="form-group d-flex flex-column required">
+                        <label class="col-form-label" for="name">
+                            {{ "Email" | localize }}
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" name="Email" id="Email" required
+                                [(ngModel)]="supplierModel.emailAddress" #emailModel="ngModel" #emailKindEl />
+                            <abp-validation-summary [control]="emailModel" [controlEl]="emailKindEl"></abp-validation-summary>
+                        </div>
+                    </div>
+                </div>
+            
+
+  
+            <div class="col-md-6">
+
+                <div class="form-group d-flex flex-column required">
+                    <label class="col-form-label" for="name">
+                        {{ "SupplierNo" | localize }}
+                    </label>
+                    <div>
+                        <input type="text" class="form-control" name="SupplierNo" id="SupplierNo" required
+                            [(ngModel)]="supplierModel.supplierNo" #supplierNoModel="ngModel" #supplierNoKindEl />
+                        <abp-validation-summary [control]="supplierNoModel" [controlEl]="supplierNoKindEl"></abp-validation-summary>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group d-flex flex-column required">
+                    <label class="col-form-label" for="name">
+                        {{ "Postcode" | localize }}
+                    </label>
+                    <div>
+                        <input type="text" class="form-control" name="Postcode" id="Postcode" required
+                            [(ngModel)]="supplierModel.postcode" #postcodeModel="ngModel" #postcodeKindEl />
+                        <abp-validation-summary [control]="postcodeModel" [controlEl]="postcodeKindEl"></abp-validation-summary>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group d-flex flex-column required">
+                    <label class="col-form-label" for="name">
+                        {{ "TownCity" | localize }}
+                    </label>
+                    <div>
+                        <input type="text" class="form-control" name="TownCity" id="TownCity" required
+                            [(ngModel)]="supplierModel.townCity" #townCityModel="ngModel" #townCityKindEl />
+                        <abp-validation-summary [control]="townCityModel" [controlEl]="townCityKindEl"></abp-validation-summary>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group d-flex flex-column required">
+                    <label class="col-form-label" for="name">
+                        {{ "Address" | localize }}
+                    </label>
+                    <div>
+                        <input type="text" class="form-control" name="Address" id="Address" required
+                            [(ngModel)]="supplierModel.address" #addressModel="ngModel" #addressKindEl />
+                        <abp-validation-summary [control]="addressModel" [controlEl]="addressKindEl"></abp-validation-summary>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group d-flex flex-column required">
+                    <label class="col-form-label" for="name">
+                        {{ "Telephone" | localize }}
+                    </label>
+                    <div>
+                        <input type="text" class="form-control" name="Telephone" id="Telephone" required
+                            [(ngModel)]="supplierModel.telephone" #telephoneModel="ngModel" #telephoneKindEl />
+                        <abp-validation-summary [control]="telephoneModel" [controlEl]="telephoneKindEl"></abp-validation-summary>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+ </div>
+      
+    <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!supplierForm.form.valid || saving"
+        (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

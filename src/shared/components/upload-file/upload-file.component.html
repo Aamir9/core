@@ -1,0 +1,12 @@
+<div class="file-upload">
+  <div *ngIf="filePreview; else fileInputTemplate" class="file-preview">
+    <p>{{ selectedFile?.name }}</p>
+    <button type="button" class="btn btn-danger btn-sm" (click)="removeFile()">
+      Remove
+    </button>
+  </div>
+
+  <ng-template #fileInputTemplate>
+    <input type="file" (change)="onFilePicked($event)" accept=".pdf" />
+  </ng-template>
+</div>

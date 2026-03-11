@@ -1,0 +1,10 @@
+.preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  width: 100%;
+  background-color: #dfebef;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}

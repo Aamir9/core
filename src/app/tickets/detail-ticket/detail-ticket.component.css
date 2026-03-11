@@ -1,0 +1,35 @@
+.color-1 {
+    color: #ff1c35 !important;
+}
+
+.color-2 {
+    color: #555 !important;
+}
+
+.link-active {
+    color: #ff1c35 !important;
+}
+
+.color-gray {
+    color: #f4f4f4;
+}
+
+.bg-gray {
+    background-color: #f4f4f4;
+}
+
+.color-red {
+    color: #ff1c35;
+}
+
+.activity-status span {
+    font-size: 0.9rem;
+}
+
+.icon {
+    width: 2rem;
+}
+
+.icon-3x {
+    width: 3rem;
+}

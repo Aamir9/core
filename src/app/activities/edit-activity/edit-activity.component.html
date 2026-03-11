@@ -1,0 +1,253 @@
+<!-- 
+<form
+class="form-horizontal"
+autocomplete="off"
+#editActivityModal="ngForm"
+(ngSubmit)="save()"
+> -->
+<abp-modal-header
+  [title]="'Activity Information' | localize"
+  (onCloseClick)="bsModalRef.hide()"
+></abp-modal-header>
+<div class="modal-body m-3">
+     <div class="row">
+      <div class="col-md-12">
+        <div class="form-group d-flex flex-column ">
+          <label class="col-form-label" for="name">
+            {{ "Name" | localize }}
+          </label>
+          <div >
+            <input
+            type="text"
+            class="form-control"
+            name="name"
+            id="name"
+            [(ngModel)]="activity.name"
+            #nameModel="ngModel"
+            #nameKindEl
+            disabled
+
+          />
+        <abp-validation-summary
+        [control]="nameModel"
+        [controlEl]="nameKindEl"
+      ></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="col-md-6">
+        <div class="form-group d-flex flex-column ">
+          <label class="col-form-label" for="name">
+            {{ "Customer" | localize }}
+          </label>
+          
+          <div >
+            <select
+            type="text"
+            class="form-control"
+            name="customer"
+            id="customer"
+            disabled
+            [(ngModel)]="activity.customerId"
+            #customerModel="ngModel"
+            #customerTypeEl
+          >
+            <option *ngFor="let customer of customers" [value]="customer.id">
+              {{ customer.fullName }}
+            </option>
+        </select>
+         
+        <abp-validation-summary
+        [control]="customerModel"
+        [controlEl]="customerTypeEl"
+      ></abp-validation-summary>
+          </div>
+
+        </div>
+      </div> -->
+
+      <div class="col-md-6">
+        <div class="form-group d-flex flex-column ">
+          <label class="col-form-label" for="name">
+            {{ "Activity Kind" | localize }}
+          </label>
+          <div >
+            <select
+            type="text"
+            class="form-control"
+            name="activityKind"
+            id="activityKind"
+            disabled
+            [(ngModel)]="activity.activityArtId"
+            #activityKindModel="ngModel"
+            #activityKindEl
+          >
+            <option *ngFor="let activityKind of activityKinds" [value]="activityKind.id">
+              {{ activityKind.name }}
+            </option>
+        </select>
+         
+        <abp-validation-summary
+        [control]="activityKindModel"
+        [controlEl]="activityKindEl"
+      ></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+     
+       <div class="col-md-6">
+        <div class="form-group d-flex flex-column ">
+          <label class="col-form-label" for="name">
+            {{ "Date" | localize }}
+          </label>
+          <div >
+            <input
+              type="date"
+              class="form-control"
+              name="date"
+              id="date"
+              disabled
+              [ngModel]="activityDate | date:'yyyy-MM-dd'"
+              (change)="activityDate = $event.target.value"
+              #dateModel="ngModel"
+              #dateEl
+            />
+            <abp-validation-summary
+              [control]="dateModel"
+              [controlEl]="dateEl"  
+            ></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+     </div>
+
+     <div class="row">
+
+      <div class="col-md-6">
+        <div class="form-group d-flex flex-column ">
+          <label class="col-form-label" for="name">
+            {{ "ActivityType" | localize }}
+          </label>
+          <div >
+            <select
+            type="text"
+            class="form-control"
+            name="activityType"
+            id="activityType"
+            disabled
+            [(ngModel)]="activity.activityTypeId"
+            #activityTypeModel="ngModel"
+            #activityTypeEl
+          >
+            <option *ngFor="let activityType of activityTypes" [value]="activityType.id">
+              {{ activityType.name }}
+            </option>
+        </select>
+         
+        <abp-validation-summary
+        [control]="activityTypeModel"
+        [controlEl]="activityTypeEl"
+      ></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group d-flex flex-column ">
+          <label class="col-form-label" for="name">
+            {{ "Employee" | localize }}
+          </label>
+          <div >
+            <select
+            type="text"
+            class="form-control"
+            name="activityType"
+            id="activityType"
+            disabled
+            [(ngModel)]="activity.employeeId"
+            #activityTypeModel="ngModel"
+            #activityTypeEl
+          >
+            <option *ngFor="let employee of employees" [value]="employee.id">
+              {{ employee.fullName }}
+            </option>
+        </select>
+         
+        <abp-validation-summary
+        [control]="activityTypeModel"
+        [controlEl]="activityTypeEl"
+      ></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+
+     </div>
+    
+     <hr>
+    
+     <div class="row">
+
+      <div class="col-md-6">
+        <div class="form-group d-flex flex-column ">
+          <label class="col-form-label" for="name">
+            {{ "FollowType" | localize }}
+          </label>
+          <div >
+            <select
+            type="text"
+            class="form-control"
+            name="FollowType"
+            id="FollowType"
+            disabled
+            [(ngModel)]="activity.followUpTypeId"
+            #FollowTypeModel="ngModel"
+            #FollowTypeEl
+          >
+            <option *ngFor="let FollowType of FollowTypes" [value]="FollowType.id">
+              {{ FollowType.name }}
+            </option>
+        </select>
+         
+        <abp-validation-summary
+        [control]="FollowTypeModel"
+        [controlEl]="FollowTypeEl"
+      ></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group d-flex flex-column ">
+          <label class="col-form-label" for="name">
+            {{ "FollowUpDate" | localize }}
+          </label>
+          <div >
+            <input
+              type="date"
+              class="form-control"
+              name="followUpDate"
+              id="followUpDate"
+              disabled
+              [ngModel]="followUpDate | date:'yyyy-MM-dd'"
+              (change)="followUpDate = $event.target.value"
+              #followUpDateModel="ngModel"
+              #followUpDateEl
+            />
+            <abp-validation-summary
+              [control]="followUpDateModel"
+              [controlEl]="followUpDateEl"  
+            ></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+
+     </div>
+    
+   
+
+</div>
+<!-- <abp-modal-footer
+  [cancelDisabled]="saving"
+  [saveDisabled]="!editActivityModal.form.valid || saving"
+  (onCancelClick)="bsModalRef.hide()"
+></abp-modal-footer> -->
+<!-- </form> -->

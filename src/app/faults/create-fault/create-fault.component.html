@@ -1,0 +1,249 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #createFaultModal="ngForm"
+  (ngSubmit)="createFault()"
+>
+  <abp-modal-header
+    [title]="'Create New Fault' | localize"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+  <div class="modal-body" style="height: 70vh; overflow: auto">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="invoiceNo">
+            {{ "Product Serial No" | localize }}
+          </label>
+          <div class="col-md-9">
+            <input
+              type="text"
+              class="form-control"
+              name="productSerialNo"
+              id="productSerialNo"
+              disabled
+              [(ngModel)]="activity.productSerialNumber"
+            />
+            <!-- <abp-validation-summary [control]="invoiceNoModel" [controlEl]="invoiceNoEl">
+                        </abp-validation-summary> -->
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="productName">
+            {{ "Product Name" | localize }}
+          </label>
+          <div class="col-md-9">
+            <input
+              type="text"
+              class="form-control"
+              name="productName"
+              id="productName"
+              maxlength="32"
+              disabled
+              [(ngModel)]="activity.productName"
+              #productNameModel="ngModel"
+              #productNameEl
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="quantity">
+            {{ "Product Number" | localize }}
+          </label>
+          <div class="col-md-9">
+            <input
+              type="text"
+              class="form-control"
+              name="quantity"
+              id="quantity"
+              maxlength="32"
+              disabled
+              [(ngModel)]="activity.productNumber"
+              #quantityModel="ngModel"
+              #quantityNoEl
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label" for="supplier">
+            {{ "Supplier" | localize }}
+          </label>
+          <div class="col-md-9">
+            <input
+              type="text"
+              class="form-control"
+              name="supplier"
+              id="supplier"
+              maxlength="32"
+              disabled
+              [(ngModel)]="activity.supplierName"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="emailAddress">
+            {{ "Email Address" | localize }}
+          </label>
+          <div class="col-md-9">
+            <input
+              type="email"
+              class="form-control"
+              name="emailAddress"
+              id="emailAddress"
+              required
+              maxlength="256"
+              pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
+              [(ngModel)]="createFaultDto.email"
+              #emailAddressModel="ngModel"
+              #emailAddressEl
+            />
+            <abp-validation-summary
+              [control]="emailAddressModel"
+              [controlEl]="emailAddressEl"
+            >
+            </abp-validation-summary>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="name">
+            {{ "Fault Date" | localize }}
+          </label>
+          <div class="col-md-9">
+            <input
+              type="datetime-local"
+              class="form-control"
+              name="name"
+              id="name"
+              required
+              [(ngModel)]="createFaultDto.date"
+              #toDateModel="ngModel"
+              #toDateEl
+            />
+            <abp-validation-summary
+              [control]="toDateModel"
+              [controlEl]="toDateEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="name">
+            {{ "Responsible Employee" | localize }}
+          </label>
+          <div class="col-md-9">
+            <select
+              type="text"
+              class="form-control"
+              name="activityType"
+              id="activityType"
+              required
+              [(ngModel)]="createFaultDto.resposibleEmployeeId"
+              #activityTypeModel="ngModel"
+              #activityTypeEl
+            >
+              <option *ngFor="let employee of employees" [value]="employee.id">
+                {{ employee.fullName }}
+              </option>
+            </select>
+
+            <abp-validation-summary
+              [control]="activityTypeModel"
+              [controlEl]="activityTypeEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="companyLogo">
+            {{ "Add Image" | localize }}
+          </label>
+          <div class="col-md-9">
+            <ngx-file-drop
+              class="mb-2"
+              dropZoneLabel="Drop files here"
+              (onFileDrop)="dropped($event)"
+            >
+              <ng-template
+                ngx-file-drop-content-tmp
+                let-openFileSelector="openFileSelector"
+              >
+                <div>
+                  <div class="text-center">
+                    Drage and drop file here, or click to Browse file
+                  </div>
+                  <div class="text-center mt-3">
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-outline"
+                      (click)="openFileSelector()"
+                    >
+                      Browse Files
+                    </button>
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-file-drop>
+            <div class="d-flex flex-wrap" *ngIf="files.length">
+              <ng-container *ngFor="let file of files; let i = index">
+                <div class="preview">
+                  <p>{{ file.name }}</p>
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    (click)="removeFile(i)"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <!-- <app-upload-photo class="ml-auto mr-auto text-center"
+                        (onFileUpload)='onFileUploadHandler($event)'></app-upload-photo> -->
+          <div class="text-danger" *ngIf="isPhotoUploaded === false">
+            {{ "kindly upload photo" | localize }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="description">
+        {{ "Description" | localize }}
+      </label>
+      <div class="col-md-9">
+        <textarea
+          type="text"
+          class="form-control"
+          name="description"
+          id="description"
+          required
+          rows="10"
+          [(ngModel)]="createFaultDto.comment"
+          #nameModel="ngModel"
+          #nameEl
+        ></textarea>
+        <abp-validation-summary
+          [control]="nameModel"
+          [controlEl]="nameEl"
+        ></abp-validation-summary>
+      </div>
+    </div>
+  </div>
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="!createFaultModal.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

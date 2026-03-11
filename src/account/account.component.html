@@ -1,0 +1,45 @@
+﻿<div class="d-flex justify-content-center align-items-center min-vh-100"
+     style="background-image:   url('https://core.beckit.dk/wp-content/uploads/2025/11/Uden-titel-4.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;">
+  
+  <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4 px-3" 
+  style="">
+    <div class="mx-auto" style="max-width: 20rem; background-color: transparent;">
+      
+      <!-- Account Header -->
+      <div class="text-center mb-4">
+        <account-header></account-header>
+      </div>
+
+
+      
+
+      <!-- Card -->
+      <div class="card shadow-lg rounded" style="background-color: #ffffff; border: none;">
+        
+        <!-- Tenant Change -->
+        <div *ngIf="showTenantChange()" class="card-header text-white text-center rounded-top" style="background-color: #3aa6b9;">
+          Current tenant: Core
+        </div>
+
+        <!-- Main Content -->
+        <div class="card-body p-4" style="background-color: #e6f2f1;">
+          <router-outlet></router-outlet>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer text-center rounded-bottom" style="background-color: #f8f9fa;">
+          <account-languages></account-languages>
+        </div>
+      </div>
+
+      <!-- Account Footer -->
+      <div class="text-center mt-4">
+        <account-footer></account-footer>
+      </div>
+      
+    </div>
+  </div>
+</div>

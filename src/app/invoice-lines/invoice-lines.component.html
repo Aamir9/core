@@ -1,0 +1,212 @@
+<div [@routerTransition]>
+
+
+  <section class="content mx-2 my-3">
+    <div class="container-fluid">
+      <div class="card">
+        
+        <form class="form-horizontal" autocomplete="off" (ngSubmit)="save()">
+          <div class="modal-body">
+          
+              <div class="d-flex flex-row   justify-content-between w-100">
+                <div>
+                  <h3 class="my-4"> {{ "Invoice Details" | localize }}</h3>
+                </div>
+                <div  class="my-4">
+                  <a href="javascript:;"  class="btn bg-primary mr-1"  (click)="updateInvoice()">
+                    <i class="fas fa-save"></i>
+                    <!-- {{ "Save" | localize }} -->
+                  
+                  </a>
+                </div>
+              </div>
+           
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group row ">
+                  <label class="col-md-3 col-form-label" for="invoiceNo">
+                    {{ "InvoiceNo" | localize }}
+                  </label>
+                  <div class="col-md-9">
+                    <input type="text" class="form-control" name="invoiceNo" id="invoiceNo"  maxlength="32"
+                      disabled [(ngModel)]="invoice.invoiceNo" #invoiceNoModel="ngModel" #invoiceNoEl />
+                    <abp-validation-summary [control]="invoiceNoModel" [controlEl]="invoiceNoEl">
+                    </abp-validation-summary>
+                  </div>
+                </div>
+                <div class="form-group row ">
+                  <label class="col-md-3 col-form-label" for="invoiceDate">
+                    {{ "InvoiceDate" | localize }}
+                  </label>
+                  <div class="col-md-9">
+                    <input type="date" class="form-control" name="invoiceDate" id="invoiceDate"  disabled
+                    [ngModel]="invoiceDate | date:'yyyy-MM-dd'" />
+                  </div>
+                </div>
+                <div class="form-group row ">
+                  <label class="col-md-3 col-form-label" for="dueDate">
+                    {{ "DueDate" | localize }}
+                  </label>
+                  <div class="col-md-9">
+                    <input type="date" class="form-control" name="dueDate" id="dueDate"  disabled
+                    [ngModel]="dueDate | date:'yyyy-MM-dd'" #dueDateEl />
+                  </div>
+                </div>
+                <div class="form-group row ">
+                  <label class="col-md-3 col-form-label" for="comment">
+                    {{ "Comment" | localize }}
+                  </label>
+                  <div class="col-md-9">
+                    <textarea type="text" class="form-control" name="comment" id="comment"  maxlength="250"
+                       [(ngModel)]="invoice.comment"></textarea>
+                   
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+               
+                <div class="form-group row ">
+                  <label class="col-md-3 col-form-label" for="comment">
+                    {{ "Customer" | localize }}
+                  </label>
+                  <div class="col-md-9">
+                    <input type="text" class="form-control"   maxlength="250" name="customerName" id="customerName"
+                      disabled [(ngModel)]="invoice.customerName" #customerNameModel="ngModel"  #customerEl>
+                      <abp-validation-summary [control]="customerNameModel" [controlEl]="customerEl"></abp-validation-summary>
+                  </div>
+                </div>
+                
+                <div class="form-group row ">
+                  <label class="col-md-3 col-form-label" for="subCustomer">
+                    {{ "Sub Customer" | localize }}
+                  </label>
+                  <div class="col-md-9">
+                    <input type="text" class="form-control"   maxlength="250" name="subCustomerName" id="subCustomerName"
+                      disabled [(ngModel)]="invoice.subCustomerName" #subCustomerNameModel="ngModel"  #subCustomerEl>
+                      <abp-validation-summary [control]="subCustomerNameModel" [controlEl]="subCustomerEl"></abp-validation-summary>
+                  </div>
+                </div>
+
+                <div class="form-group row ">
+                  <label class="col-md-3 col-form-label" for="amount">
+                    {{ "Amount" | localize }}
+                  </label>
+                  <div class="col-md-9">
+                    <input type="text" class="form-control" name="amount" id="amount"  maxlength="32" disabled
+                      [(ngModel)]="invoice.amount" #amountModel="ngModel" #amountEl />
+                    <abp-validation-summary [control]="amountModel" [controlEl]="amountEl"></abp-validation-summary>
+                  </div>
+                </div>
+                <div class="form-group row ">
+                  <label class="col-md-3 col-form-label" for="currency">
+                    {{ "Currency" | localize }}
+                  </label>
+                  <div class="col-md-9">
+                    <input type="text" class="form-control" name="currency" id="currency"  maxlength="32"
+                      disabled [(ngModel)]="invoice.currency" #currencyModel="ngModel" #currencyEl />
+                    <abp-validation-summary [control]="currencyModel" [controlEl]="currencyModel">
+                    </abp-validation-summary>
+                  </div>
+                </div>
+
+
+                <!-- <div class="form-group row ">
+                  <label class="col-md-3 col-form-label" for="serialNumber">
+                    {{ "SerialNumber" | localize }}
+                  </label>
+
+                  <div class="col-md-9">
+                    <input type="text" class="form-control" name="serialNumber" id="serialNumber"  maxlength="32"
+                       [(ngModel)]="invoice.serialNumber" #serialNumberModel="ngModel" #serialNumberEl />
+                    <abp-validation-summary [control]="serialNumberModel" [controlEl]="serialNumberModel">
+                    </abp-validation-summary>
+                  </div>
+
+                </div> -->
+
+
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+              
+                  <div class="row">
+                    <div class="col-12">
+                      <h3 class="my-4"> {{ "InvoiceLines" | localize }}</h3>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-bordered" [busy]="isTableLoading">
+                      <thead class="bg-light">
+                        <tr>
+                          <th>{{ "LineNo" | localize }}</th>
+                          <th>{{ "Serial Number" | localize }}</th>
+                          <th>{{ "ProductName" | localize }}</th>
+                          <!-- <th>{{ "Serial" | localize }}</th> -->
+                          <th>{{ "ProductNumber" | localize }}</th>
+                          <th>{{ "Quantity" | localize }}</th>
+                          <th>{{ "Status" | localize }}</th>
+                          <th style="width: 310px;">{{ "Actions" | localize }}</th>
+                         
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let invoiceLine of invoiceLines | paginate
+                        : {
+                            id: 'server',
+                            itemsPerPage: pageSize,
+                            currentPage: pageNumber,
+                            totalItems: totalItems
+                          }">
+                          <td>{{ invoiceLine.lineNo }}</td>
+                          <td>{{ invoiceLine.serialNumber }}</td>
+                          <td>{{ invoiceLine.productName }}</td>
+                          <!-- <td>{{ invoiceLine.serialNumber }}</td> -->
+                          <td>{{ invoiceLine.productNumber }}</td>
+                          <td>{{ invoiceLine.quantity }}</td>
+                          <td>{{ invoiceLine.status }}</td>
+                          <td>
+                            <button  type="button" class="btn btn-sm bg-secondary" (click)="addFault(invoiceLine)" *ngIf="invoiceLine.serialNumber">
+                                <i class="fas fa-plus-square"></i>
+                                {{ "Add Fault" | localize }}
+                            </button>
+                            <button *ngIf="!invoiceLine.serialNumber"  type="button" class="btn ml-2 btn-sm bg-secondary" (click)="addSerialNumber(invoiceLine)">
+                              <i class="fas fa-plus-square"></i>
+                              {{ "Add Serial #" | localize }}
+                          </button>
+                        </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="card-footer table-card-footer bg-light border-top">
+                    <div class="row">
+                        <div class="col-sm-4 col-12 text-sm-left text-center">
+                            <button class="btn btn-secondary" (click)="refresh()">
+                                <i class="fas fa-redo-alt"></i>
+                            </button>
+                        </div>
+                        <div class="col-sm-4 col-12 text-center">
+                            <p class="mb-0 my-2">
+                                {{ "TotalRecordsCount" | localize: totalItems }}
+                            </p>
+                        </div>
+                        <div class="col-sm-4 col-12">
+                            <div class="float-sm-right m-auto">
+                                <abp-pagination-controls id="server" (pageChange)="getDataPage($event)">
+                                </abp-pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+
+      </div>
+    </div>
+  </section>
+
+</div>

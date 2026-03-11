@@ -1,0 +1,255 @@
+
+
+<form class="form-horizontal" autocomplete="off" #createUserModal="ngForm" (ngSubmit)="save()">
+  <abp-modal-header [title]="'Create Package' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+  <div class="modal-body">
+      <div class="p-3">
+   <div class="">
+    
+           <div class="row">
+               <div class="col-md-4 ">
+                   <label class="col-form-label" for="supplier">
+                      {{ "Package Type" | localize }}
+                    </label>
+                    <!-- <ng-select
+          type="text"
+          class="form-control"
+          name="packageType"
+          id="packageType"
+          placeholder="Select packageType"
+          style="padding: 0 0.75rem"
+          [(ngModel)]="CreatePackageDto.packageTypeId"
+         
+
+        >
+          <ng-option *ngFor="let item of CreatePackageDto" [value]="CreatePackageDto.packageTypeId">
+            {{ item.packageType }}
+          </ng-option>
+        </ng-select> -->
+    
+      
+               </div>
+               <div class="col-md-4">
+                  <label for="date">Date</label>
+                  <input 
+                      type="date" 
+                      class="form-control form-control-sm" 
+                      id="date" 
+                      [value]="today"
+                  >
+              </div>
+              
+              <div class="col-md-4">
+                  <label for="followUpEmployee">Employee</label>
+                  <!-- <select 
+                      class="form-control form-control-sm" 
+                      name="followUpEmployee" 
+                      id="followUpEmployee"
+                      [(ngModel)]="CreatePackageDto.employeeId" 
+                      #EmployeeModel="ngModel">
+                      <option *ngFor="let employee of employees" [value]="employee.createdUserId">
+                          {{ employee.name }}
+                      </option>
+                  </select>  -->
+                  <div class=" required">
+                      <select
+                        id="select-employe"
+                        name="select-employe"
+                        type="text"
+                        class="form-control"
+                        placeholder="Select Employee"
+                        required
+                        [disabled]="isEditMode()"
+                        [(ngModel)]="assignedTo"
+                        (ngModelChange)="onEmployeeChange($event)"
+                        #assignedToModel="ngModel"
+                        #assignedToEl
+                      >
+                        <option
+                          *ngFor="let employee of employees"
+                          [value]="employee.id"
+                        >
+                          {{ employee.fullName }}
+                        </option>
+                      </select>
+                      <abp-validation-summary
+                        [control]="assignedToModel"
+                        [controlEl]="assignedToEl"
+                      ></abp-validation-summary>
+                    </div>
+              </div>
+              
+           </div>
+           <div class="row mt-2">
+
+              <div class="col-md-4">
+                  <label for=""><strong>Sender Type</strong></label><br />
+                  <div>
+                    <label class="form-check-label " for="flexRadioDefault1"> Supplier</label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;
+                    <input
+                      class="form-check-input"
+                      id="flexRadioDefault1"
+                      type="radio"
+                      name="Employee"
+                      [(ngModel)]="showInput"
+                      [value]="false"
+                    />
+          
+                    <label class="form-check-label" for="flexRadioDefault2">Customer</label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input
+                      class="form-check-input"
+                      id="flexRadioDefault2"
+                      type="radio"
+                      name="Employee"
+                      [(ngModel)]="showInput"
+                      [value]="true"
+                    />
+                  </div>
+                </div>
+          
+                <div class="col-md-4"  *ngIf="!showInput">
+                  <div class="form-group d-flex flex-column">
+                    <label class="col-form-label" for="groupId">
+                      {{ "Supplier" | localize }}
+                    </label>
+                    <ng-select
+                      type="text"
+                      class="form-control"
+                      name="supplier"
+                      id="supplier"
+                      placeholder="Select Supplier"
+                      style="padding: 0 0.75rem"
+                      [(ngModel)]="CreatePackageDto.senderId"
+          
+                    >
+                      <ng-option *ngFor="let supplier of suppliers" [value]="supplier.senderId">
+                        {{ supplier.name }}
+                      </ng-option>
+                    </ng-select> 
+          
+          
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="showInput">
+                  <div class="form-group d-flex flex-column required">
+                    <label class="col-form-label" for="name">
+                      {{ "Customer" | localize }}
+                    </label>
+                     <ng-select
+                      id="customer"
+                      name="customer"
+                      type="text"
+                      class="form-control rounded-pill"
+                      placeholder="Select Customer"
+                      style="padding: 0 0.75rem"
+                      [(ngModel)]="CreatePackageDto.senderId"
+                    >
+                      <ng-option *ngFor="let customer of customers" [value]="customer.customersenderId">
+                        {{ customer.name }}
+                      </ng-option>
+                    </ng-select> -
+                    <!-- <abp-validation-summary
+                      [control]="CustomerModel"
+                      [controlEl]="CustomerEl"
+                    ></abp-validation-summary> -->
+                  </div>
+                </div>
+            
+
+
+
+
+
+               <div class="col-md-4 ">
+                   <label for="picture">Picture</label>
+                   <input type="file" class="form-control-file form-control-sm" id="picture" accept="image/*">
+               </div>
+           </div>
+           <hr />
+           <div class="card ">
+               <div class="card-header d-flex ">
+                   <h5 class=" flex-grow-1">Sub Packages</h5>
+<div class="p-2">
+                   <button type="button" class="btn btn-primary btn-sm "(click)="addSubPackage()">
+                       <i class="fa fa-plus-square"></i> Add Sub Package
+                   </button></div>
+               </div>
+               <div class="card-body p-0">
+                   <table class="table table-hover table-sm text-nowrap mb-0">
+                       <tbody>
+                           <tr >
+                               <td>
+                                   <div class="px-3 py-2">
+                                       <div class="row">
+                                           <div class="col-md-4 mb-3">
+                                               <label for="contains">Contains</label>
+                                               <input type="text" class="form-control form-control-sm" id="contains" >
+                                           </div>
+                                           <div class="col-md-4 mb-3">
+                                               <label for="followUpDate">Follow Up Date</label>
+                                               <input type="date" class="form-control form-control-sm" name="followUpDate" id="followUpDate" >
+                                           </div>
+                                           <div class="col-md-4 mb-3">
+                                               <label for="FollowType">Follow Type</label>
+                                               <select class="form-control form-control-sm" name="FollowType" id="FollowType" >
+                                                   <option *ngFor="let FollowType of FollowTypes" [value]="FollowType.id">{{ FollowType.name }}</option>
+                                               </select>
+                                           </div>
+                                       </div>
+                                       <div class="row">
+                                           <div class="col-md-4 mb-3">
+                                               <label><strong>Follow Up</strong></label>
+                                               <div>
+                                                   <div class="form-check form-check-inline">
+                                                       <input class="form-check-input" type="radio" name="selection" (click)="setFollowupType(false)" [checked]="!showInput">
+                                                       <label class="form-check-label">Group</label>
+                                                   </div>
+                                                   <div class="form-check form-check-inline">
+                                                       <input class="form-check-input" type="radio" name="selection" (click)="setFollowupType(true)" [checked]="showInput">
+                                                       <label class="form-check-label">Employee</label>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                           <div class="col-md-4 mb-3">
+                                               <label for="group">Follow Up Group</label>
+                                               <select class="form-control form-control-sm" id="group">
+                                                   <option value="">Select Group</option>
+                                               </select>
+                                           </div>
+                                           <div class="col-md-4 mb-3">
+                                               <label for="subpackage-picture">Picture</label>
+                                               <input type="file" class="form-control-file form-control-sm" id="subpackage-picture" accept="image/*" multiple>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </td>
+                               <td class="align-middle text-end">
+                                   <button type="button" class="btn btn-danger btn-sm" >
+                                       <i class="fas fa-trash"></i>
+                                   </button>
+                               </td>
+                           </tr>
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+          
+     
+   </div>
+</div>
+           
+   </div>
+  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createUserModal.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form> 
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,36 @@
+<div>
+  <div class="header">
+    <h6>Sections</h6>
+    <button class="btn btn-primary" (click)="onSaveChanges()">Save Changes</button>
+  </div>
+  <div class="body">
+    <div class="upper row">
+      <div class="col-md-2">
+        <ul class="section-list">
+          <li
+            *ngFor="let sec of sections; let i = index"
+            [ngClass]="{ active: i == currentIndex }"
+            (click)="onSectionClick(i)"
+          >
+            {{ sec | titlecase }}
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-10 section-data">
+        <section *ngFor="let item of activeSectionFields">
+          <small>{{ item | humanize }}</small>
+          <input
+            class="form-control"
+            type="text"
+            [(ngModel)]="config[sections[currentIndex]][item]"
+            (ngModelChange)="sendDataToIframe()"
+          />
+        </section>
+      </div>
+    </div>
+    <hr />
+    <div class="lower">
+      <iframe id="iframe" class="iframe" [src]="iframeUrl | safe" (load)="onLoad()"></iframe>
+    </div>
+  </div>
+</div>

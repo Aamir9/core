@@ -1,0 +1,68 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #createFaultModal="ngForm"
+  (ngSubmit)="createFault()"
+>
+  <abp-modal-header
+    [title]="'Upload Files' | localize"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+  <div class="modal-body" style="height: 40vh; overflow: auto">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="companyLogo">
+            {{ "Add Image" | localize }}
+          </label>
+          <div class="col-md-9">
+            <ngx-file-drop
+              class="mb-2"
+              dropZoneLabel="Drop files here"
+              (onFileDrop)="dropped($event)"
+            >
+              <ng-template
+                ngx-file-drop-content-tmp
+                let-openFileSelector="openFileSelector"
+              >
+                <div>
+                  <div class="text-center">
+                    Drage and drop file here, or click to Browse file
+                  </div>
+                  <div class="text-center mt-3">
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-outline"
+                      (click)="openFileSelector()"
+                    >
+                      Browse Files
+                    </button>
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-file-drop>
+            <div class="d-flex flex-wrap" *ngIf="files.length">
+              <ng-container *ngFor="let file of files; let i = index">
+                <div class="preview">
+                  <p>{{ file.name }}</p>
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    (click)="removeFile(i)"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <abp-modal-footer
+    [cancelDisabled]="saving"
+    [saveDisabled]="saving || !files.length"
+    (onCancelClick)="bsModalRef.hide()"
+  ></abp-modal-footer>
+</form>

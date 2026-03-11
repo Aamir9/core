@@ -1,0 +1,202 @@
+<div [@routerTransition]>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6">
+                    <!-- <h1>{{ "EmployeeRememberReport" | localize }}</h1> -->
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <section class="content px-2">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6">&emsp;</div>
+
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button type="button" class="btn bg-blue" (click)="getDataPage(1)">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control" name="keyword" (keyup.enter)="getDataPage(1)"
+                                    [placeholder]="'Search Customer Name' | localize" [(ngModel)]="keyword"
+                                    (ngModelChange)="getDataPage(1)" />
+
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="advancedFiltersVisible" class="card mb-0 mt-1">
+                        <div class="card-body">
+                            <form class="form-horizontal">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row mb-0">
+                                            <label class="col-md-3 col-form-label">
+                                                {{ "Is Follow Up" | localize }}
+                                            </label>
+                                            <div class="col-md-9 pt-2">
+                                                <div class="custom-control custom-radio d-inline">
+                                                    <input type="radio" class="custom-control-input" id="isFollowUp"
+                                                        name="isFollowUp" [(ngModel)]="isFollowUp" [value]="undefined"
+                                                        checked />
+                                                    <label class="custom-control-label" for="isFollowUp">
+                                                        {{ "All" | localize }}
+                                                    </label>
+                                                </div>
+                                                <div class="custom-control custom-radio d-inline mx-3">
+                                                    <input type="radio" class="custom-control-input" id="isFollowUpYes"
+                                                        name="isFollowUp" [(ngModel)]="isFollowUp" [value]="true" />
+                                                    <label class="custom-control-label" for="isFollowUpYes">
+                                                        {{ "Yes" | localize }}
+                                                    </label>
+                                                </div>
+                                                <div class="custom-control custom-radio d-inline">
+                                                    <input type="radio" class="custom-control-input"
+                                                        id="isFollowUpFalse" name="isFollowUp" [(ngModel)]="isFollowUp"
+                                                        [value]="false" />
+                                                    <label class="custom-control-label" for="isFollowUpFalse">
+                                                        {{ "No" | localize }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row mb-0">
+                                            <label class="col-md-3 col-form-label">
+                                                {{ "Only Me" | localize }}
+                                            </label>
+                                            <div class="col-md-9 pt-2">
+                                                <div class="custom-control custom-radio d-inline">
+                                                    <input type="radio" class="custom-control-input" id="isOnlyMe"
+                                                        name="isOnlyMe" [(ngModel)]="isOnlyMe" [value]="undefined"
+                                                        checked />
+                                                    <label class="custom-control-label" for="isOnlyMe">
+                                                        {{ "All" | localize }}
+                                                    </label>
+                                                </div>
+                                                <div class="custom-control custom-radio d-inline mx-3">
+                                                    <input type="radio" class="custom-control-input" id="isOnlyMeYes"
+                                                        name="isOnlyMe" [(ngModel)]="isOnlyMe" [value]="true" />
+                                                    <label class="custom-control-label" for="isOnlyMeYes">
+                                                        {{ "Yes" | localize }}
+                                                    </label>
+                                                </div>
+                                                <div class="custom-control custom-radio d-inline">
+                                                    <input type="radio" class="custom-control-input" id="isOnlyMeFalse"
+                                                        name="isOnlyMe" [(ngModel)]="isOnlyMe" [value]="false" />
+                                                    <label class="custom-control-label" for="isOnlyMeFalse">
+                                                        {{ "No" | localize }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row mb-0">
+                                            <label class="col-md-4 col-form-label" for="followUpActivityTypeId">
+                                                {{ "Follow Up Type" | localize }}
+                                            </label>
+                                            <div class="col-md-8">
+                                                <select type="text" class="form-control" name="followUpActivityTypeId"
+                                                    [(ngModel)]="followUpActivityTypeId" id="followUpActivityTypeId"
+                                                    required #followUpActivityTypeIdModel="ngModel"
+                                                    #followUpActivityTypeIdEl>
+                                                    <option *ngFor="let type of activityTypes" [value]="type.id">
+                                                        {{ type.name }}
+                                                    </option>
+                                                </select>
+                                                <abp-validation-summary [control]="followUpActivityTypeIdModel"
+                                                    [controlEl]="followUpActivityTypeIdEl">
+                                                </abp-validation-summary>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" (click)="getDataPage(1)" class="btn bg-blue">
+                                {{ "Search" | localize }}
+                            </button>
+                            <button type="button" (click)='clear()' class="btn btn-default float-right">
+                                {{ "Clear" | localize }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>{{ "ActivityDate" | localize }}</th>
+                                    <th>{{ "ActivityName" | localize }}</th>
+                                    <th>{{ "FollowUpDate" | localize }}</th>
+                                    <th>{{ "IsFellowUp" | localize }}</th>
+                                    <th>{{ "FollowUpType" | localize }}</th>
+                                    <th>{{"Employee"| localize}}</th>
+                                    <th>{{"User Id"| localize}}</th>
+                                    <th>{{ "User Name" | localize }}</th>
+                                    <th>{{ "Group Name" | localize }}</th>
+                                    <!-- <th >{{ "Actions" | localize }}</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let activity of activities | paginate
+                                : {
+                                    id: 'server',
+                                    itemsPerPage: pageSize,
+                                    currentPage: pageNumber,
+                                    totalItems: totalItems
+                                  } " (click)="openActivityDialog(activity,$event)">
+                                    
+                                    <td> {{activity.date |date}}</td>
+                                    <td> {{activity.name }}</td>
+                                    <td>{{activity.followUpDate | date}}</td>
+                                    <td><input type="checkbox" name="followUp" [(ngModel)]="activity.isFollowUp"
+                                            (change)="followUpActivity(activity)"></td>
+                                    <td>{{activity.followUpTypeName}}</td>
+                                    <td>{{activity.employeeName}}</td>
+                                    <td>{{activity.customerId}}</td>
+                                    <td (click)="onCustomerClick(activity, $event)" class="clickable"> {{ activity.customerName }}</td>
+                                    <td > {{ activity.groupName }}</td>
+                                    <!-- <td>
+                                        <button type="button" class="btn bg-primary mr-1" (click)="openActivity(activity)">
+                                            <i class="fas fa-eye"></i>
+                                          </button>
+                                    </td> -->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer table-card-footer bg-light border-top">
+                    <div class="row">
+                        <div class="col-sm-4 col-12 text-sm-left text-center">
+                            <button class="btn btn-secondary" (click)="refresh()">
+                                <i class="fas fa-redo-alt"></i>
+                            </button>
+                        </div>
+                        <div class="col-sm-4 col-12 text-center">
+                            <p class="mb-0 my-2">
+                                {{ "TotalRecordsCount" | localize: totalItems }}
+                            </p>
+                        </div>
+                        <div class="col-sm-4 col-12">
+                            <div class="float-sm-right m-auto">
+                                <abp-pagination-controls id="server" (pageChange)="getDataPage($event)">
+                                </abp-pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

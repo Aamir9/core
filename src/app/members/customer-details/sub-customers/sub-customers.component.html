@@ -1,0 +1,107 @@
+<div [@routerTransition]>
+  <section class="content">
+
+    <div class="row mt-3">
+      <div class="col-md-6 ">
+        <div class="input-group">
+          <input type="text" class="form-control" name="keyword" [placeholder]="'SearchWithThreeDot' | localize"
+            [(ngModel)]="keyword" (ngModelChange)="getDataPage(1)" (keyup.enter)="getDataPage(1)" />
+
+        </div>
+      </div>
+
+      <div class="col-md-6 d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="showCreateOrEditDialog()">
+          <i class="fa fa-plus-square"></i> {{ "Contact Person" | localize }}
+        </button>
+
+      </div>
+    </div>
+    <!-- <div class="row">
+            <div class="col-md-6">
+              <label class="col-md-3 col-form-label" for="serialNumber">
+                {{ "Customer Type" | localize }}
+              </label>
+              <select type="text" class="form-control" name="customeTypeId" id="customeTypeId"
+                [(ngModel)]="customerTypeId" #customerTypeModel="ngModel" (ngModelChange)="getDataPage(1)"
+                #customerTypeEl>
+                <option></option>
+                <option *ngFor="let customerType of customerTypes" [value]="customerType.id">
+                  {{ customerType.type }}
+                </option>
+              </select>
+            </div>
+          </div> -->
+
+    <div class="card-body p-0 mt-3">
+      <div class="table-responsive">
+        <table class="table table-bordered parent-table mb-0" [busy]="isTableLoading">
+          <thead >
+            <tr>
+              <th>{{ "User Name" | localize }}</th>
+              <th>{{ "Full Name" | localize }}</th>
+              <th>{{ "EmailAddress" | localize }}</th>
+              <th>{{ "Telephone" | localize }}</th>
+              <th>{{ "Active" | localize }}</th>
+              <th style="width: 7rem;">{{ "Actions" | localize }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="
+                let customer of customers
+                  | paginate
+                    : {
+                        id: 'server',
+                        itemsPerPage: pageSize,
+                        currentPage: pageNumber,
+                        totalItems: totalItems
+                      }
+              ">
+              <td>{{ customer.userName }}</td>
+              <td>{{ customer.fullName }}</td>
+              <td>{{ customer.emailAddress }}</td>
+              <td>{{ customer.telephoneFax }}</td>
+
+              <td>
+                <span class="badge" [ngClass]="customer.isActive ? 'bg-success' : 'bg-secondary'">
+                  {{ customer.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+
+              <td>
+                <button type="button" class="btn btn-sm btn-info mr-1" (click)="showEditSubCustomerDialog(customer)">
+                   <i class="fas fa-edit"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-danger" (click)="delete(customer)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-footer table-card-footer bg-light border-top">
+      <div class="row">
+        <div class="col-sm-4 col-12 text-sm-left text-center">
+          <button class="btn btn-secondary" (click)="refresh()">
+            <i class="fas fa-redo-alt"></i>
+          </button>
+        </div>
+        <div class="col-sm-4 col-12 text-center">
+          <p class="mb-0 my-2">
+            {{ "TotalRecordsCount" | localize: totalItems }}
+          </p>
+        </div>
+        <div class="col-sm-4 col-12">
+          <div class="float-sm-right m-auto">
+            <abp-pagination-controls id="server" (pageChange)="getDataPage($event)">
+            </abp-pagination-controls>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </section>
+</div>

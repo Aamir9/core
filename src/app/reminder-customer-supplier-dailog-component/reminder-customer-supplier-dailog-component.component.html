@@ -1,0 +1,243 @@
+<div class="container-fluid">
+  <div class="modal-header">
+    <h4 class="modal-title">Customer Details</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="bsModalRef.hide()" title="Close">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 1 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+      </svg>
+    </button>
+    
+       
+      
+  </div>
+  <div class="modal-body" style="min-width: 100%;">
+   <!-- <app-customer-details [customerUserIdFromReminder]="customerUserId" [customerIdFromReminder] = "id"></app-customer-details> -->
+   <div>
+  
+    <div class="row mt-2">
+      <div class="col-12 d-flex align-items-center justify-content-between">
+        <h4 class="font-weight-bold">Basic Information</h4>
+        <div class="d-flex align-items-center justify-content-end">
+          <p class="m-0 mr-3">Customer is Active</p>
+          <div class="toggle-switch">
+            <input
+              type="checkbox" disabled
+              id="showResultSubEntries"
+              class="toggle-input"
+              [(ngModel)]="customer.isActive"
+            />
+            <label for="showResultSubEntries" class="toggle-label m-0"></label>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-12">
+        <div class="form-group required">
+          <label class="col-form-label" for="name">
+            {{ "Display Name" | localize }}
+          </label>
+          <div>
+            <input type="text" class="form-control" name="name" id="name" required maxlength="32" disabled
+              [(ngModel)]="customer.name" #nameModel="ngModel" #nameEl />
+            <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-12">
+        <label class="col-form-label" for="CustomerTypes">
+          {{ "Customer Type" | localize }}
+        </label>
+        <div>
+          <select type="text" class="form-control" name="customeTypeId" id="customeTypeId" disabled
+            [(ngModel)]="customer.customerTypeId" #customerTypeModel="ngModel" #customerTypeEl>
+            <option *ngFor="let customerType of customerTypes" [value]="customerType.id">
+              {{ customerType.type }}
+            </option>
+          </select>
+          <abp-validation-summary [control]="customerTypeModel"
+            [controlEl]="customerTypeEl"></abp-validation-summary>
+        </div>
+      </div>
+      <div class="col-md-3 col-12">
+        <div class="form-group required">
+          <label class="col-form-label" for="customerNum">
+            {{ "Customer No" | localize }}
+          </label>
+          <div>
+            <input type="text" class="form-control" name="customerNum" id="customerNum" required disabled
+              maxlength="32" [(ngModel)]="customer.customerNo" #customerNoModel="ngModel" #customerNoEl />
+            <abp-validation-summary [control]="customerNoModel"
+              [controlEl]="customerNoEl"></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-3 col-12">
+        <div class="form-group required">
+          <label class="col-form-label" for="name">
+            {{ "Fist Name" | localize }}
+          </label>
+          <div>
+            <input type="text" class="form-control" name="name" id="name" required maxlength="32" disabled
+              [(ngModel)]="customer.name" #nameModel="ngModel" #nameEl />
+            <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-12">
+        <div class="form-group required">
+          <label class="col-form-label" for="surname">
+            {{ "Last Name" | localize }}
+          </label>
+          <div>
+            <input type="text" class="form-control" name="surname" id="surname" maxlength="32" disabled
+              [(ngModel)]="customer.surname" #surnameModel="ngModel" #surnameEl />
+            <abp-validation-summary [control]="surnameModel" [controlEl]="surnameEl"></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-12">
+       
+      </div>
+    </div>
+ <!-- Contact -->
+ <div class="row">
+  <div class="col-12">
+    <h4 class="font-weight-bold">Contact</h4>
+  </div>
+  <div class="col-md-3 col-12">
+    <div class="form-group required">
+      <label class="col-form-label" for="emailAddress">
+        {{ "Email" | localize }}
+      </label>
+      <div>
+        <input type="email" class="form-control" name="emailAddress" id="emailAddress" required disabled
+          maxlength="256" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
+          [(ngModel)]="customer.emailAddress" #emailAddressModel="ngModel" #emailAddressEl />
+        <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl">
+        </abp-validation-summary>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-12">
+    <div class="form-group required">
+      <label class="col-form-label" for="telephoneFax">
+        {{ "Phone Number" | localize }}
+      </label>
+      <div>
+        <input type="text" class="form-control" name="telephoneFax" id="telephoneFax" required minlength="2" disabled
+          maxlength="32" [(ngModel)]="customer.telephoneFax" #telephoneFaxModel="ngModel" #telephoneFaxEl />
+        <abp-validation-summary [control]="telephoneFaxModel"
+          [controlEl]="telephoneFaxEl"></abp-validation-summary>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-12">
+    <div class="form-group required">
+      <label class="col-form-label" for="website">
+        {{ "Website" | localize }}
+      </label>
+      <div>
+        <input type="text" class="form-control" name="website" id="website" required minlength="2" disabled
+          maxlength="150" [(ngModel)]="customer.website" #websiteModel="ngModel" #websiteEl />
+        <abp-validation-summary [control]="websiteModel" [controlEl]="websiteEl"></abp-validation-summary>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+<!-- Location -->
+<div class="row">
+  <div class="col-12">
+    <h4 class="font-weight-bold">Location</h4>
+  </div>
+  <div class="col-md-3 col-12">
+    <div class="form-group required">
+      <label class="col-form-label" for="currency">
+        {{ "Country" | localize }}
+      </label>
+      <div>
+        <input type="text" class="form-control" name="country" id="country" required minlength="2" disabled
+          maxlength="32" [(ngModel)]="customer.country" #countryModel="ngModel" #countryEl />
+        <abp-validation-summary [control]="countryModel" [controlEl]="countryEl"></abp-validation-summary>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-12">
+    <div class="form-group required">
+      <label class="col-form-label" for="townCity">
+        {{ "Town/City" | localize }}
+      </label>
+      <div>
+        <input type="text" class="form-control" name="townCity" id="townCity" required minlength="2" disabled
+          maxlength="32" [(ngModel)]="customer.townCity" #townCityModel="ngModel" #townCityEl />
+        <abp-validation-summary [control]="townCityModel" [controlEl]="townCityEl"></abp-validation-summary>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-12">
+    <div class="form-group required">
+      <label class="col-form-label" for="postcode">
+        {{ "PostCode" | localize }}
+      </label>
+      <div>
+        <input type="text" class="form-control" name="postcode" id="postcode" required minlength="2" disabled
+          maxlength="32" [(ngModel)]="customer.postcode" #postCodeModel="ngModel" #postCodeEl />
+        <abp-validation-summary [control]="postCodeModel" [controlEl]="postCodeEl"></abp-validation-summary>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-12">
+    <div class="form-group required">
+      <label class="col-form-label" for="address">
+        {{ "Address" | localize }}
+      </label>
+      <div>
+        <input type="text" class="form-control" name="address" id="address" required maxlength="250" disabled
+          [(ngModel)]="customer.address" #addressModel="ngModel" #addressEl />
+        <abp-validation-summary [control]="addressModel" [controlEl]="addressEl"></abp-validation-summary>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+<!-- Other -->
+<div class="row">
+  <div class="col-12">
+    <h4 class="font-weight-bold">Other</h4>
+  </div>
+  <div class="col-md-3 col-12">
+    <label class="col-form-label" for="responsibleEmployee">
+      {{ "Responsible Employee" | localize }}
+    </label>
+    <div>
+      <select type="text" class="form-control" name="responsibleEmployee" id="responsibleEmployee" required disabled
+        [(ngModel)]="customer.responsibleEmployeeId" #responsibleEmployeeModel="ngModel"
+        #responsibleEmployeeEl>
+        <option *ngFor="let employee of employees" [value]="employee.id">
+          {{ employee.name }}
+        </option>
+      </select>
+      <abp-validation-summary [control]="responsibleEmployeeModel"
+        [controlEl]="responsibleEmployeeEl"></abp-validation-summary>
+    </div>
+  </div>
+  <div class="col-md-3 col-12">
+    <label class="col-form-label" for="currency">
+      {{ "Currency" | localize }}
+    </label>
+    <div>
+      <input type="text" class="form-control" name="currency" id="currency" required minlength="2" disabled
+        maxlength="32" [(ngModel)]="customer.currency" #currencyModel="ngModel" #currencyEl />
+      <abp-validation-summary [control]="currencyModel" [controlEl]="currencyEl"></abp-validation-summary>
+    </div>
+  </div>
+</div>
+
+  </div>
+  
+  </div>
+  
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-secondary" (click)="bsModalRef.hide()">Close</button>
+  </div>
+</div>

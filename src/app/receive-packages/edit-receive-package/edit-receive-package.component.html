@@ -1,0 +1,565 @@
+
+<div class="card mt-0">
+
+  <div class="modal-body ">   
+   
+    <div class="container-fluid">
+      <tabset>
+        <tab [heading]="'Package' | localize" class="pt-3 px-2">
+          <div class="tab-wrapper">
+            <div class="tab-body row">
+             
+      <div class="col-md-4">
+        <div class="form-group d-flex flex-column required">
+          <label class="col-form-label" for="packageType">
+            {{ "Package Type" | localize }}
+              <a  (click)="showCreateDialog()"
+                class="">(new)</a>
+
+          </label>
+          <div>
+            <ng-select id="packageType" required name="packageType" type="text" class="form-control rounded-pill"
+              placeholder="Select packageType" style="padding: 0 0.75rem" [(ngModel)]="createPackageDto.packageTypeId"
+              [ngModelOptions]="{ standalone: true }" (change)="onPackageTypeChange($event)" #packageTypeModel="ngModel"
+              #packageTypeKindEl>
+              <ng-option *ngFor="let packageType of packageTypes" [value]="packageType.id">
+                {{ packageType.name }}
+              </ng-option>
+            </ng-select>
+            <!-- <abp-validation-summary [control]="packageTypeModel"
+              [controlEl]="packageTypeKindEl"></abp-validation-summary> -->
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-floating">
+          <label class="col-form-label" for="employeeId">
+            {{ "Description" | localize }}
+          </label>
+          <input class="form-control" placeholder="Description here" 
+          [(ngModel)]="createPackageDto.description"
+          >  
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <label for="date">Package Receive Date</label>
+        <input
+          type="text"
+          class="form-control"
+          bsDatepicker
+          [(ngModel)]="receiveDate"
+          (bsValueChange)="onDateChange($event)"
+          id="date"
+          [bsConfig]="bsConfig"
+        />
+      </div>
+
+      <div class="col-md-4 container">
+        <label class="mt-2"><strong>Sender Type</strong></label><br />
+        <div class="ml-3">         
+          <input class="form-check-input" id="flexRadionone" type="radio" name="senderType" [(ngModel)]="senderType"
+            [ngModelOptions]="{ standalone: true }" (change)="onSenderTypeChange()" [value]="'None'"  />
+            <label class="form-check-label" for="flexRadionone">Unspecified</label>
+          &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+          <input class="form-check-input" id="flexRadioDefault1" type="radio" name="senderType" [(ngModel)]="senderType"
+            [ngModelOptions]="{ standalone: true }" (change)="onSenderTypeChange()" [value]="'Supplier'" />
+          <label class="form-check-label" for="flexRadioDefault1">Supplier</label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <input class="form-check-input" id="flexRadioDefault2" type="radio" name="senderType" [(ngModel)]="senderType"
+            [ngModelOptions]="{ standalone: true }" (change)="onSenderTypeChange()" [value]="'Customer'" />
+          <label class="form-check-label" for="flexRadioDefault2">Customer</label>
+        </div>
+      </div>
+
+      <div class="col-md-4" *ngIf="senderType === 'Supplier'">
+        <div class="form-group d-flex flex-column">
+          <label class="col-form-label">{{ "Supplier" | localize }}</label>
+          <ng-select type="text" required class="form-control" name="supplier" id="supplier"
+            placeholder="Select Supplier" style="padding: 0 0.75rem" [(ngModel)]="selectedSupplierName"
+            (change)="selectedSupplierNameFunction($event)"
+            [ngModelOptions]="{ standalone: true }" #supplierModel="ngModel" #supplierKindEl>
+            <ng-option *ngFor="let supplier of suppliers" [value]="supplier.supplierUserId" [attr.name]="supplier.name">
+              {{ supplier.name }}
+              <span>{{ supplier.emailAddress }}</span> <br />
+              <span>{{ supplier.telephoneFax }}</span> 
+            </ng-option>
+          </ng-select>
+          <!-- <abp-validation-summary [control]="supplierModel" [controlEl]="supplierKindEl"></abp-validation-summary> -->
+        </div>
+      </div>
+
+      <div class="col-md-4" *ngIf="senderType === 'Customer'">
+        <div class="form-group d-flex flex-column required">
+          <label class="col-form-label">{{ "Customer" | localize }}</label>         
+          <ng-select id="customer" name="customer" required type="text" class="form-control rounded-pill"
+            placeholder="Search and select customer" style="padding: 0 0.75rem" [(ngModel)]="selectedCustomerName"
+            (change)="selectedCustomerNameFunction($event)"
+            [typeahead]="customerSearch$" [loading]="loadingCustomers" (scrollToEnd)="onScrollToEnd()">
+            <ng-option *ngFor="let customer of customers" [value]="customer.customerUserId" [attr.name]="customer.name">
+              <div class="customer-details">
+                <strong>{{ customer.name }} <code>{{customer.customerNo}}</code> </strong> <br />
+                <span>{{ customer.emailAddress }}</span> <br />
+                <span>{{ customer.telephoneFax }}</span> 
+              </div>
+            </ng-option>
+          </ng-select>
+          <!-- <abp-validation-summary [control]="customerModel" [controlEl]="customerKindEl"></abp-validation-summary> -->
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <label for="followUpEmployee" class="col-form-label">Employee</label>
+        <ng-select class="form-control" required name="followUpEmployee" id="followUpEmployee" style="padding: 0 0.75rem"
+          [(ngModel)]="createPackageDto.employeeId" [ngModelOptions]="{ standalone: true }" #EmployeeModel="ngModel"
+          #EmployeeKindEl>
+          <ng-option *ngFor="let employee of employees" [value]="employee.id">
+            {{ employee.name }}
+          </ng-option>
+        </ng-select>
+        <!-- <abp-validation-summary [control]="EmployeeModel" [controlEl]="EmployeeKindEl"></abp-validation-summary> -->
+      </div>
+
+      <div class="col-md-4 col-4">
+        <div class="d-flex ">
+          <div class=""> 
+            <div class="col-md-6" *ngIf="createPackageDto.base64Picture != null && isImageLoadFramDb === true">
+              <div class="bg-light rounded-4 shadow-sm">
+                <div class="image-preview">
+                  <img src="{{ createPackageDto.base64Picture }}"
+                       class="img-fluid rounded-4 "
+                       alt="Package Content Image"
+                       >
+                </div>
+              </div>
+            </div>
+            <!-- <label for="">Upload Photo</label> -->
+            &nbsp;
+            <div class="d-flex justify-content-left">
+              <app-upload-photo [imageUrl]="createPackageDto.base64Picture"
+              (onFileUpload)="onFileUploadHandler($event)">
+            </app-upload-photo>
+            <small class="text-danger d-block mt-2" *ngIf="isPhotoUploaded === false">
+              {{ "Please upload an image" | localize }}
+            </small>
+            </div>
+        
+           </div>
+          </div>
+        
+        </div>
+
+          </div>
+        </div>
+        </tab>
+
+     
+        <tab heading="CustomerDetails" id="tab1">
+          <div class="row mt-2">
+
+
+            <div class="col-md-4 col-12">
+              <div class="form-group ">
+                <label class="col-form-label" for="outerSenderFirstName">
+                  {{ "Fist Name" | localize }}
+                </label>
+                <div>
+                  <input type="text" class="form-control" name="outerSenderFirstName" id="senderFirstName" required maxlength="32"
+                    [(ngModel)]="createPackageDto.outerSenderFirstName" #outerSenderFirstNameModel="ngModel" #outerSenderFirstNameEl />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <div class="form-group">
+                <label class="col-form-label" for="outerSenderLastName">
+                  {{ "Last Name" | localize }}
+                </label>
+                <div>
+                  <input type="text" class="form-control" name="outerSenderLastName" id="outerSenderLastName" maxlength="32"
+                    [(ngModel)]="createPackageDto.outerSenderLastName" #outerSenderLastNameModel="ngModel" #outerSenderLastNameEl />
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <hr>
+          <div class="row">
+         
+            <div class="col-md-4 col-12">
+              <div class="form-group ">
+                <label class="col-form-label" for="outerSenderEmail">
+                  {{ "Email" | localize }}
+                </label>
+                <div>
+                  <input type="email" class="form-control" name="outerSenderEmail" id="outerSenderEmail" required
+                    maxlength="256" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
+                    [(ngModel)]="createPackageDto.outerSenderEmail" #outerSenderEmailModel="ngModel" #outerSenderEmailEl />
+
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-12">
+              <div class="form-group">
+                <label class="col-form-label" for="outerSenderPhoneNumber">
+                  {{ "Phone Number" | localize }}
+                </label>
+                <div>
+                  <input type="text" class="form-control" name="outerSenderPhoneNumber" id="outerSenderPhoneNumber"
+                    maxlength="15" [(ngModel)]="createPackageDto.outerSenderPhoneNumber" #outerSenderPhoneNumberModel="ngModel" #outerSenderPhoneNumberEl />
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        
+        </tab>
+
+
+
+
+        <tab heading=" Add Subpackage">
+        <div class="container mt-4">
+          <div class="row g-3">
+            <div *ngFor="let subPackage of subPackages; let i = index" class="col-md-4">
+              <div class="card border rounded-3 shadow-sm">
+                <div class="card-body p-4">
+                  <div class="row g-3 align-items-center">
+                    <div class="col-12">
+                      <label for="contains-{{ i }}" class="form-label fw-semibold">Contains</label>
+                      <input type="text" class="form-control form-control-sm rounded-pill border-0 bg-light"
+                        name="contains-{{ i }}" id="contains-{{ i }}" placeholder="Enter here.."
+                        [(ngModel)]="subPackage.contains" [ngModelOptions]="{ standalone: true }" />
+                    </div>
+    
+                    <div class="col-12">
+                      <div class="d-flex align-items-center justify-content-between mt-2">
+                        <div>
+                         
+                          &nbsp;<app-upload-photo [imageUrl]="subPackage.base64Picture"
+                            (onFileUpload)="onFileUploadFSub($event,i)"></app-upload-photo>
+                          <small class="text-danger d-block mt-2" *ngIf="subPackage.isPhotoUploaded === false">
+                            {{ "Please upload an image" | localize }}
+                          </small>
+                        </div>
+                        <div class="ms-3">
+                          <button type="button" class="btn btn-outline-danger btn-sm rounded-pill"
+                            (click)="removeSubPackage(i)">
+                            <i class="fas fa-trash-alt me-1"></i> Remove
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="mt-5">
+                <button class="btn btn-primary" type="button" (click)="addSubPackage($event)">
+                  <i class="fa fa-plus-square"></i> &nbsp;Sub Package
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>    
+
+         <!-- <tab [heading]="'Activies' | localize" class="pt-3 px-2">
+        <div class="row">
+          <div class="col-md-6 mt-3">
+            <div class="card p-2">
+              <form class="form-horizontal" autocomplete="off" #NoteActivityInput="ngForm"
+                >
+      
+                <div class="form-group d-flex flex-column ">
+                  <label class="col-form-label" for="name">
+                    {{ "Note" | localize }}
+                  </label>
+                  <div>
+                    <textarea type="text" cols="30" rows="9" class="form-control" name="description" id="description"
+                      required [(ngModel)]="createPackageDto.activityNote" #descriptionModel="ngModel" #descriptionKindEl
+                      maxlength="255" [disabled]="activityId > 0">
+                    </textarea>
+      
+                  </div>
+                </div>
+      
+              </form>
+            </div>
+      
+      
+      
+          </div>
+          <div class="col-md-6">
+          
+          <div class=" mt-3">
+            <div class="card p-2 ">
+             
+              <div class="row"> 
+                <div class="col-md-12">
+                  <div class="form-group d-flex flex-column ">
+                    <label class="col-form-label" for="name">
+                      {{ "ActivityType" | localize }}
+                    </label>
+                    <div>
+                      <ng-select type="text" class="form-control" name="activityType" id="activityType" 
+                      style="padding: 0 0.75rem"placeholder="Select Activity type"
+                        [(ngModel)]="createPackageDto.activityTypeId" #activityTypeModel="ngModel" #activityTypeEl>
+                        <ng-option *ngFor="let activityType of activityTypes" [value]="activityType.id">
+                          {{ activityType.name }}
+                        </ng-option>
+                      </ng-select>
+      
+                      <abp-validation-summary [control]="activityTypeModel" [controlEl]="activityTypeEl">
+                      </abp-validation-summary>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="FollowType">Follow Type</label>
+                  <ng-select class="form-control form-control" name="FollowType" id="FollowType"
+                    [(ngModel)]="createPackageDto.followUpTypeId" style="padding: 0 0.75rem"
+                    [ngModelOptions]="{ standalone: true }"
+                    placeholder="Select FollowType">
+                    <ng-option   *ngFor="let FollowType of FollowTypes" [value]="FollowType.id">
+                      {{ FollowType.name }}
+                    </ng-option>
+                  </ng-select>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group d-flex flex-column ">
+                  <label class="col-form-label" for="name">
+                    {{ " Follow Up Date" | localize }}
+                  </label>
+                  <div>
+                    <input type="date" class="form-control" name="date" id="date" [(ngModel)]="createPackageDto.followUpDate"
+                      #dateModel="ngModel" #dateEl />
+                    <abp-validation-summary [control]="dateModel" [controlEl]="dateEl"></abp-validation-summary>
+                  </div>
+                </div>
+              </div>
+               
+                <div class="col-md-6 p-2">
+                  <label><strong>Follow Up</strong></label>
+                  <br />
+                  <label class="form-check-label" for="group">Group</label> &nbsp; &nbsp;
+                  &nbsp; &nbsp;
+                  <input class="form-check-input" type="radio" name="followUpType" id="group" [value]="false"
+                    (change)="onFollowUpTypeChange($event)" />
+          
+                  <label class="form-check-label" for="employee">Employee</label> &nbsp;
+                  &nbsp; &nbsp;&nbsp;&nbsp;
+                  <input class="form-check-input" type="radio" name="followUpType" id="employee" [value]="true"
+                    (change)="onFollowUpTypeChange($event)" />
+                </div>
+               
+                <div class="col-md-6 p-2 p-2" *ngIf="!showOption">
+                  <div class="form-group d-flex flex-column">
+                    <label class="col-form-label">
+                      {{ "Follow Up Group" | localize }}
+                    </label>
+                    <div>
+                      <select class="form-control" [(ngModel)]="createPackageDto.fllowUpGroupId"
+                        [ngModelOptions]="{ standalone: true }" placeholder="Select Follow up Group">
+          
+                        <option *ngFor="let group of groups" [value]="group.id">
+                          {{ group.name }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="col-md-6" *ngIf="showOption">
+                  <div class="form-group d-flex flex-column">
+                    <label class="col-form-label" for="employeeId">
+                      {{ "Follow Up Employee" | localize }}
+                    </label>
+                    <div>
+                      <select class="form-control" name="employeeId" id="employeeId"
+                        [(ngModel)]="createPackageDto.fllowUpEmployeeId" #EmployeeModel="ngModel"
+                        [ngModelOptions]="{ standalone: true }">
+          
+                        <option *ngFor="let employee of employees" [value]="employee.id">
+                          {{ employee.name }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+               
+              </div>
+      
+             
+            </div>
+          </div>
+
+        </div>
+      </div>
+        </tab> -->
+  
+
+        <tab *ngIf="senderType !== 'None'" [heading]="'Note' | localize" class="pt-3 px-2">
+          <div class="row">
+             <div class="col-md-6 mt-3">
+               <div class="card p-2">
+                 <form class="form-horizontal" autocomplete="off" #NoteActivityInput="ngForm"
+                   >
+   
+                   <div class="form-group d-flex flex-column ">
+                     <label class="col-form-label" for="name">
+                       {{ "Note" | localize }}
+                     </label>
+                     <div>
+                       <textarea type="text" cols="30" rows="9" class="form-control" name="description" id="description" 
+                         required [(ngModel)]="createPackageDto.activityNote" #descriptionModel="ngModel" #descriptionKindEl
+                         maxlength="255" [disabled]="activityId > 0">
+                       </textarea>
+   
+                     </div>
+                   </div>
+   
+                 </form>
+               </div>
+   
+   
+   
+             </div>
+             <div class="col-md-6">
+   
+             <div class=" mt-3">
+               <div class="card p-2 ">
+   
+                 <div class="row">
+                   <div class="col-md-12">
+                     <div class="form-group d-flex flex-column ">
+                       <label class="col-form-label" for="name">
+                         {{ "ActivityType" | localize }}
+                       </label>
+                       <div>
+                         <ng-select type="text" class="form-control" name="activityType" id="activityType" 
+                           style="padding: 0 0.75rem"placeholder="Select Activity type"
+                           [(ngModel)]="createPackageDto.activityTypeId" #activityTypeModel="ngModel" #activityTypeEl>
+                           <ng-option *ngFor="let activityType of activityTypes" [value]="activityType.id">
+                             {{ activityType.name }}
+                           </ng-option>
+                         </ng-select>
+   
+                         <!-- <abp-validation-summary [control]="activityTypeModel" [controlEl]="activityTypeEl">
+                         </abp-validation-summary> -->
+                       </div>
+                     </div>
+                   </div>
+   
+                   <div class="col-md-6">
+                     <label for="FollowType">Follow Type</label>
+                     <ng-select class="form-control" name="FollowType" id="FollowType" 
+                       [(ngModel)]="createPackageDto.followUpTypeId" style="padding: 0 0.75rem"
+                       [ngModelOptions]="{ standalone: true }"
+                       placeholder="Select FollowType">
+                       <ng-option   *ngFor="let FollowType of FollowTypes" [value]="FollowType.id">
+                         {{ FollowType.name }}
+                       </ng-option>
+                     </ng-select>
+                   </div>
+                   <div class="col-md-6">
+                   <div class="form-group d-flex flex-column ">
+                     <label class="col-form-label" for="name">
+                       {{ " Follow Up Date" | localize }}
+                     </label>
+                     <div>
+                       <!-- <input type="date" class="form-control" name="date" id="date" [(ngModel)]="createPackageDto.followUpDate"
+                         #dateModel="ngModel" #dateEl /> -->
+                         <input type="text" class="form-control" name="date"  bsDatepicker [(ngModel)]="createPackageDto.followUpDate" 
+                         (bsValueChange)="onDateChange($event)" id="date" [bsConfig]="bsConfig" />
+                       <!-- <abp-validation-summary [control]="dateModel" [controlEl]="dateEl"></abp-validation-summary> -->
+                     </div>
+                   </div>
+                 </div>
+   
+                   <div class="col-md-6 p-2">
+                     <label><strong>Follow Up</strong></label>
+                     <br />
+                     <label class="form-check-label" for="group">Group</label> &nbsp; &nbsp;
+                     &nbsp; &nbsp;
+                     <input class="form-check-input" type="radio" name="followUpType" id="group" [value]="'group'" 
+                     [checked]="groupshow"
+                     (change)="onFollowUpTypeChange('group')" />
+   
+                     <label class="form-check-label" for="employee">Employee</label> &nbsp;
+                     &nbsp; &nbsp;&nbsp;&nbsp;
+                     <input class="form-check-input" type="radio" name="followUpType" id="employee" [value]="'employee'" 
+                     [checked]="employeeShow"
+                     (change)="onFollowUpTypeChange('employee')" />
+                   </div>
+   
+                   <div class="col-md-6" *ngIf="groupshow">
+                     <div class="form-group d-flex flex-column">
+                       <label class="col-form-label">
+                         {{ "Follow Up Group" | localize }}
+                       </label>
+                       <div>
+                         <ng-select  class="form-control" [(ngModel)]="createPackageDto.fllowUpGroupId" style="padding: 0 0.75rem"                          
+                           [ngModelOptions]="{ standalone: true }" placeholder="Select Follow Up Group">   
+                           <ng-option *ngFor="let group of groups" [value]="group.id">
+                             {{ group.name }}
+                           </ng-option>
+                         </ng-select>
+                       </div>
+                     </div>
+                   </div>
+   
+                   <div class="col-md-6" *ngIf="employeeShow">
+                     <div class="form-group d-flex flex-column">
+                       <label class="col-form-label" for="employeeId">
+                         {{ "Follow Up Employee" | localize }}
+                       </label>
+                       <div>
+                      
+                         <ng-select class="form-control" name="employeeId" id="employeeId" 
+                         [(ngModel)]="createPackageDto.fllowUpEmployeeId" style="padding: 0 0.75rem"
+                         [ngModelOptions]="{ standalone: true }"
+                         placeholder="Select Employee">
+                         <ng-option *ngFor="let employee of employees" [value]="employee.id">
+                           {{ employee.name }}
+                         </ng-option>
+                       </ng-select>
+                       </div>
+                     </div>
+                   </div>
+   
+                 </div>
+   
+   
+               </div>
+             </div>
+   
+           </div>
+         </div>
+   
+   
+   
+       </tab>
+
+      </tabset>
+    </div>
+    
+
+  </div>
+  <hr>
+  <!-- footer -->
+  <div class="p-2">
+    <div class="row mt-0">
+      <div class="col-md-12 d-flex justify-content-end align-items-center">
+        <button class="btn bg-blue mr-4" (click)="save()">
+          {{ "Save" | localize }}
+        </button>
+        <button class="btn btn-outline-secondary mr-1" (click)="back()">
+          {{ "Back" | localize }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

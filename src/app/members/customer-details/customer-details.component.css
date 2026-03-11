@@ -1,0 +1,50 @@
+::ng-deep .ng-select-container {
+ 
+     width: 100% !important;
+
+
+  font-size: 15px;
+  border: 1px solid #ddd !important;
+  border-radius: 10px !important;
+  background-color: #fafafa !important;
+  transition: all 0.2s ease;
+  outline: none;
+  color: #222 !important;
+  box-sizing: border-box;
+  
+  } 
+  /* Sleek input style for dynamic fields */
+.sleek-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #fafafa;
+  transition: all 0.2s ease;
+  outline: none;
+  color: #222;
+  box-sizing: border-box;
+}
+
+label{
+    font-weight: 400  !important;
+}
+
+.sleek-input:focus {
+  border-color: #4a90e2;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .sleek-input {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .form-field label {
+    font-size: 13px;
+  }
+}

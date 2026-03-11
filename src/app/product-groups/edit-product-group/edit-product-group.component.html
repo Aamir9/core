@@ -1,0 +1,69 @@
+    
+<form autocomplete="off" #productGroupForm="ngForm"  (ngSubmit)="save()">
+
+    <abp-modal-header [title]="'Detials' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group d-flex flex-column required">
+                  <label class="col-form-label" for="name">
+                    {{ "Name" | localize }}
+                  </label>
+                  <div>
+                    <input type="text" class="form-control" name="name" id="name" required [(ngModel)]="productGroupDto.name"
+                      #nameModel="ngModel" #nameKindEl />
+                    <abp-validation-summary [control]="nameModel" [controlEl]="nameKindEl"></abp-validation-summary>
+                  </div>
+                </div>
+              </div>
+
+                
+                <div class="col-md-6">
+                    <div class="form-group d-flex flex-column ">
+                        <label class="col-form-label" for="domestic">
+                            {{ "Domestic" | localize }}
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" name="domestic" id="domestic"  [(ngModel)]="productGroupDto.domestic"
+                                #domesticModel="ngModel" #domesticKindEl />
+                            <abp-validation-summary [control]="domesticModel" [controlEl]="domesticKindEl"></abp-validation-summary>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                  
+                    <div class="form-group d-flex flex-column ">
+                        <label class="col-form-label" for="domestic">
+                            {{ "EU" | localize }}
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" name="EU" id="EU"  [(ngModel)]="productGroupDto.eu"
+                                #EUModel="ngModel" #EUKindEl />
+                            <abp-validation-summary [control]="EUModel" [controlEl]="EUKindEl"></abp-validation-summary>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                  
+                    <div class="form-group d-flex flex-column ">
+                        <label class="col-form-label" for="abroad">
+                            {{ "Abroad" | localize }}
+                        </label>
+                        <div>
+                            <input type="text" class="form-control" name="abroad" id="abroad"  [(ngModel)]="productGroupDto.abroad"
+                                #abroadModel="ngModel" #abroadKindEl />
+                        </div>
+                    </div> 
+                </div>
+                </div>
+      
+    </div>
+   
+    <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!productGroupForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>
+

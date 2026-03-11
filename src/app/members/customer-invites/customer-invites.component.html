@@ -1,0 +1,62 @@
+
+    <section class="content-header">
+        <div class="container-fluid">
+          <div class="row">
+         
+            <div class="col-6" *ngIf="inviteDto?.length > 0;else  notInvited;" >
+              <h3>{{ "Invited Activities" | localize }}</h3>
+            </div>
+          
+          <ng-template #notInvited> 
+            <h5> No invited  !</h5>
+          </ng-template>
+          </div>
+        </div>
+      </section> 
+  
+  
+        <div class="content mx-3" *ngFor="let inviteItem of inviteDto">
+           <div class="card pb-2">
+          <div   class=" d-flex flex-lg-row flex-md-row flex-sm-column justify-content-between px-3">
+            <div>
+              <div class="d-flex flex-lg-row flex-md-row flex-column ">
+                <div class="date-block p-3 border-right">
+                  <h5 class="color-1"> 
+                  
+                    {{ inviteItem.activity.date  | date:'dd/MM/yyyy' }}
+  
+                  </h5>
+                </div>
+                
+                <div class="activity-details p-3 ">
+                  <div class="a-heading">
+                    <h5> {{inviteItem.activity.name}} </h5>
+                  </div>
+                  <b> {{ getActivityTypeName(inviteItem.activity.activityTypeId) }} </b>
+                 
+    
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class=" p-3">
+               <img *ngIf="getUserInviteResponse(inviteItem) ===1"  src="../../assets/img/greenCheck.png" class="icon" alt="">
+               <img *ngIf="getUserInviteResponse(inviteItem)  ===0" src="../../assets/img/cross_without_circle.png" class="icon" alt="">
+                <img *ngIf="getUserInviteResponse(inviteItem)  ===2" src="../../assets/img/question.png" class="icon" alt="">  
+              </div>
+  
+              <div class="mt-3">
+
+                <button class="btn btn-primary btn-sm"  (click)="goToInvitedActivityDetails(inviteItem)">
+                  <i class="fa fa-eye"></i>
+                  <span> {{ "Details" | localize }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          </div>
+          
+        </div>
+  
+   
+  

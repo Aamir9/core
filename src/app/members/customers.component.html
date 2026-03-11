@@ -1,0 +1,703 @@
+<div class="content">
+  <!-- Filters -->
+  <div class="row mt-3">
+
+<div class="col-md-6 col-12 d-flex align-items-end justify-content-start">
+      <button
+        *ngIf="isCustomer === false"
+        type="button"
+        class="btn btn-primary mr-3"
+        (click)="createCustomer()"
+      >
+        <i class="fa fa-plus-square mr-2"></i>
+        {{ "Create Company" | localize }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary mr-3"
+        (click)="collapseAll()"
+      >
+        {{ "Collapse All" | localize }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary mr-3"
+        (click)="expandAll()"
+      >
+        {{ "Expand All" | localize }}
+      </button>
+    </div>
+
+    <div class="col-md-6 col-12 d-flex align-items-end">
+      <input
+        type="text"
+        class="form-control mr-3"
+        name="keyword"
+        [placeholder]="'SearchWithThreeDot' | localize"
+        [(ngModel)]="keyword"
+        (ngModelChange)="getDataPage(1)"
+      />
+      <button type="button" class="btn btn-primary" (click)="getDataPage(1)">
+        {{ "Search" | localize }}
+      </button>
+    </div>
+  </div>
+  <!-- Filters End -->
+
+
+
+  <!-- Table -->
+  <div class="table-container mt-3">
+    <div class="table-responsive">
+      <table class="table parent-table table-bordered " [busy]="isTableLoading">
+        <thead>
+          <tr>
+            <th>{{ "Company Name" | localize }}</th>
+             <th>{{ "Email" | localize }}</th>
+            <th>{{ "Phone" | localize }}</th>
+            <th>{{ "Zip Code" | localize }}</th>
+            <th>{{ "Town/City" | localize }}</th>
+            <th>{{ "Address" | localize }}</th>
+          
+
+            <th style="" >{{ "Actions" | localize }}</th> 
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container
+            *ngFor="
+              let customer of customers
+                | paginate
+                  : {
+                      id: 'server',
+                      itemsPerPage: pageSize,
+                      currentPage: pageNumber,
+                      totalItems: totalItems
+                    }
+            "
+          >
+            <tr [ngClass]="{ 'table-row-active': customer.isSubCustomerOpen }">
+              <td style="cursor: pointer;" (click)="customerDetails(customer)">
+                <div
+                  class="table-cell d-flex align-items-center justify-content-start font-weight-bold"
+                >
+                  <a
+                    (click)="
+                      customer.isSubCustomerOpen = !customer.isSubCustomerOpen
+                    "
+                  >
+                    <i
+                      title="View Customers"
+                      *ngIf="!customer.isSubCustomerOpen"
+                      class="fas fa-chevron-down mr-2 pointer"
+                    ></i>
+                    <i
+                      title="View  Customers"
+                      *ngIf="customer.isSubCustomerOpen"
+                      class="fas fa-chevron-up mr-2 pointer"
+                    ></i>
+                  </a>
+                  {{ customer.name }}
+                </div>
+              </td>
+               <td style="cursor: pointer;" (click)="customerDetails(customer)">
+                {{ customer.emailAddress }}
+              </td>
+              <td style="cursor: pointer;" (click)="customerDetails(customer)">
+                {{ customer.telephoneFax }}
+              </td>
+           
+              <td style="cursor: pointer;" (click)="customerDetails(customer)">
+                {{ customer.postcode }}
+              </td>
+              <td style="cursor: pointer;" (click)="customerDetails(customer)">
+                {{ customer.townCity }}
+              </td>
+              <td style="cursor: pointer;" (click)="customerDetails(customer)">
+                {{ customer.address }}
+              </td>
+              <td> 
+                      <button *ngIf="!isCustomer" type="button" 
+                        href="javascript:;"
+                       class="btn btn-sm bg-primary "
+                        (click)="customerDetails(customer)"
+                         data-bs-toggle="tooltip" 
+    data-bs-placement="top"
+    title="View Details"
+                      >
+                        <i class="fas fa-eye"></i>
+                      </button> &nbsp;
+                
+                      <button *ngIf="!isCustomer"
+        type="button"
+        class="btn btn-sm bg-danger"
+        (click)="delete(customer)"
+        title="Delete">
+    <i class="fas fa-trash"></i>
+</button>
+ &nbsp;
+                     
+          <!-- <button *ngIf="!isCustomer" type="button" class="btn btn-sm bg-secondary"
+           (click)="resetPassword(customer)"
+                     data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                       title="Reset Password">
+                     <i class="fas fa-lock"></i>
+                    {{ "ResetPassword" | localize }}
+                    </button>   -->
+              </td> 
+             
+
+              <!-- <td>
+                <ng-container
+                  [ngTemplateOutlet]="tableActionMenu"
+                  [ngTemplateOutletContext]="{ customer: customer }"
+                ></ng-container>
+              </td> -->
+            </tr>
+            <ng-container *ngIf="customer.isSubCustomerOpen">
+              <tr *ngIf="customer?.subCustomers?.length == 0">
+                <td colspan="12" class="text-center">No  Customers Found</td>
+              </tr>
+              <tr
+                *ngIf="customer?.subCustomers?.length"
+                style="box-shadow: none"
+              >
+                <td colspan="12" class="p-0 border-0">
+                  <div class="table-responsive">
+                    <table class="table  child-table">
+                       <thead>
+                            <tr class="table-secondary">
+                              <th>{{ "Contact Person" | localize }}</th>
+                              <th>{{ "User Name" | localize }}</th>
+                              <th>{{ "Email" | localize }}</th>
+                              <th>{{ "Phone" | localize }}</th>
+                              <th> {{ "Active" | localize }}</th> 
+                               <th  style="width: 240px;">{{ "Actions" | localize }}</th> 
+
+                            </tr>
+                            </thead>
+                      <tbody>
+                        <tr *ngFor="let subCustomer of customer.subCustomers"
+                        style="border-left: 1px blue; border-top: 1px blue;"
+                        >
+                           <!-- table header also add  -->
+                           
+                        
+                          <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)"> {{ subCustomer.name }}</td>
+                          <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.userName }}</td>
+                          <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.emailAddress }}</td>
+                          <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.telephoneFax }}</td>
+                           <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">
+                            <span class="badge" [ngClass]="subCustomer.isActive ? 'bg-success' : 'bg-secondary'">
+                               {{ subCustomer.isActive ? 'Active' : 'Inactive' }}
+                </span></td> 
+
+                          <td>
+                             <button *ngIf="!isCustomer" type="button" class="btn btn-sm bg-secondary"
+           (click)="resetPassword(subCustomer)"
+                     data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                       title="Reset Password">
+                     <i class="fas fa-lock"></i>
+                    {{ "ResetPassword" | localize }}
+                    </button>  
+&nbsp;
+                                   <button *ngIf="!isCustomer" type="button" 
+                        href="javascript:;"
+                       class="btn btn-sm bg-primary "
+                         (click)="showEditSubCustomerDialog(subCustomer)"
+                         data-bs-toggle="tooltip" 
+    data-bs-placement="top"
+    title="View Details"
+                      >
+                        <i class="fas fa-eye"></i>
+                      </button> &nbsp;
+             <button *ngIf="!isCustomer"
+        type="button"
+        class="btn btn-sm bg-danger"
+        (click)="deleteSubCustomer(subCustomer)"
+        title="Delete">
+    <i class="fas fa-trash"></i>
+</button>
+ 
+                     
+         
+
+
+
+
+                            <!-- <ng-container
+                              [ngTemplateOutlet]="tableActionMenu"
+                              [ngTemplateOutletContext]="{
+                                customer: customer,
+                                subCustomer: subCustomer
+                              }"
+                            ></ng-container> -->
+                          </td> 
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card-footer table-card-footer bg-light border mb-5">
+    <div class="row">
+      <div class="col-sm-4 col-12 text-sm-left text-center">
+        <button class="btn btn-secondary" (click)="refresh()">
+          <i class="fas fa-redo-alt"></i>
+        </button>
+      </div>
+      <div class="col-sm-4 col-12 text-center">
+        <p class="mb-0 my-2">
+          {{ "TotalRecordsCount" | localize : totalItems }}
+        </p>
+      </div>
+      <div class="col-sm-4 col-12">
+        <div class="float-sm-right m-auto">
+          <abp-pagination-controls
+            id="server"
+            (pageChange)="getDataPage($event)"
+          >
+          </abp-pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template
+  #tableActionMenu
+  let-customer="customer"
+  let-subCustomer="subCustomer"
+>
+  <span dropdown class="table-action" container="body">
+    <a
+      href
+      id="button-basic"
+      dropdownToggle
+      aria-controls="dropdown-basic"
+      (click)="(false)"
+    >
+      <i class="fas fa-ellipsis-h table-action-menu-icon"></i>
+    </a>
+    <ul
+      id="dropdown-basic"
+      *dropdownMenu
+      class="dropdown-menu dropdown-menu-right table-action-menu"
+      role="menu"
+      aria-labelledby="button-basic"
+    >
+      <li class="disabled" role="menuitem">
+        <a class="dropdown-item disabled table-action-menu-header">
+          <span class="text-secondary">Actions</span>
+          <i class="fas fa-ellipsis-h table-action-menu-icon-active"></i
+        ></a>
+      </li>
+      <li role="menuitem">
+        <a
+          class="dropdown-item table-action-menu-item"
+          (click)="customerDetails(customer)"
+          ><i class="fas fa-eye"></i>View Details</a
+        >
+      </li>
+      <li role="menuitem">
+        <a
+          class="dropdown-item table-action-menu-item"
+          [routerLink]="['/app/activities']"
+          [queryParams]="{ customerId: customer.id }"
+          routerLinkActive="router-link-active"
+          ><i class="fas fa-eye"></i>View Activities</a
+        >
+      </li>
+      <li role="menuitem">
+        <a
+          class="dropdown-item table-action-menu-item"
+          [routerLink]="['/app/tickets']"
+          [queryParams]="{
+            customerId: customer.id,
+            subCustomerId: subCustomer?.id ?? 0
+          }"
+          routerLinkActive="router-link-active"
+          ><i class="fas fa-eye"></i>View Tickets</a
+        >
+      </li>
+      <!-- <li role="menuitem">
+        <a
+          class="dropdown-item table-action-menu-item"
+          (click)="showCreateOrEditActivityDialog(customer)"
+          ><i class="fas fa-plus-square"></i>Add Activity</a
+        >
+      </li> -->
+      <!-- <li role="menuitem">
+        <a class="dropdown-item table-action-menu-item"
+          ><i class="fas fa-pencil-alt"></i>Edit</a
+        >
+      </li>
+      <li role="menuitem">
+        <a class="dropdown-item table-action-menu-item"
+          ><i class="fas fa-plus-square"></i>Add sub-entry</a
+        >
+      </li> -->
+      <li role="menuitem">
+
+        <a
+          class="dropdown-item table-action-menu-item"
+          [routerLink]="['/app/activity/create']"
+          [queryParams]="{
+            customerId: customer.id
+          }"
+          ><i class="fas fa-plus-square"></i>Add Ticket</a
+        >
+      </li>
+      <li role="menuitem">
+        <a class="dropdown-item table-action-menu-item"
+          ><i class="fas fa-times-circle text-danger"></i>Delete</a
+        >
+      </li>
+    </ul>
+  </span>
+</ng-template>
+
+<div [@routerTransition] *ngIf="false">
+  <section class="content-header">
+    <div class="container-fluid">
+      <h3 class="font-weight-bold">Old Design</h3>
+      <div class="row">
+        <div class="col-6">
+          <h1>{{ title | localize }}</h1>
+        </div>
+        <div class="col-6 text-right" *ngIf="isCustomer === false">
+          <a href="javascript:;" class="btn bg-blue" (click)="createCustomer()">
+            <i class="fa fa-plus-square"></i>
+            {{ "Customer" | localize }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="content px-2">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-6">&emsp;</div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <!-- <div class="input-group-prepend">
+                                    <button type="button" class="btn bg-blue" (click)="getDataPage(1)">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div> -->
+                <input
+                  type="text"
+                  class="form-control"
+                  name="keyword"
+                  [placeholder]="'SearchWithThreeDot' | localize"
+                  [(ngModel)]="keyword"
+                  (ngModelChange)="getDataPage(1)"
+                />
+                <div class="input-group-append" *ngIf="false">
+                  <button
+                    type="button"
+                    class="btn btn-default"
+                    (click)="advancedFiltersVisible = !advancedFiltersVisible"
+                  >
+                    <i
+                      class="fas"
+                      [class.fa-angle-up]="advancedFiltersVisible"
+                      [class.fa-angle-down]="!advancedFiltersVisible"
+                    ></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="advancedFiltersVisible" class="card mb-0 mt-1">
+            <div class="card-body">
+              <form class="form-horizontal">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group row mb-0">
+                      <label class="col-md-3 col-form-label" for="userTypeId">
+                        {{ "Customer No" | localize }}
+                      </label>
+                      <div class="col-md-9">
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="userTypeId"
+                          [(ngModel)]="customerNumber"
+                          id="userTypeId"
+                          #userTypeIdModel="ngModel"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group row mb-0">
+                      <label class="col-md-3 col-form-label" for="name">
+                        {{ "Name" | localize }}
+                      </label>
+                      <div class="col-md-9">
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="name"
+                          [(ngModel)]="name"
+                          id="name"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mt-1">
+                    <div class="form-group row mb-0">
+                      <label class="col-md-3 col-form-label" for="emailAddress">
+                        {{ "Email" | localize }}
+                      </label>
+                      <div class="col-md-9">
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="emailAddress"
+                          id="emailAddress"
+                          [(ngModel)]="emailAddress"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mt-1">
+                    <div class="form-group row mb-0">
+                      <label class="col-md-3 col-form-label" for="telephone">
+                        {{ "Telephone" | localize }}
+                      </label>
+                      <div class="col-md-9">
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="telephone"
+                          id="telephone"
+                          [(ngModel)]="telephone"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mt-1">
+                    <div class="form-group row mb-0">
+                      <label class="col-md-3 col-form-label" for="serialNumber">
+                        {{ "Serial Number" | localize }}
+                      </label>
+                      <div class="col-md-9">
+                        <input
+                          type="text"
+                          class="form-control"
+                          name="serialNumber"
+                          id="serialNumber"
+                          [(ngModel)]="serialNumber"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mt-1">
+                    <select
+                      type="text"
+                      class="form-control"
+                      name="customeTypeId"
+                      id="customeTypeId"
+                      [(ngModel)]="customerTypeId"
+                      #customerTypeModel="ngModel"
+                      #customerTypeEl
+                    >
+                      <option
+                        *ngFor="let customerType of customerTypes"
+                        [value]="customerType.id"
+                      >
+                        {{ customerType.type }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6 mt-1" *ngIf="false">
+                  <label class="col-md-3 col-form-label" for="serialNumber">
+                    {{ "Customer Type" | localize }}
+                  </label>
+                  <select
+                    type="text"
+                    class="form-control"
+                    name="customeTypeId"
+                    id="customeTypeId"
+                    [(ngModel)]="customerTypeId"
+                    #customerTypeModel="ngModel"
+                    (ngModelChange)="getDataPage(1)"
+                    #customerTypeEl
+                  >
+                    <option></option>
+                    <option
+                      *ngFor="let customerType of customerTypes"
+                      [value]="customerType.id"
+                    >
+                      {{ customerType.type }}
+                    </option>
+                  </select>
+                </div>
+              </form>
+            </div>
+            <div class="card-footer">
+              <button
+                type="button"
+                class="btn bg-blue"
+                (click)="getDataPage(1)"
+              >
+                {{ "Search" | localize }}
+              </button>
+              <button
+                type="button"
+                class="btn btn-default float-right"
+                (click)="clearFilters()"
+              >
+                {{ "Clear" | localize }}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" [busy]="isTableLoading">
+              <thead>
+                <tr>
+                  <th style="min-width: 150px">{{ "Site" | localize }}</th>
+                  <th>{{ "First Name" | localize }}</th>
+                  <th>{{ "Last Name" | localize }}</th>
+                  <th>{{ "CType" | localize }}</th>
+                  <th>{{ "Email" | localize }}</th>
+                  <th>{{ "Address" | localize }}</th>
+                  <th>{{ "Zip" | localize }}</th>
+                  <th>{{ "City" | localize }}</th>
+                  <th>{{ "Phone" | localize }}</th>
+                  <th>{{ "RespEmp" | localize }}</th>
+                  <th style="width: 7rem">{{ "Actions" | localize }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngFor="
+                    let customer of customers
+                      | paginate
+                        : {
+                            id: 'server',
+                            itemsPerPage: pageSize,
+                            currentPage: pageNumber,
+                            totalItems: totalItems
+                          }
+                  "
+                >
+                  <!-- Main Customer Row -->
+                  <tr>
+                    <td>
+                      <i
+                        title="View Sub Customers"
+                        *ngIf="customer.isSubCustomerOpen"
+                        (click)="toggleSubCustomers(customer)"
+                        class="fas fa-chevron-up mr-2 pointer"
+                      ></i>
+                      <i
+                        title="View Sub Customers"
+                        *ngIf="!customer.isSubCustomerOpen"
+                        (click)="toggleSubCustomers(customer)"
+                        class="fas fa-chevron-down mr-2 pointer"
+                      ></i>
+                      {{ customer.site }}
+                    </td>
+                    <td>{{ customer.name }}</td>
+                    <td>{{ customer.surname }}</td>
+                    <td>{{ customer.customerType }}</td>
+                    <td>{{ customer.emailAddress }}</td>
+                    <td>{{ customer.address }}</td>
+                    <td>{{ customer.postcode }}</td>
+                    <td>{{ customer.townCity }}</td>
+                    <td>{{ customer.telephoneFax }}</td>
+                    <td>{{ customer.responsibleEmployee }}</td>
+                    <td>
+                      <a
+                        href="javascript:;"
+                        class="btn bg-blue mr-1"
+                        (click)="customerDetails(customer)"
+                      >
+                        <i class="fas fa-eye"></i>
+                      </a>
+                      <a
+                        href="javascript:;"
+                        class="btn bg-red mr-1"
+                        (click)="delete(customer)"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  <!-- Sub-Customers Row -->
+                  <ng-container *ngIf="customer.isSubCustomerOpen">
+                    <tr *ngFor="let subCustomer of customer.subCustomers">
+                      <td></td>
+                      <td class="text-center">{{ subCustomer.name }}</td>
+                      <td>{{ subCustomer.surname }}</td>
+                      <td>{{ subCustomer.customerType }}</td>
+                      <td>{{ subCustomer.emailAddress }}</td>
+                      <td>{{ subCustomer.address }}</td>
+                      <td>{{ subCustomer.postCode }}</td>
+                      <td>{{ subCustomer.townCity }}</td>
+                      <td>{{ subCustomer.telephoneFax }}</td>
+                      <td>{{ subCustomer.responsibleEmployee }}</td>
+                      <td>
+                        <a
+                          href="javascript:;"
+                          class="btn bg-blue mr-1"
+                          (click)="customerDetails(subCustomer)"
+                        >
+                          <i class="fas fa-eye"></i>
+                        </a>
+                      </td>
+                    </tr>
+                    <tr *ngIf="customer?.subCustomers?.length == 0">
+                      <td colspan="8" class="text-center">
+                        No Sub Customers Found
+                      </td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer table-card-footer bg-light border-top">
+          <div class="row">
+            <div class="col-sm-4 col-12 text-sm-left text-center">
+              <button class="btn btn-secondary" (click)="refresh()">
+                <i class="fas fa-redo-alt"></i>
+              </button>
+            </div>
+            <div class="col-sm-4 col-12 text-center">
+              <p class="mb-0 my-2">
+                {{ "TotalRecordsCount" | localize : totalItems }}
+              </p>
+            </div>
+            <div class="col-sm-4 col-12">
+              <div class="float-sm-right m-auto">
+                <abp-pagination-controls
+                  id="server"
+                  (pageChange)="getDataPage($event)"
+                >
+                </abp-pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

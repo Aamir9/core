@@ -1,0 +1,113 @@
+
+<div class="p-2">
+
+  <h4  class=" text-primary"
+   (click)="back()">
+   <i class="fas fa-arrow-left"></i></h4> 
+
+ 
+ 
+</div>
+<div class="container-fluid">
+
+ <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+
+   <div class="card-body row g-4 p-4 bg-light">
+     <!-- Package Info Section -->
+     <div class="col-md-6 ">
+       <h5 class="fw-bold text-primary mb-4 ">Package Detail</h5>
+       <div class="row">
+         <div class="col-md-6">
+           <div class="mb-3 mt-3">
+             <h6 class="fw-bold text-primary">Package Type</h6>
+             <p class="text-muted">{{ PackageDto.packageTypeName }}</p>
+           </div>
+
+           <div class="mb-3">
+             <h6 class="fw-bold text-primary">Receive Date</h6>
+             <p class="text-muted">{{ PackageDto.receiveDate | date }}</p>
+           </div>
+
+           <div class="mb-3">
+             <h6 class="fw-bold text-primary">User Name</h6>
+             <p class="text-muted">{{ PackageDto.senderFullName }}</p>
+           </div>
+           <div class="mb-3">
+             <h6 class="fw-bold text-primary">User Email</h6>
+             <p class="text-muted">{{ PackageDto.senderEmail }}</p>
+           </div>
+
+
+
+           <div class="mb-3">
+             <h6 class="fw-bold text-primary">User Type</h6>
+             <p class="text-muted" *ngIf="PackageDto.senderUserTypeId == 2">Customer </p>
+             <p class="text-muted" *ngIf="PackageDto.senderUserTypeId == 3">Supplier </p>
+           </div>
+
+
+           <div class="mb-3">
+             <h6 class="fw-bold text-primary">Employee</h6>
+             <p class="text-muted">{{ PackageDto.creatorUserId }}</p>
+           </div>
+
+           <div class="mb-3">
+             <h6 class="fw-bold text-primary">Description</h6>
+             <p class="text-muted">{{ PackageDto.description}}</p>
+           </div>
+         </div>
+
+         <div class="col-md-6" *ngIf="PackageDto.imageUrl != null">
+           <div class="bg-light p-4 rounded-4 shadow-sm">
+             <div class="">
+               <img src="{{ PackageDto.imageUrl }}"
+                    class="img-fluid rounded-4 "
+                    alt="Package Content Image"
+                    >
+             </div>
+           </div>
+         </div>
+       </div>
+
+     </div>
+
+     <!-- Sub-Packages Section -->
+     <div class="col-md-6">
+       <div *ngIf="PackageDto.subPackageDtos && PackageDto.subPackageDtos.length > 0">
+         <h5 class="fw-bold text-primary mb-4">Sub Packages</h5>
+         <div class="row g-4">
+           <!-- Iterate over subPackageDtos and display each as a card -->
+           <div class="col-12" *ngFor="let subPackage of PackageDto.subPackageDtos">
+             <div class="card ">
+
+               <div class="row  ">
+                 <div class="col-md-6 ">
+                   <div class="card-body  ">
+                     <p class="card-text text-muted"
+                        >
+                       {{ subPackage.contains }}
+                     </p>
+                   </div>
+                 </div>
+                 <div class="col-md-6"  *ngIf="subPackage.imageUrl != null" >
+                   <img [src]="subPackage.imageUrl"
+                   alt="Sub-Package Image"
+                   class="img-fluid rounded-4 "></div>
+               </div>
+
+
+
+             </div>
+           </div>
+         </div>
+       </div>
+
+       <!-- Display message if no sub-packages are available -->
+       <div *ngIf="PackageDto.subPackageDtos.length === 0" class="text-muted mt-4">
+         <p>No sub-packages available.</p>
+       </div>
+     </div>
+   </div>
+ </div>
+</div>
+

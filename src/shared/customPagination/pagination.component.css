@@ -1,0 +1,13 @@
+.pagination-container {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+}
+button.active {
+  font-weight: bold;
+  background-color: #3aa6b9;
+  color: white;
+}
+button:disabled {
+  opacity: 0.5;
+}

@@ -1,0 +1,197 @@
+<form class="form-horizontal" autocomplete="off" #editTenantForm="ngForm" (ngSubmit)="save()">
+  <abp-modal-header [title]="'Edit Company' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+  <div class="modal-body" style="height: 70vh;overflow:auto;">
+    <tabset>
+      <tab [heading]="'Details' | localize" class="pt-3 px-2">
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="tenancyName">
+        {{ "TenancyName" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="tenancyName" id="tenancyName" minlength="2" maxlength="64"
+          required [(ngModel)]="tenant.tenancyName" #tenancyNameModel="ngModel" #tenancyNameEl />
+        <abp-validation-summary [control]="tenancyNameModel" [controlEl]="tenancyNameEl"></abp-validation-summary>
+      </div>
+    </div>
+  
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="companyName">
+      {{ "Company Name" | localize }}
+    </label>
+    <div class="col-md-9">
+      <input type="text" class="form-control" name="companyName" id="companyName" maxlength="256" required
+        [(ngModel)]="tenant.companyName" #companyNameModel="ngModel" #companyNameEl />
+      <abp-validation-summary [control]="companyNameModel" [controlEl]="companyNameEl"></abp-validation-summary>
+    </div>
+
+  </div>
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="companyType">
+      {{ "Company Type" | localize }}
+    </label>
+    <div class="col-md-9">
+      <input type="text" class="form-control" name="companyType" id="companyType" maxlength="256" required
+        [(ngModel)]="tenant.companyType" #companyTypeModel="ngModel" #companyTypeEl />
+      <abp-validation-summary [control]="companyTypeModel" [controlEl]="companyTypeEl"></abp-validation-summary>
+    </div>
+
+  </div>
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="address">
+      {{ "Address" | localize }}
+    </label>
+    <div class="col-md-9">
+      <input type="text" class="form-control" name="address" id="address" maxlength="256" required
+        [(ngModel)]="tenant.address" #addressModel="ngModel" #addressEl />
+      <abp-validation-summary [control]="addressModel" [controlEl]="addressEl"></abp-validation-summary>
+    </div>
+
+  </div>
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="postalCode">
+      {{ "Postal Code" | localize }}
+    </label>
+    <div class="col-md-9">
+      <input type="text" class="form-control" name="postalCode" id="postalCode" maxlength="256" required
+        [(ngModel)]="tenant.postCode" #postCodeModel="ngModel" #postCodeEl />
+      <abp-validation-summary [control]="postCodeModel" [controlEl]="postCodeEl"></abp-validation-summary>
+    </div>
+
+  </div>
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="country">
+      {{ "Country" | localize }}
+    </label>
+    <div class="col-md-9">
+      <input type="text" class="form-control" name="country" id="country" maxlength="256" required
+        [(ngModel)]="tenant.country" #countryModel="ngModel" #countryEl />
+      <abp-validation-summary [control]="countryModel" [controlEl]="countryEl"></abp-validation-summary>
+    </div>
+
+  </div>
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="invoiceCurrency">
+      {{ "Invoice Currency" | localize }}
+    </label>
+    <div class="col-md-9">
+      <input type="text" class="form-control" name="invoiceCurrency" id="invoiceCurrency" maxlength="256" required
+        [(ngModel)]="tenant.invoiceCurrency" #invoiceCurrencyModel="ngModel" #invoiceCurrencyEl />
+      <abp-validation-summary [control]="invoiceCurrencyModel" [controlEl]="invoiceCurrencyEl"></abp-validation-summary>
+    </div>
+
+  </div>
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="webAddress">
+      {{ "Web Address" | localize }}
+    </label>
+    <div class="col-md-9">
+      <input type="text" class="form-control" name="webAddress" id="webAddress" maxlength="256" required
+        [(ngModel)]="tenant.webAddress" #webAddressModel="ngModel" #webAddressEl />
+      <abp-validation-summary [control]="webAddressModel" [controlEl]="webAddressEl"></abp-validation-summary>
+    </div>
+  </div>
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="telephoneNumber">
+      {{ "Telephone Number" | localize }}
+    </label>
+    <div class="col-md-9">
+      <input type="text" class="form-control" name="telephoneNumber" id="telephoneNumber" maxlength="256" required
+        [(ngModel)]="tenant.telephoneNumber" #telephoneNumberModel="ngModel" #telephoneNumberEl />
+      <abp-validation-summary [control]="telephoneNumberModel" [controlEl]="telephoneNumberEl"></abp-validation-summary>
+    </div>
+  </div>
+  <div class="form-group row mb-0">
+    <label class="col-md-3 col-form-label">
+      {{ "Equipment Type Medical" | localize }}
+    </label>
+    <div class="col-md-9">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" name="isEquipmentTypeMedical" id="isEquipmentTypeMedical"
+          [(ngModel)]="tenant.isEquipmentTypeMedical" />
+        <label class="custom-control-label mt-2" for="isEquipmentTypeMedical"></label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group row required">
+    <label class="col-md-3 col-form-label" for="companyLogo">
+      {{ "Company Logo" | localize }}
+    </label>
+    <app-upload-photo *ngIf="isDataLoaded" (onFileUpload)='onFileUploadHandler($event)' [imageUrl]='logoUrl'>
+    </app-upload-photo>
+    <div class="text-danger" *ngIf="isPhotoUploaded===false">
+      {{'kindly upload photo' | localize}}
+    </div>
+  </div>
+  
+ <!-- custome fields -->
+ <div>
+      <div class="row">
+              <div class="col-6">
+                  <h4>{{ "CustomFields" | localize }}</h4>
+              </div>
+               <div class="col-6 text-right">
+                <a href="javascript:;" class="btn bg-blue" (click)="onAddField()">
+                  <i class="fa fa-plus-square"></i>
+                  {{ "CustomFields" | localize }}
+              </a>
+               </div>
+               
+          </div>
+         
+          <div class="card-body table-responsive p-0 mt-1">
+            <table class="table table-hover text-nowrap">
+              <thead class="bg-light">
+                <tr>
+                  <th>Screen</th>
+                  <th class="w-25">Type</th>
+                  <th class="w-25">Label</th>
+                  <th class="w-25">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let field of tenant.customFields; let i=index;">
+                  <td>
+                    <select type="text" class="form-control" name="{{'screen'+i}}"  required 
+                      [(ngModel)]="field.screen" #screenModel="ngModel" #screenEl>
+                      <option *ngFor="let screen of screens" [value]="screen.value">
+                        {{ screen.name }}
+                      </option>
+                    </select>
+                    <abp-validation-summary [control]="screenModel" [controlEl]="screenEl"></abp-validation-summary>
+                  </td>
+                  <td>
+                    <select type="text" class="form-control" name="{{'type'+i}}"  required 
+                      [(ngModel)]="field.type" #typeModel="ngModel" #typeEl>
+                      <option *ngFor="let type of fieldTypes" [value]="type.value">
+                        {{ type.name }}
+                      </option>
+                    </select>
+                    <abp-validation-summary [control]="typeModel" [controlEl]="typeEl"></abp-validation-summary>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" name="{{'label'+i}}" placeholder="Label"
+                    maxlength="256" required [(ngModel)]="field.label" #labelModel="ngModel"
+                    #labelEl />
+                  <abp-validation-summary [control]="labelModel" [controlEl]="labelEl">
+                  </abp-validation-summary>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-danger" (click)="onRemoveField(i)">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+       
+    </div>
+
+
+</tab>
+<tab [heading]="'Sites' | localize" class="pt-3 px-2">
+<app-sites [tenantId]="id"></app-sites>
+</tab>
+</tabset>
+</div>
+  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!editTenantForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

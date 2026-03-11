@@ -1,0 +1,28 @@
+<form class="form-horizontal" autocomplete="off" #createTenantForm="ngForm" (ngSubmit)="save()">
+  <abp-modal-header [title]="'Economic Grants' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+  <div class="modal-body">
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="tenancyName">
+        {{ "AppSecret Token" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="tenancyName" id="tenancyName" required [(ngModel)]="appSecret"
+          #tenancyNameModel="ngModel" #tenancyNameEl />
+        <abp-validation-summary [control]="tenancyNameModel" [controlEl]="tenancyNameEl"></abp-validation-summary>
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="name">
+        {{ "Grant Token" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="name" id="name" maxlength="128" required [(ngModel)]="grantToken"
+          #nameModel="ngModel" #nameEl />
+        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
+      </div>
+    </div>
+
+  </div>
+  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createTenantForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

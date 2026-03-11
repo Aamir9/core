@@ -1,0 +1,46 @@
+<!-- Toggler button for mobile view -->
+<!-- <div class="toggler" >
+  <i
+    class="fas"(click)="toggleSidebar()"
+    [ngClass]="{
+      'fa-bars': !sidebarExpanded && isMobile,
+      'fa-times': sidebarExpanded && isMobile,
+      'fa-chevron-left': sidebarExpanded && !isMobile,
+      'fa-chevron-right': !sidebarExpanded && !isMobile
+    }"
+  ></i>
+</div> -->
+
+<!-- 
+<div  
+  class="  d-none d-lg-block"
+  [ngClass]="{ collapsed: !sidebarExpanded, expanded: sidebarExpanded  }"
+>
+<div class="toggler bg-primary text-white p-2 rounded d-flex align-items-center justify-content-center shadow-sm"
+(click)="toggleSidebar()"
+style="cursor: pointer; transition: transform 0.3s ease, background-color 0.3s ease;">
+<i
+class="fas"
+[ngClass]="{
+ 'fa-chevron-left': sidebarExpanded,
+ 'fa-chevron-right': !sidebarExpanded
+}"
+style="transition: transform 0.3s ease;"
+></i>
+</div>
+<div  >
+ 
+  
+ </div>
+</div>  -->
+<div class="sidebar-container" >
+  <ng-container >
+   
+    <sidebar-logo></sidebar-logo>
+    <sidebar-menu></sidebar-menu>
+    &nbsp;   &nbsp;
+  </ng-container>
+</div>
+
+
+

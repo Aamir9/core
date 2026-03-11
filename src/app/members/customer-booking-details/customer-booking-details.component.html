@@ -1,0 +1,164 @@
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-6 py-3">
+            <h4>
+                {{ "Booking Info" | localize }}
+            </h4>
+            <div class="my-3">
+                <p class="mr-2 "><b>Start Booking : </b> {{bookingDto.fromDate | date}} </p>
+            </div>
+
+            <div class="my-3">
+                <p class="mr-2 "><b>End Booking : </b>{{bookingDto.fromDate | date}} </p>
+            </div>
+            <div class="my-3">
+                <p class="mr-2 "> <b>Booking Status : </b>{{bookingDto.bookingStatus }} </p>
+            </div>
+            <div class="my-3">
+                <p class="mr-2 "><b>Activity Type: </b>{{bookingDto.bookingActivityType }}</p>
+            </div>
+
+            <div class="my-3">
+                <p class="mr-2 "><b>Customer Name: </b>{{bookingDto.customerName }}</p>
+            </div>
+            <div class="my-3">
+                <p class="mr-2 "> <b>Description : </b>{{bookingDto.description }}</p>
+            </div>
+            <hr>
+            <div class="my-3">
+                <b class="mr-2 ">Booked Employees </b>
+                <ul class="list-group">
+                    <li class="list-group-item border border-info shadow p-3 mb-1 bg-body-tertiary rounded
+                    " *ngFor="let item of bookingDto.employees">
+                        {{ item.employeeName }}
+                        <span class="status"
+                            [ngClass]="{ 'status--present': item.status === 'Accepted', 'status--absent': item.status === 'Rejected' }">
+                            {{ item.status }}
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6 py-3">
+
+            <h4>
+                {{ "SetStatus" | localize }}
+            </h4>
+
+            <button *ngIf="isActionButtonsVisible" class="btn btn-outline-primary mr-3"
+                (click)="updateEmployeeStatusAsAccepted(1)">
+                <img src="../../../assets/img/greenCheck.png" class="icon pr-2" alt="">
+                {{ "Accept" | localize }}
+
+            </button>
+
+            <button *ngIf="isActionButtonsVisible" class="btn btn-outline-primary mr-3"
+                (click)="updateBookingEmployeeStatusAsRejected()">
+                <img src="../../../assets/img/greenCheck.png" class="icon pr-2" alt="">
+                {{ "Reject" | localize }}
+
+            </button>
+
+            <button *ngIf="isActionResponseVisible" class="btn btn-outline-primary mr-3" disabled>
+                <img src="../../../assets/img/greenCheck.png" class="icon pr-2" alt="">
+                {{ responseText | localize }}
+
+            </button>
+
+            <button [disabled]="checkIfAllEmployeesHasGiveResponse() || this.bookingDto.bookingStatus === 'Close'"
+                class="btn btn-outline-danger" (click)="updateEmployeeStatusAsAccepted(0)">
+                <img src="../../../assets/img/cross.png" class="icon pr-2" alt="">
+                {{ "Close Booking" | localize }}
+            </button>
+
+        </div>
+
+
+    </div>
+</div>
+
+<div class="container py-5 ">
+    <div class="row">
+        <!-- <div class="col-md-6 py-3">
+
+            <h4> {{ "UserStatus" | localize }} </h4>
+            <div>
+                <h4 class="mt-4"> <img src=".../../../assets/img/greenCheck.png" class="img-fluid" alt=""> {{ "Comming" | localize }}</h4>
+                <hr>
+
+
+                <div class="py-2 " *ngFor="let comming of acceptedInvites">
+                    <img src="../../../assets/img/user.png" class="icon mr-3" alt="">
+                    <span>{{comming.name}}</span>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="mt-5"> <img src="../../../assets/img/cross.png" class="icon mr-2"> {{ "NotComming" | localize }} </h4>
+                <hr>
+
+                <div class="py-2" *ngFor="let notComming of declinedInvites">
+                    <img src="../../../assets/img/user.png" class="icon mr-3" alt="">
+                    <span>{{notComming.name}}</span>
+                </div>
+            </div>
+
+
+            <div>
+                <h4 class="mt-5"> <img src="../../../assets/img/question.png" class="icon mr-2"> {{ "NotAnswer" | localize }}
+                </h4>
+                <hr>
+
+                <div class="py-2" *ngFor="let pending of pendingInvites">
+                    <img src="../../../assets/img/user.png" class="icon mr-3" alt="">
+                    <span> {{pending.name}}</span>
+                </div>
+            </div>
+
+
+
+        </div> -->
+
+
+
+        <div class="col-md-6 py-3">
+
+            <hr>
+            <h4> {{ "AddComment" | localize }} </h4>
+
+            <div class="form-group mt-3">
+                <textarea name="comment" id="comment" [(ngModel)]="commentDto.commentText"
+                    [disabled]=" this.bookingDto.bookingStatus === 'Close'"
+                    class="form-control border border-info shadow p-3 mb-1 bg-body-tertiary rounded"
+                    rows="3"></textarea>
+
+            </div>
+
+            <div class="form-group mt-3 d-flex flex-row justify-content-end">
+                <button [disabled]=" this.bookingDto.bookingStatus === 'Close'" class="btn btn-primary ms-auto"
+                    (click)="addComment()">
+                    Save
+                </button>
+            </div>
+
+            <div class="container py-2">
+                <h4> {{ "Comments" | localize }} </h4>
+                <hr>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="py-2" *ngFor="let comment of comments">
+                            <img src="../../../assets/img/user.png" class="icon mr-3" alt="">
+                            <b>{{comment.userName}}</b>
+                            <p class="pl-5">
+                                {{comment.commentText}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

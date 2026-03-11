@@ -1,0 +1,171 @@
+<form autocomplete="off" #form1="ngForm" (ngSubmit)="save()">
+    <abp-modal-header [title]="'Update package Type' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group d-flex flex-column required">
+            <label class="col-form-label" for="name">
+              {{ "package Type" | localize }}
+            </label>
+            <div>
+              <input
+                type="text"
+                class="form-control"
+                name="packageType"
+                id="packageType"
+                required
+                [(ngModel)]="packageTypeDto.name"
+                #nameModel="ngModel"
+                #nameKindEl
+              />
+              <abp-validation-summary
+                [control]="nameModel"
+                [controlEl]="nameKindEl"
+              ></abp-validation-summary>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group d-flex flex-column">
+            <label class="col-form-label" for="name">
+              {{ "FollowUp Type" | localize }}
+            </label>
+            <div>
+              <!-- <ng-select
+                type="text"
+                class="form-control"
+                name="FollowType"
+                id="FollowType"
+                style="padding: 0 0.75rem"
+                placeholder="Select FollowUp Type"
+                [(ngModel)]="packageTypeDto.followUpTypeId"
+                #FollowTypeModel="ngModel"
+                #FollowTypeEl
+              >
+                <ng-option *ngFor="let FollowType of FollowTypes" [value]="FollowType.id">
+                  {{ FollowType.name }}
+                </ng-option>
+              </ng-select> -->
+              <ng-select class="form-control" name="FollowType" id="FollowType" style="padding: 0 0.75rem"
+                placeholder="Select FollowUp Type" [(ngModel)]="packageTypeDto.followUpTypeId" #FollowTypeModel="ngModel" (change)="deSelectfollowUpType($event)"
+                #FollowTypeEl>
+                <ng-option *ngFor="let FollowType of FollowTypes" [value]="FollowType.id">
+                  {{ FollowType.name }}
+                </ng-option>
+              </ng-select>
+
+  
+              <!-- <abp-validation-summary
+                [control]="FollowTypeModel"
+                [controlEl]="FollowTypeEl"
+              ></abp-validation-summary> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label for=""><strong>Sender Type</strong></label><br />
+          <div>
+  
+            <label class="form-check-label" for="flexRadioNone">Unspecified</label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  
+            <input
+              class="form-check-input"
+              id="flexRadioNone"
+              type="radio"
+              name="Employee"
+              [(ngModel)]="senderType"
+              [value]="'None'"
+              (change)="onSenderTypeChange()"
+            />
+  
+            <label class="form-check-label" for="flexRadioDefault1">Supplier</label>
+            &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;
+            <input
+              class="form-check-input"
+              id="flexRadioDefault1"
+              type="radio"
+              name="Employee"
+              [(ngModel)]="senderType"
+              [value]="'Supplier'"
+              (change)="onSenderTypeChange()"
+            />
+  
+            <label class="form-check-label" for="flexRadioDefault2">Customer</label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input
+              class="form-check-input"
+              id="flexRadioDefault2"
+              type="radio"
+              name="Employee"
+              [(ngModel)]="senderType"
+              [value]="'Customer'"
+              (change)="onSenderTypeChange()"
+            />
+  
+  
+          </div>
+        </div>
+  
+        <!-- Supplier Dropdown -->
+        <div class="col-md-6" *ngIf="senderType === 'Supplier'">
+          <div class="form-group d-flex flex-column">
+            <label class="col-form-label" for="groupId">{{ "Supplier" | localize }}</label>
+            <ng-select
+              type="text"
+              class="form-control"
+              name="supplier"
+              id="supplier"
+              placeholder="Select Supplier"
+              style="padding: 0 0.75rem"
+              [(ngModel)]="selectedSupplierName"
+              (change)="selectedSupplierNameFunction($event)"
+            >
+              <ng-option *ngFor="let supplier of suppliers" [value]="supplier.supplierUserId" [attr.name]="supplier.name">
+                {{ supplier.name }}
+              </ng-option>
+            </ng-select>
+          </div>
+        </div>
+  
+        <!-- Customer Dropdown -->
+        <div class="col-md-6" *ngIf="senderType === 'Customer'">
+          <div class="form-group d-flex flex-column required">
+            <label class="col-form-label" for="name">{{ "Customer" | localize }}</label>
+            <ng-select
+              id="customer"
+              name="customer"
+              type="text"
+              class="form-control rounded-pill"
+              placeholder="Search and select customer"
+              style="padding: 0 0.75rem"
+              (change)="selectedCustomerNameFunction($event)"
+              [(ngModel)]="selectedCustomerName"
+              [typeahead]="customerSearch$"
+              [loading]="loadingCustomers"
+              (scrollToEnd)="onScrollToEnd()"
+            >
+              <ng-option *ngFor="let customer of customers" [value]="customer.customerUserId" [attr.name]="customer.name">
+                <div class="customer-details">
+                  <strong>{{ customer.name }} <code>{{customer.customerNo}}</code> </strong> <br />
+                  <span>{{ customer.emailAddress }}</span> <br />
+                  <span>{{ customer.telephoneFax }}</span> 
+                </div>
+              </ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+  
+  
+    </div>
+  
+    <abp-modal-footer
+      [cancelDisabled]="saving"
+      [saveDisabled]="!form1.form.valid || saving"
+      (onCancelClick)="bsModalRef.hide()"
+    ></abp-modal-footer>
+  </form>
+  

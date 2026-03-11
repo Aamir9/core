@@ -1,0 +1,458 @@
+<div [@routerTransition]>
+<div class="row">
+
+
+  <div class="col-md-4 col-12">
+    <p class="text-bold m-0 mb-2"> From Date</p>
+    <div class="input-group" >
+    <input
+    type="text"
+    class="form-control"
+    placeholder=" Search From Date"
+    bsDatepicker
+    id="date"
+    [bsConfig]="bsConfig"autocomplete="off"
+      [(ngModel)]="selectedFromDate"
+      (keyup.enter)="getDataPage(1)"
+      (ngModelChange)="getDataPage(1)"
+    />
+     <span
+    class="input-group-text cursor-pointer position-absolute border border-0"
+    style="right: 10px; top: 50%; transform: translateY(-50%); background-color: transparent;"
+    (click)="selectedFromDate = ''; getDataPage(1)"
+    title="Clear Date"
+>
+    <i class="fa fa-times" ></i>
+</span> 
+</div>
+  </div>
+  <div class="col-md-4 col-12">
+    <label for="toDate" class="text-bold m-0 mb-2">To Date</label>
+    <div class="input-group">
+        <input
+            type="text"
+            class="form-control"
+            autocomplete="off"
+            placeholder="Search To Date"
+            bsDatepicker
+            id="toDate"
+            [bsConfig]="bsConfig"
+            [(ngModel)]="selectedToDate"
+            (keyup.enter)="getDataPage(1)"
+            (ngModelChange)="getDataPage(1)"
+        />
+        <!-- Optional Clear Icon -->
+        <span
+            class="input-group-text cursor-pointer position-absolute  border border-0"
+            style="right: 10px; top: 50%; transform: translateY(-50%); background-color: transparent;"
+            (click)="selectedToDate = ''; getDataPage(1)"
+            title="Clear Date"
+        >
+            <i class="fa fa-times"></i>
+        </span>
+    </div>
+</div>
+
+
+  <!-- <div class="col-md-4 col-12 d-flex  justify-content-end mt-4">
+  
+        <div class="input-group  " >
+        
+          <input
+            type="text"
+            class="form-control"
+            name="keyword"
+            [placeholder]="'SearchWithThreeDot' | localize"
+            [(ngModel)]="keyword"
+            (keyup.enter)="getDataPage(1)"
+            (ngModelChange)="getDataPage(1)"
+          />
+        </div>
+      </div>  -->
+
+</div> 
+  <section class="content card mt-4 ">
+    <div class="row p-3">
+      <div class="col-md-4 col-12 ">
+        <button
+          type="button"
+          class="btn btn-primary "
+          (click)="createPackage()"
+        >
+          <i class="fa fa-plus-square "></i>
+          {{ "Create" | localize }}
+        </button> &nbsp;&nbsp;
+        <button
+          type="button"
+          class="btn btn-outline-secondary "
+          (click)="collapseAll()"
+        >
+          {{ "Collapse All" | localize }}
+        </button>&nbsp;&nbsp;
+        <button
+          type="button"
+          class="btn btn-outline-secondary "
+          (click)="expandAll()"
+        >
+          {{ "Expand All" | localize }}
+        </button>
+      </div>
+    </div>
+
+
+    <div class="container-fluid">
+    
+        <div class="table-container card-body " 
+      >
+          <div class="table-responsive  "  >
+            <table class="table parent-table " >
+              <thead class="bg-light">
+                <tr>
+                  <!-- <th>
+                    <div class="form-group">
+                      <p class="text-bold mb-2 text-primary ">Package Type</p>
+                      <ng-select
+                        class="form-control rounded-pill "
+                        placeholder="Select Package Type"
+                        style="padding: 0 0.75rem ; width: 190px;"
+                        [(ngModel)]="selectedPackageTypeId"
+                        (keyup.enter)="getDataPage(1)"
+                        (ngModelChange)="getDataPage(1)"
+                      >
+                        <ng-option *ngFor="let package of packageTypes" [value]="package.id">
+                          {{ package.name }}
+                        </ng-option>
+                      </ng-select>
+                    </div>
+                  </th> -->
+               
+                    <th>
+                      <div class="form-group">
+                        <p class="text-bold mb-2 text-primary">Package Type</p>
+                        <ng-select
+                          class="form-control rounded-pill"
+                          placeholder="Select Package Type"
+                          style="padding: 0 0.75rem; width: 190px;"
+                          [(ngModel)]="selectedPackageTypeId"
+                          (keyup.enter)="getDataPage(1)"
+                          (ngModelChange)="onPackageTypeChange($event)"
+                      
+                        >
+                          <ng-option *ngFor="let package of packageTypes" [value]="package.id">
+                            {{ package.name }}
+                          </ng-option>
+                        </ng-select>
+                      </div>
+                    </th>
+                
+                  
+                  <th>
+                    <div class="form-group">
+                      <label for="date" class="text-bold text-primary mb-2">Receive Date</label>
+                      <div class="input-group" style="width: 205px;">
+                          <input
+                              type="text"
+                              class="form-control position-relative"
+                              bsDatepicker
+                              id="date"
+                              autocomplete="off"
+                              placeholder="Select a date"
+                              [bsConfig]="bsConfig"
+                              [(ngModel)]="selectedReceiveDate"
+                              (keyup.enter)="getDataPage(1)"
+                              (ngModelChange)="getDataPage(1)"
+                          />
+                          <span
+                              class="input-group-text cursor-pointer position-absolute border border-0"
+                              style="right: 10px; top: 50%; transform: translateY(-50%); background-color: transparent;"
+                              (click)="selectedReceiveDate = ''; getDataPage(1)"
+                              title="Clear Date"
+                          >
+                              <i class="fa fa-times" ></i>
+                          </span>
+                      </div>
+                  </div>
+                  
+                  </th>
+
+                  <!-- <th>
+                    <div class="form-group">
+                      <label for="userType" class="text-bold text-primary mb-2">User Type</label>
+                      <select
+                          id="userType"
+                          class="form-control"
+                          [(ngModel)]="userTypeName"
+                          style="padding: 0 0.75rem"
+                          (keyup.enter)="getDataPage(1)"
+                          (ngModelChange)="getDataPage(1)"
+                      >
+                          <option value="">All</option> 
+                          <option value="Customer">Customer</option>
+                          <option value="Supplier">Supplier</option>
+                      </select>
+                  </div>
+                  
+                  </th> -->
+                  
+                  <th class="align-top">
+                    <p class="text-bold text-primary   mb-2">{{ "Sender" | localize }}</p>
+                  </th>
+                  <th class="align-top">
+                    <p class="text-bold text-primary   mb-2">{{ "Description" | localize }}</p>
+                  </th>
+                  <th class="align-top">
+                    <p class="text-bold text-primary   mb-2">{{ "Picture" | localize }}</p>
+                  </th>
+                   <th class="align-top">
+                    <p class="text-bold text-primary  mb-2">{{ "Actions" | localize }}</p>
+                  </th>
+                &nbsp;  </tr>
+                &nbsp;
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngFor="
+                    let package of packages
+                      | paginate
+                        : {
+                            id: 'server',
+                            itemsPerPage: pageSize,
+                            currentPage: pageNumber,
+                            totalItems: totalItems
+                          }
+                  "
+                >
+                  <tr [ngClass]="{ 'table-row-active': package.isOpenSubList }">
+                    <td>
+                      <div
+                        class="table-cell d-flex align-items-center justify-content-start font-weight-bold"
+                      >
+                        <a
+                          (click)="  package.isOpenSubList = !package.isOpenSubList
+"
+                        >
+                          <i
+                            title="View Sub Package"
+                            *ngIf="!package.isOpenSubList"
+                            class="fas fa-chevron-down mr-2 pointer"
+                          ></i>
+                          <i
+                            title="View Sub Package"
+                            *ngIf="package.isOpenSubList"
+                            class="fas fa-chevron-up mr-2 pointer"
+                          ></i>
+                        </a>
+                        {{ package.packageTypeName }}
+                      </div>
+                    </td>
+
+                    <td>{{ package.receiveDate | date }}</td>
+                    <!-- <td>{{ userType(package.senderUserTypeId) }}</td> -->
+                    <td>{{ package.senderFullName }}</td>
+                    <td  >{{ package.description}}</td>
+                    <td > 
+                      <img src="{{package.imageUrl}}"  class="img-thumbnail"[width]="100" alt="">
+                    </td>
+                    <td>
+                      <div>
+                         <!-- Three-dot action menu for View and Delete -->
+                  <span dropdown class="table-action">
+                    <a
+                      href
+                      id="button-basic"
+                      dropdownToggle
+                      aria-controls="dropdown-basic"
+                      (click)="(false)"
+                    >
+                      <i class="fas fa-ellipsis-h table-action-menu-icon"></i>
+                    </a>
+                    <ul
+                      id="dropdown-basic"
+                      *dropdownMenu
+                      class="dropdown-menu dropdown-menu-right table-action-menu"
+                      role="menu"
+                      aria-labelledby="button-basic"
+                    >
+                      <li role="menuitem">
+                        <a
+                          class="dropdown-item table-action-menu-item"
+                          [routerLink]="['/app/package-detail']"
+                          [queryParams]="{ packageId: package.id }"
+                          routerLinkActive="router-link-active"
+                          ><i class="fas fa-eye"></i>  Details </a
+                        >
+                      </li>
+                      <li role="menuitem">
+                        <a
+                          class="dropdown-item table-action-menu-item"
+                          [routerLink]="['/app/package-edit']"
+                          [queryParams]="{ packageId: package.id }"
+                          routerLinkActive="router-link-active"
+                        >
+                          <i class="fas fa-edit"></i> Edit
+                        </a>
+                      </li>
+
+                      <li role="menuitem">
+                        <a
+                          class="dropdown-item table-action-menu-item"
+                          (click)="delete(package)"
+                          ><i
+                            class="fas fa-times-circle text-danger"
+                          ></i>
+                          Delete</a
+                        >
+                      </li>
+
+                    </ul>
+                  </span>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="d-flex">
+                        <ng-container
+                          [ngTemplateOutlet]="tableActionMenu"
+                          [ngTemplateOutletContext]="{
+                            package: package
+                          }"
+                        ></ng-container>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Subpackage Section Start -->
+                  <div *ngIf="package.isOpenSubList">
+                    <tr *ngIf="package?.subPackageDtos?.length == 0">
+                      <td colspan="12" class="text-center">No Records Found</td>
+                    </tr>
+                    <tr *ngIf="package?.subPackageDtos?.length" class="border-top-0">
+                      <td colspan="12" >
+                        <div class="table-responsive">
+                          <table class="table child-table ">
+                            <thead class="bg-light">
+                              <!-- <tr>
+                                <th>#</th>
+                                <th>{{ "Contains" | localize }}</th>
+                                <th>{{ "Image" | localize }}</th>
+                                <th>{{ "Actions" | localize }}</th>
+                              </tr> -->
+                            </thead>
+                            <tbody>
+                              <tr
+                                *ngFor="
+                                  let subPackage of package?.subPackageDtos;
+                                  let i = index
+                                "
+                                class="align-middle"
+                              >
+                                <!-- Numbering -->
+                                <td class="align-middle">{{ i + 1 }}</td>
+
+                                <!-- Sub-package Content -->
+                                <td class="align-middle">{{ subPackage.contains }}</td>
+
+                                <!-- Sub-package Image -->
+                                <td class="align-middle">
+                                  <div *ngIf="subPackage.imageUrl">
+                                    <img
+                                      class="img-fluid img-thumbnail"
+                                      style="max-height: 60px"
+                                      src="{{subPackage.imageUrl}}"
+                                      alt="Image not found"
+                                    />
+                                  </div>
+                                </td>
+
+                                <!-- Action Buttons -->
+                                <td class="align-middle">
+                                  <div class="d-flex justify-content-start">
+                                    <!-- <button
+                                      type="button"
+                                      class="btn btn-sm btn-outline-primary mr-2"
+                                      (click)="editSubPackage(subPackage)"
+                                    >
+                                      <i class="fas fa-pencil-alt"></i> {{ 'Edit' | localize }}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      class="btn btn-sm btn-outline-danger mr-2"
+                                      (click)="removeSubPackage(package, subPackage)"
+                                    >
+                                      <i class="fas fa-trash"></i> {{ 'Remove' | localize }}
+                                    </button> -->
+
+                                    <!-- Three-dot action menu for View and Delete -->
+                                    <!-- <span dropdown class="table-action">
+                                      <a
+                                        href
+                                        id="button-basic"
+                                        dropdownToggle
+                                        aria-controls="dropdown-basic"
+                                        (click)="(false)"
+                                      >
+                                        <i class="fas fa-ellipsis-h table-action-menu-icon"></i>
+                                      </a>
+                                      <ul
+                                        id="dropdown-basic"
+                                        *dropdownMenu
+                                        class="dropdown-menu dropdown-menu-right table-action-menu"
+                                        role="menu"
+                                        aria-labelledby="button-basic"
+                                      >
+                                        <li role="menuitem">
+                                          <a
+                                            class="dropdown-item table-action-menu-item"
+                                            [routerLink]="['/app/package-detail']"
+                                            [queryParams]="{ packageId: package.id }"
+                                            routerLinkActive="router-link-active"
+                                            ><i class="fas fa-eye"></i> Details</a
+                                          >
+                                        </li>
+
+                                      </ul>
+                                    </span> -->
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </td>
+                    </tr>
+                  </div>
+
+
+                  <!-- Subpackage Section End -->
+
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+      
+        <div class="card-footer table-card-footer bg-light border-top">
+          <div class="row">
+            <div class="col-sm-4 col-12 text-sm-left text-center">
+              <button class="btn btn-secondary" (click)="refresh()">
+                <i class="fas fa-redo-alt"></i>
+              </button>
+            </div>
+            <div class="col-sm-4 col-12 text-center">
+              <p class="mb-0 my-2">
+                {{ "TotalRecordsCount" | localize : totalItems }}
+              </p>
+            </div>
+            <div class="col-sm-4 col-12">
+              <div class="float-sm-right m-auto">
+                <abp-pagination-controls
+                  id="server"
+                  (pageChange)="getDataPage($event)"
+                >
+                </abp-pagination-controls>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

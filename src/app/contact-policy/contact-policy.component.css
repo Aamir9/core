@@ -1,0 +1,17 @@
+.table.parent-table th, table.parent-table td{
+  /* padding: 3px 8px !important; */
+  padding : 0.25rem 0.65rem !important;
+  vertical-align: middle !important;
+  font-size: 0.875rem !important;
+  border-top: 1px solid #dee2e6 !important;
+  border-bottom: 1px solid #dee2e6 !important;
+  border-color: #e9ecef !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  max-width: 200px !important;
+  min-width: 100px !important;
+  background-color: #ffffff !important;
+ 
+
+}

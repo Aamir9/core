@@ -1,0 +1,139 @@
+<form class="form-horizontal" autocomplete="off" #createTenantForm="ngForm" (ngSubmit)="save()">
+  <abp-modal-header [title]="'Create Company' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+  <div class="modal-body" style="height: 70vh;overflow:auto;">
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="tenancyName">
+        {{ "TenancyName" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="tenancyName" id="tenancyName" minlength="2" maxlength="64"
+          required [(ngModel)]="tenant.tenancyName" #tenancyNameModel="ngModel" #tenancyNameEl />
+        <abp-validation-summary [control]="tenancyNameModel" [controlEl]="tenancyNameEl"></abp-validation-summary>
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="adminEmailAddress">
+        {{ "AdminEmailAddress" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="email" class="form-control" name="adminEmailAddress" id="adminEmailAddress"
+          pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$" maxlength="256" required
+          [(ngModel)]="tenant.adminEmailAddress" #adminEmailAddressModel="ngModel" #adminEmailAddressEl />
+        <abp-validation-summary [control]="adminEmailAddressModel" [controlEl]="adminEmailAddressEl">
+        </abp-validation-summary>
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="companyName">
+        {{ "Company Name" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="companyName" id="companyName" maxlength="256" required
+          [(ngModel)]="tenant.companyName" #companyNameModel="ngModel" #companyNameEl />
+        <abp-validation-summary [control]="companyNameModel" [controlEl]="companyNameEl"></abp-validation-summary>
+      </div>
+
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="companyType">
+        {{ "Company Type" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="companyType" id="companyType" maxlength="256" required
+          [(ngModel)]="tenant.companyType" #companyTypeModel="ngModel" #companyTypeEl />
+        <abp-validation-summary [control]="companyTypeModel" [controlEl]="companyTypeEl"></abp-validation-summary>
+      </div>
+
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="address">
+        {{ "Address" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="address" id="address" maxlength="256" required
+          [(ngModel)]="tenant.address" #addressModel="ngModel" #addressEl />
+        <abp-validation-summary [control]="addressModel" [controlEl]="addressEl"></abp-validation-summary>
+      </div>
+
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="postalCode">
+        {{ "Postal Code" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="postalCode" id="postalCode" maxlength="256" required
+          [(ngModel)]="tenant.postCode" #postCodeModel="ngModel" #postCodeEl />
+        <abp-validation-summary [control]="postCodeModel" [controlEl]="postCodeEl"></abp-validation-summary>
+      </div>
+
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="country">
+        {{ "Country" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="country" id="country" maxlength="256" required
+          [(ngModel)]="tenant.country" #countryModel="ngModel" #countryEl />
+        <abp-validation-summary [control]="countryModel" [controlEl]="countryEl"></abp-validation-summary>
+      </div>
+
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="invoiceCurrency">
+        {{ "Invoice Currency" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="invoiceCurrency" id="invoiceCurrency" maxlength="256" required
+          [(ngModel)]="tenant.invoiceCurrency" #invoiceCurrencyModel="ngModel" #invoiceCurrencyEl />
+        <abp-validation-summary [control]="invoiceCurrencyModel" [controlEl]="invoiceCurrencyEl"></abp-validation-summary>
+      </div>
+
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="webAddress">
+        {{ "Web Address" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="webAddress" id="webAddress" maxlength="256" required
+          [(ngModel)]="tenant.webAddress" #webAddressModel="ngModel" #webAddressEl />
+        <abp-validation-summary [control]="webAddressModel" [controlEl]="webAddressEl"></abp-validation-summary>
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="telephoneNumber">
+        {{ "Telephone Number" | localize }}
+      </label>
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="telephoneNumber" id="telephoneNumber" maxlength="256" required
+          [(ngModel)]="tenant.telephoneNumber" #telephoneNumberModel="ngModel" #telephoneNumberEl />
+        <abp-validation-summary [control]="telephoneNumberModel" [controlEl]="telephoneNumberEl"></abp-validation-summary>
+      </div>
+    </div>
+    <div class="form-group row mb-0">
+      <label class="col-md-3 col-form-label">
+        {{ "Equipment Type Medical" | localize }}
+      </label>
+      <div class="col-md-9">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" name="isEquipmentTypeMedical" id="isEquipmentTypeMedical"
+            [(ngModel)]="tenant.isEquipmentTypeMedical" />
+          <label class="custom-control-label mt-2" for="isEquipmentTypeMedical"></label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row required">
+      <label class="col-md-3 col-form-label" for="companyLogo">
+        {{ "Company Logo" | localize }}
+      </label>
+      <app-upload-photo (onFileUpload)='onFileUploadHandler($event)'></app-upload-photo>
+      <div class="text-danger" *ngIf="isPhotoUploaded===false">
+        {{'kindly upload photo' | localize}}
+      </div>
+    </div>
+    <p class="text-center text-info mb-0">
+      {{ "DefaultPasswordIs" | localize: "123qwe" }}
+    </p>
+  </div>
+  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createTenantForm.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

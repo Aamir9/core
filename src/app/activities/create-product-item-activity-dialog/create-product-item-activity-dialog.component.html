@@ -1,0 +1,108 @@
+<form autocomplete="off" #form1="ngForm" (ngSubmit)="onSaveButtonClick()">
+
+    <abp-modal-header [title]="title | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <fieldset [disabled]="disableFields">
+        <div class="modal-body">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group d-flex flex-column required">
+                        <label class="col-form-label" for="name">
+                            {{ "Activity Type" | localize }}
+                        </label>
+                        <input type="text" class="form-control" name="name" id="name" disabled [value]="activityType" />
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="form-group d-flex flex-column required">
+                        <label class="col-form-label" for="name">
+                            {{ "FollowUp Activity Type" | localize }}
+                        </label>
+                        <input type="text" class="form-control" name="name" id="name" disabled
+                            [value]="followUpActivityType" />
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group d-flex flex-column required">
+                        <label class="col-form-label" for="name">
+                            {{ "Serial No" | localize }}
+                        </label>
+                        <ng-select type="text" name="{{'productItem'}}" required
+                            (ngModelChange)="onProductItemChange($event)" [(ngModel)]="productItem.productItemId"
+                            #productItemModel="ngModel" #productItemEl>
+
+                            <ng-option *ngFor="let product of productItems" [value]="product.id">
+                                {{ product.name }}
+                            </ng-option>
+                        </ng-select>
+                        <abp-validation-summary [control]="productItemModel" [controlEl]="productItemEl">
+                        </abp-validation-summary>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group d-flex flex-column required">
+                        <label class="col-form-label" for="name">
+                            {{ "Product" | localize }}
+                        </label>
+                        <input type="text" class="form-control" name="name" required id="name" disabled
+                            [value]="productName" />
+                    </div>
+
+                </div>
+               
+                <div class="col-md-6">
+                    <div class="form-group d-flex flex-column ">
+                        <label class="col-form-label" for="invoice">
+                            {{ "Invoice" | localize }}
+                        </label>
+                        <select type="text" class="form-control" name="invoice"
+                            (ngModelChange)="loadInvoiceLines($event)" [(ngModel)]="productItem.invoiceId"
+                            #invoiceModel="ngModel" #invoiceEl>
+                            <option></option>
+                            <option *ngFor="let invoice of invoices" [value]="invoice.id">
+                                {{ invoice.name }}
+                            </option>
+                        </select>
+                        <abp-validation-summary [control]="invoiceModel" [controlEl]="invoiceEl">
+                        </abp-validation-summary>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="" *ngIf="productItem.invoiceId">
+                        <div class="form-group d-flex flex-column ">
+                            <label class="col-form-label" for="invoiceLine">
+                                {{ "Invoice Line" | localize }}
+                            </label>
+                            <select type="text" class="form-control" name="invoiceLine"
+                                [(ngModel)]="productItem.invoiceLineId" #invoiceLineModel="ngModel" #invoiceLineEl>
+                                <option></option>
+                                <option *ngFor="let line of invoiceLines" [value]="line.id">
+                                    {{ line.lineNo }}
+                                </option>
+                            </select>
+                            <abp-validation-summary [control]="invoiceLineModel" [controlEl]="invoiceLineEl">
+                            </abp-validation-summary>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group d-flex flex-column required">
+                        <label class="col-form-label" for="note">
+                            {{ "Note" | localize }}
+                        </label>
+                        <textarea type="text" class="form-control" name="note" id="note" required
+                            [(ngModel)]="productItem.note" #noteModel="ngModel" #noteEl></textarea>
+                        <abp-validation-summary [control]="noteModel" [controlEl]="noteEl">
+                        </abp-validation-summary>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!form1.form.valid || saving"
+            (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+    </fieldset>
+</form>

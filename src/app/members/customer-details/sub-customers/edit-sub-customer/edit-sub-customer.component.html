@@ -1,0 +1,248 @@
+<form class="form-horizontal sleek-form"
+      autocomplete="off"
+      #editUserModal="ngForm"
+      (ngSubmit)="save()">
+
+  <abp-modal-header 
+      [title]="'Contact Person Info ' | localize"
+      (onCloseClick)="bsModalRef.hide()">
+  </abp-modal-header>
+
+  <div class="modal-body" style="height: 60vh; overflow-y: auto;">
+ <tabset>
+  <tab heading="{{ 'General' | localize }}">
+    <div class="row">
+      <div class="col-md-12  d-flex justify-content-end"*ngIf="!isLoading">
+        <!-- Active Status Toggle -->
+<div class="custom-control custom-switch">
+  <input 
+    type="checkbox"
+    class="custom-control-input"
+    id="isActive"
+    name="isActive"
+    [(ngModel)]="customer.isActive">
+  
+  <label class="custom-control-label" for="isActive">
+    <span [ngClass]="{
+      'text-success': customer.isActive,
+      'text-danger': !customer.isActive
+    }">
+      {{ customer.isActive ? ('Active' | localize) : ('Inactive' | localize) }}
+    </span>
+  </label>
+</div>
+
+      </div>
+      <!-- First Name -->
+      <div class="col-md-6">
+        <div class="form-group required">
+          <label>{{ "First Name" | localize }}</label>
+          <input 
+            type="text" 
+            class="form-control"
+            name="name" 
+            required maxlength="32"
+            [(ngModel)]="customer.name"
+            #nameModel="ngModel" #nameEl />
+          <abp-validation-summary 
+            [control]="nameModel"
+            [controlEl]="nameEl">
+          </abp-validation-summary>
+        </div>
+      </div>
+
+      <!-- Last Name -->
+      <div class="col-md-6">
+        <div class="form-group required">
+          <label>{{ "Last Name" | localize }}</label>
+          <input 
+            type="text"
+            class="form-control"
+            name="surname"
+            maxlength="32"
+            [(ngModel)]="customer.surname"
+            #surnameModel="ngModel" #surnameEl />
+          <abp-validation-summary 
+            [control]="surnameModel"
+            [controlEl]="surnameEl">
+          </abp-validation-summary>
+        </div>
+      </div>
+
+      <!-- Username -->
+      <div class="col-md-6">
+        <div class="form-group required">
+          <label>{{ "User Name" | localize }}</label>
+          <!-- making username field disabled -->
+          <input 
+            type="text" disabled readonly
+            class="form-control disabled"
+            name="userName"
+            required minlength="2" maxlength="32"
+            [(ngModel)]="customer.userName"
+            #userNameModel="ngModel" #userNameEl />
+          <abp-validation-summary 
+            [control]="userNameModel"
+            [controlEl]="userNameEl">
+          </abp-validation-summary>
+        </div>
+      </div>
+
+      <!-- Email Address -->
+      <div class="col-md-6">
+        <div class="form-group required">
+          <label>{{ "EmailAddress" | localize }}</label>
+          <input 
+            type="email"
+            class="form-control"
+            name="emailAddress"
+            required maxlength="256"
+            [(ngModel)]="customer.emailAddress"
+            #emailAddressModel="ngModel" #emailAddressEl />
+          <abp-validation-summary 
+            [control]="emailAddressModel"
+            [controlEl]="emailAddressEl">
+          </abp-validation-summary>
+        </div>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="col-md-6">
+        <div class="form-group required">
+          <label>{{ "Phone Number" | localize }}</label>
+          <input
+            type="text"
+            class="form-control"
+            name="telephoneFax"
+            required minlength="2"
+            maxlength="32"
+            [(ngModel)]="customer.telephoneFax"
+            #telephoneFaxModel="ngModel"
+            #telephoneFaxEl
+            placeholder="Enter phone number" />
+          <abp-validation-summary [control]="telephoneFaxModel" [controlEl]="telephoneFaxEl"></abp-validation-summary>
+        </div>
+      </div>
+
+      <!-- Password (only for new sub-customer) -->
+      <div class="col-md-6" *ngIf="!id">
+        <div class="form-group required">
+          <label>{{ "Password" | localize }}</label>
+          <input 
+            type="password"
+            class="form-control"
+            name="password"
+            required maxlength="32"
+            validateEqual="confirmPassword"
+            reverse="true"
+            [(ngModel)]="customer.password"
+            #passwordModel="ngModel" #passwordEl />
+          <abp-validation-summary 
+            [control]="passwordModel"
+            [controlEl]="passwordEl"
+            [customValidationErrors]="passwordValidationErrors">
+          </abp-validation-summary>
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="col-md-6" *ngIf="!id">
+        <div class="form-group required">
+          <label>{{ "ConfirmPassword" | localize }}</label>
+          <input 
+            type="password"
+            class="form-control"
+            name="confirmPassword"
+            required maxlength="32"
+            validateEqual="password"
+            reverse="false"
+            ngModel
+            #confirmPasswordModel="ngModel" #confirmPasswordEl />
+          <abp-validation-summary 
+            [control]="confirmPasswordModel"
+            [controlEl]="confirmPasswordEl"
+            [customValidationErrors]="confirmPasswordValidationErrors">
+          </abp-validation-summary>
+        </div>
+      </div>
+
+    
+<div class="col-md-6">
+   <div class="form-field">
+        <label for="description">{{ "Note" | localize }}</label>
+        <textarea
+          id="description"
+          name="description"
+          maxlength="500"
+          rows="1"
+          [(ngModel)]="customer.description"
+          #descriptionModel="ngModel"
+          #descriptionEl
+          placeholder="Enter Note"
+        ></textarea>
+        <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl"></abp-validation-summary>
+      </div>  
+    <!-- Custom Fields -->
+   <!-- <app-custom-fields 
+      *ngIf="isCustomFieldsAvailable"
+      [customFields]="customer.customFields">
+    </app-custom-fields> -->
+    </div>
+
+<!-- <div class="col-md-6">
+  <label class="form-label">Password</label>
+  <div class="position-relative">
+    <input 
+      [type]="showPassword ? 'text' : 'password'"
+      class="password-input form-control pe-5"
+      [(ngModel)]="passwordValue"
+      name="newPassword"
+      placeholder="Enter new password"
+    />
+    <i class="fa"
+       [ngClass]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
+       (click)="showPassword = !showPassword"
+       class="password-eye"
+       style="cursor: pointer; opacity: 0.7;">
+    </i>
+  </div>
+
+  <button 
+    type="button"
+    class="btn btn-primary btn-sm mt-2"
+    (click)="updatePassword()">
+    Update Password
+  </button>
+</div> -->
+
+
+</div>
+</tab>
+   <tab [heading]="'Activies' | localize" class="pt-3 px-2">
+          <div class="  row mb-0 w-100">
+            <div *ngIf="customer.userId > 0" class="w-100">
+              <app-activities [customerId]="customer.userId"></app-activities>
+            </div>
+          </div>
+        </tab>
+        
+         <tab [heading]="'PhoneCallNote' | localize">
+          <div class="  row mb-0 w-100">
+            <div *ngIf="customer.id > 0" class="w-100">
+              <app-phone-call-activity [selectedCustomer]="customer">
+              </app-phone-call-activity>
+            </div>
+          </div>
+        </tab> 
+       
+
+</tabset>
+  </div>
+
+  <abp-modal-footer 
+      [cancelDisabled]="saving"
+      [saveDisabled]="!editUserModal.form.valid || saving"
+      (onCancelClick)="bsModalRef.hide()">
+  </abp-modal-footer>
+
+</form>

@@ -1,0 +1,36 @@
+﻿﻿<!-- <div class="text-center">
+  <ng-container *ngFor="let language of languages">
+    <a
+      *ngIf="language.name != currentLanguage.name"
+      href="javascript:void(0);"
+      (click)="changeLanguage(language.en)"
+    >
+      <span
+        title="{{ language.displayName }}"
+        [attr.class.current-language-icon]="
+          language.name != currentLanguage.name
+        "
+      >
+        <i class="d-inline-block mx-1 {{ language.icon }}"></i> 
+        <span class="mr-2">{{ language.displayName}}</span>
+      </span>
+    </a>
+  </ng-container>
+</div> -->
+<div >
+  <span 
+    (click)="changeLanguageToEnglish()" 
+    title="English"
+    style="
+      cursor:pointer; 
+      color:#555; 
+      font-size:14px; 
+      text-decoration:underline;
+      transition: color 0.2s ease;
+    "
+    (mouseover)="hover=true" 
+    (mouseout)="hover=false"
+  >
+    English
+  </span>
+</div>

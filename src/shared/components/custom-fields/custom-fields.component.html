@@ -1,0 +1,27 @@
+
+  <div class="col" *ngFor="let field of customFields; let i = index">
+    <div class="form-field">
+      <label class="" for="customField{{i}}">
+        {{ field.label | localize }}
+      </label>
+      <div>
+        <input
+          id="customField{{i}}"
+          type="{{ getCustomFieldType(field.type) }}"
+          class="sleek-input"
+          name="{{ field.label + i }}"
+          [disabled]="disabled"
+          required
+          maxlength="250"
+          [(ngModel)]="field.value"
+          #customFieldModel="ngModel"
+          #customFieldEl
+        />
+        <!-- <abp-validation-summary
+          [control]="customFieldModel"
+          [controlEl]="customFieldEl"
+        ></abp-validation-summary> -->
+      </div>
+    </div>
+  </div>
+

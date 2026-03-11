@@ -1,0 +1,23 @@
+<form autocomplete="off" #productSerialForm="ngForm" (ngSubmit)="save()">
+
+  <abp-modal-header [title]="'Add Product Serials' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+  <div class="modal-body">
+    <div class="row">
+
+      <div class="col-md-4" *ngFor="let value of serials;let i=index">
+        <div class="form-group d-flex flex-column required">
+          <label class="col-form-label" for="{{'name'+i}}">
+            {{ "Serial No" | localize }}
+          </label>
+          <div>
+            <input type="text" class="form-control" name="{{'name'+i}}"  required [(ngModel)]="value.name"
+              #nameModel="ngModel" #nameKindEl />
+            <abp-validation-summary [control]="nameModel" [controlEl]="nameKindEl"></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!productSerialForm.form.valid || saving"
+    (onCancelClick)="onCancelClick()"></abp-modal-footer>
+</form>

@@ -1,0 +1,446 @@
+<div [@routerTransition] class="mx-2">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6">
+                    <h1>{{ "Eye Tool" | localize }}</h1>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <div class="info-box ">
+        <tabset>
+            <tab heading="Prescription" id="tab1"> 
+                <app-eye-history></app-eye-history> </tab>
+            <tab heading="Eye Tool">
+                <form autocomplete="off" #eyeToolForm="ngForm" (ngSubmit)="createEyeTool()">
+                    <div class="container-fluid py-md-5">
+                        <div class="d-flex flex-row justify-content-start ">
+                            <div style="width: 13%;">
+                                <h6> {{ "Eye" | localize }}</h6>
+                                <h6 class="px-3 "> {{ "OD (Right)" | localize }} </h6>
+                            </div>
+
+                            <div>
+                                <h6> {{ "SPH" | localize }} </h6>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="odRightSPH" id="odRightSPH"
+                                            required [(ngModel)]="eyeToolModel.odRightSPH" 
+                                            #odRightSPHModel="ngModel"
+                                            placeholder="SPH"
+                                             #odRightSPHEl />
+                                        <abp-validation-summary [control]="odRightSPHModel" [controlEl]="odRightSPHEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h6> {{ "CYL" | localize }} </h6>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="odRightCYL" id="odRightCYL"
+                                            required [(ngModel)]="eyeToolModel.odRightCYL" #odRightCYLModel="ngModel"
+                                            #odRightCYLEl placeholder="CYL" />
+                                        <abp-validation-summary [control]="odRightCYLModel" [controlEl]="odRightCYLEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h6> {{ "AXIS" | localize }}</h6>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="odRightAXIS" id="odRightAXIS"
+                                            required [(ngModel)]="eyeToolModel.odRightAXIS" #odRightAXISModel="ngModel"
+                                            #odRightAXISEl placeholder="AXIS" />
+                                        <abp-validation-summary [control]="odRightAXISModel"
+                                            [controlEl]="odRightAXISEl"></abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h6> {{ "VD" | localize }}</h6>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="odRightVD" id="odRightVD" required
+                                            [(ngModel)]="eyeToolModel.odRightVD" #odRightVDModel="ngModel" #oodRightVDl
+                                            placeholder="VD" />
+                                        <abp-validation-summary [control]="odRightVDModel" [controlEl]="oodRightVDl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h6> {{ "NEAR" | localize }}</h6>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="odRightNEARADD"
+                                            id="odRightNEARADD" required [(ngModel)]="eyeToolModel.odRightNEARADD"
+                                            #odRightNEARADDModel="ngModel" #odRightNEARADDEl placeholder="NEAR" />
+                                        <abp-validation-summary [control]="odRightNEARADDModel"
+                                            [controlEl]="odRightNEARADDEl"></abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h6> {{ "VN" | localize }} </h6>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="odRightVN" id="odRightVN" required
+                                            [(ngModel)]="eyeToolModel.odRightVN" #odRightVNModel="ngModel" #odRightVNEl
+                                            placeholder="VN" />
+                                        <abp-validation-summary [control]="odRightVNModel" [controlEl]="odRightVNEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row justify-content-start ">
+                            <div style="width: 13%;">
+
+                                <h6 class="px-3 "> {{ "OS (Left)" | localize }} </h6>
+                            </div>
+
+                            <div>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="osLeftSPH" id="osLeftSPH" required
+                                            [(ngModel)]="eyeToolModel.osLeftSPH" #osLeftSPHModel="ngModel" #osLeftSPHEl
+                                            placeholder="Left SPH" />
+                                        <abp-validation-summary [control]="osLeftSPHModel" [controlEl]="osLeftSPHEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="osLeftCYL" id="osLeftCYL" required
+                                        [(ngModel)]="eyeToolModel.osLeftCYL" #osLeftCYLModel="ngModel" #osLeftCYLEl
+                                        placeholder="Left CYL" />
+                                    <abp-validation-summary [control]="osLeftCYLModel" [controlEl]="osLeftCYLEl">
+                                    </abp-validation-summary>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+
+                                    <div>
+                                        <input type="text" class="form-control" name="osLeftAXIS" id="osLeftAXIS"
+                                            required [(ngModel)]="eyeToolModel.osLeftAXIS" #osLeftAXISModel="ngModel"
+                                            #osLeftAXISEl placeholder="Left AXIS" />
+                                        <abp-validation-summary [control]="osLeftAXISModel" [controlEl]="osLeftAXISEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div>
+
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="osLeftVD" id="osLeftVD" required
+                                            placeholder="Left VD" [(ngModel)]="eyeToolModel.osLeftVD"
+                                            #osLeftVDModel="ngModel" #osLeftVDEl />
+                                        <abp-validation-summary [control]="osLeftVDModel" [controlEl]="osLeftVDEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="osLeftNEARADD" id="osLeftNEARADD"
+                                            required [(ngModel)]="eyeToolModel.osLeftNEARADD" placeholder="left Near"
+                                            #osLeftNEARADDModel="ngModel" #osLeftNEARADDEl />
+                                        <abp-validation-summary [control]="osLeftNEARADDModel"
+                                            [controlEl]="osLeftNEARADDEl"></abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="osLeftVN" id="osLeftVN" required
+                                            placeholder="Left VN" [(ngModel)]="eyeToolModel.osLeftVN"
+                                            #osLeftVNModel="ngModel" #osLeftVNEl />
+                                        <abp-validation-summary [control]="osLeftVNModel" [controlEl]="osLeftVNEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row justify-content-start ">
+                            <div style="width: 13%;">
+                                <h6 class="px-3 "> {{ "Lens" | localize }} </h6>
+                            </div>
+                            
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="lensType" id="lensType" required
+                                    [(ngModel)]="eyeToolModel.lensType" #lensTypeModel="ngModel" #lensTypeEl
+                                    placeholder="Lens Type" />
+                                <abp-validation-summary [control]="lensTypeModel" [controlEl]="lensTypeEl">
+                                </abp-validation-summary>
+                            </div>
+                            
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="lensFor" id="lensFor" required
+                                    [(ngModel)]="eyeToolModel.lensFor" #lensForModel="ngModel" #lensForEl
+                                    placeholder="Lens For" />
+                                <abp-validation-summary [control]="lensForModel" [controlEl]="lensForEl">
+                                </abp-validation-summary>
+                            </div>
+
+                            <div class="form-group">
+                                    <input type="text" class="form-control" name="lensSide" id="lensSide" required
+                                        [(ngModel)]="eyeToolModel.lensSide" #lensSideModel="ngModel" #lensSideEl
+                                        placeholder="Lens Side" />
+                                    <abp-validation-summary [control]="lensSideModel" [controlEl]="lensSideEl">
+                                    </abp-validation-summary>
+                            
+                             </div>
+                             
+                              
+                    </div>
+                    
+                    <div class="d-flex flex-row justify-content-start ">
+                        <div style="width:13%;" >Remarks</div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="remark" id="remark" required
+                                [(ngModel)]="eyeToolModel.remark" #remarkModel="ngModel" #remarkEl
+                                placeholder="Remark" />
+                            <abp-validation-summary [control]="remarkModel" [controlEl]="remarkEl">
+                            </abp-validation-summary>
+
+                       </div>
+                    </div>
+                        <div class="d-flex flex-row justify-content-start  pr-md-5">
+                            <button type="submit" class="btn bg-blue" [disabled]="!eyeToolForm.form.valid">
+                                {{ "Save" | localize }}
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+            </tab>
+            <tab heading="Result">
+               
+                    <div class="container-fluid py-md-5">
+                        <div class="d-flex flex-row justify-content-start ">
+                            <div style="width: 13%;">
+                                <h6> {{ "Eye" | localize }}</h6>
+                                <h6 class="px-3 "> {{ "OD (Right)" | localize }} </h6>
+                            </div>
+
+                            <div>
+                                <h6> {{ "SPH" | localize }} </h6>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="odRightSPH" id="odRightSPH"
+                                            disabled [(ngModel)]="eyeToolModel.odRightSPH" #odRightSPHModel="ngModel"
+                                            placeholder="SPH" #odRightSPHEl />
+                                        <abp-validation-summary [control]="odRightSPHModel" [controlEl]="odRightSPHEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h6> {{ "CYL" | localize }} </h6>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="odRightCYL" id="odRightCYL"
+                                        disabled [(ngModel)]="eyeToolModel.odRightCYL" #odRightCYLModel="ngModel"
+                                            #odRightCYLEl placeholder="CYL" />
+                                        <abp-validation-summary [control]="odRightCYLModel" [controlEl]="odRightCYLEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h6> {{ "AXIS" | localize }}</h6>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="odRightAXIS" id="odRightAXIS"
+                                        disabled [(ngModel)]="eyeToolModel.odRightAXIS" #odRightAXISModel="ngModel"
+                                            #odRightAXISEl placeholder="AXIS" />
+                                        <abp-validation-summary [control]="odRightAXISModel"
+                                            [controlEl]="odRightAXISEl"></abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h6> {{ "VD" | localize }}</h6>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="odRightVD" id="odRightVD" disabled
+                                            [(ngModel)]="eyeToolModel.odRightVD" #odRightVDModel="ngModel" #oodRightVDl
+                                            placeholder="VD" />
+                                        <abp-validation-summary [control]="odRightVDModel" [controlEl]="oodRightVDl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h6> {{ "NEAR" | localize }}</h6>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="odRightNEARADD"
+                                            id="odRightNEARADD" disabled [(ngModel)]="eyeToolModel.odRightNEARADD"
+                                            #odRightNEARADDModel="ngModel" #odRightNEARADDEl placeholder="NEAR" />
+                                        <abp-validation-summary [control]="odRightNEARADDModel"
+                                            [controlEl]="odRightNEARADDEl"></abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h6> {{ "VN" | localize }} </h6>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="odRightVN" id="odRightVN" disabled
+                                            [(ngModel)]="eyeToolModel.odRightVN" #odRightVNModel="ngModel" #odRightVNEl
+                                            placeholder="VN" />
+                                        <abp-validation-summary [control]="odRightVNModel" [controlEl]="odRightVNEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row justify-content-start ">
+                            <div style="width: 13%;">
+
+                                <h6 class="px-3 "> {{ "OS (Left)" | localize }} </h6>
+                            </div>
+
+                            <div>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="osLeftSPH" id="osLeftSPH" disabled
+                                            [(ngModel)]="eyeToolModel.osLeftSPH" #osLeftSPHModel="ngModel" #osLeftSPHEl
+                                            placeholder="Left SPH" />
+                                        <abp-validation-summary [control]="osLeftSPHModel" [controlEl]="osLeftSPHEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="osLeftCYL" id="osLeftCYL" disabled
+                                        [(ngModel)]="eyeToolModel.osLeftCYL" #osLeftCYLModel="ngModel" #osLeftCYLEl
+                                        placeholder="Left CYL" />
+                                    <abp-validation-summary [control]="osLeftCYLModel" [controlEl]="osLeftCYLEl">
+                                    </abp-validation-summary>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+
+                                    <div>
+                                        <input type="text" class="form-control" name="osLeftAXIS" id="osLeftAXIS"
+                                        disabled [(ngModel)]="eyeToolModel.osLeftAXIS" #osLeftAXISModel="ngModel"
+                                            #osLeftAXISEl placeholder="Left AXIS" />
+                                        <abp-validation-summary [control]="osLeftAXISModel" [controlEl]="osLeftAXISEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div>
+
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="osLeftVD" id="osLeftVD" disabled
+                                            placeholder="Left VD" [(ngModel)]="eyeToolModel.osLeftVD"
+                                            #osLeftVDModel="ngModel" #osLeftVDEl />
+                                        <abp-validation-summary [control]="osLeftVDModel" [controlEl]="osLeftVDEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="osLeftNEARADD" id="osLeftNEARADD"
+                                        disabled [(ngModel)]="eyeToolModel.osLeftNEARADD" placeholder="left Near"
+                                            #osLeftNEARADDModel="ngModel" #osLeftNEARADDEl />
+                                        <abp-validation-summary [control]="osLeftNEARADDModel"
+                                            [controlEl]="osLeftNEARADDEl"></abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+
+                                <div class="form-group">
+                                    <div>
+                                        <input type="text" class="form-control" name="osLeftVN" id="osLeftVN" disabled
+                                            placeholder="Left VN" [(ngModel)]="eyeToolModel.osLeftVN"
+                                            #osLeftVNModel="ngModel" #osLeftVNEl />
+                                        <abp-validation-summary [control]="osLeftVNModel" [controlEl]="osLeftVNEl">
+                                        </abp-validation-summary>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row justify-content-start ">
+                            <div style="width: 13%;">
+                                <h6 class="px-3 "> {{ "Lens" | localize }} </h6>
+                            </div>
+                            
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="lensType" id="lensType" disabled
+                                    [(ngModel)]="eyeToolModel.lensType" #lensTypeModel="ngModel" #lensTypeEl
+                                    placeholder="Lens Type" />
+                                <abp-validation-summary [control]="lensTypeModel" [controlEl]="lensTypeEl">
+                                </abp-validation-summary>
+                            </div>
+                            
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="lensFor" id="lensFor" disabled
+                                    [(ngModel)]="eyeToolModel.lensFor" #lensForModel="ngModel" #lensForEl
+                                    placeholder="Lens For" />
+                                <abp-validation-summary [control]="lensForModel" [controlEl]="lensForEl">
+                                </abp-validation-summary>
+                            </div>
+
+                            <div class="form-group">
+                                    <input type="text" class="form-control" name="lensSide" id="lensSide" disabled
+                                        [(ngModel)]="eyeToolModel.lensSide" #lensSideModel="ngModel" #lensSideEl
+                                        placeholder="Lens Side" />
+                                    <abp-validation-summary [control]="lensSideModel" [controlEl]="lensSideEl">
+                                    </abp-validation-summary>
+                            
+                             </div>
+                             
+                              
+                    </div>
+                    
+                    <div class="d-flex flex-row justify-content-start ">
+                        <div style="width:13%;" >Remarks</div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="remark" id="remark" disabled
+                                [(ngModel)]="eyeToolModel.remark" #remarkModel="ngModel" #remarkEl
+                                placeholder="Remark" />
+                            <abp-validation-summary [control]="remarkModel" [controlEl]="remarkEl">
+                            </abp-validation-summary>
+
+                       </div>
+                    </div>
+                        <div class="d-flex flex-row justify-content-start  pr-md-5">
+                            <button type="submit" class="btn bg-blue" [disabled]="!eyeToolForm.form.valid">
+                                {{ "Save" | localize }}
+                            </button>
+                        </div>
+
+                    </div>
+              
+            </tab>
+        </tabset>
+    </div>
+</div>

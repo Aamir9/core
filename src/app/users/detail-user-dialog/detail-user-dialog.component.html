@@ -1,0 +1,269 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #editUserModal="ngForm"
+  (ngSubmit)="save()"
+>
+  <abp-modal-header
+    [title]="'User Detail' | localize"
+    (onCloseClick)="bsModalRef.hide()"
+  ></abp-modal-header>
+  <div class="modal-body">
+    <tabset>
+      <tab [heading]="'UserDetails' | localize" class="pt-3 px-2">
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="name">
+            {{ "Name" | localize }}
+          </label>
+          <div class="col-md-9">
+            <input
+              type="text"
+              class="form-control"
+              name="name"
+              id="name"
+              required
+              maxlength="32"
+              [(ngModel)]="user.name"
+              #nameModel="ngModel"
+              #nameEl
+            />
+            <abp-validation-summary
+              [control]="nameModel"
+              [controlEl]="nameEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="surname">
+            {{ "Surname" | localize }}
+          </label>
+          <div class="col-md-9">
+            <input
+              type="text"
+              class="form-control"
+              name="surname"
+              id="surname"
+              required
+              maxlength="32"
+              [(ngModel)]="user.surname"
+              #surnameModel="ngModel"
+              #surnameEl
+            />
+            <abp-validation-summary
+              [control]="surnameModel"
+              [controlEl]="surnameEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="userName">
+            {{ "UserName" | localize }}
+          </label>
+          <div class="col-md-9">
+            <input
+              type="text"
+              class="form-control"
+              name="userName"
+              id="userName"
+              required
+              minlength="2"
+              maxlength="32"
+              [(ngModel)]="user.userName"
+              #userNameModel="ngModel"
+              #userNameEl
+            />
+            <abp-validation-summary
+              [control]="userNameModel"
+              [controlEl]="userNameEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="usetType">
+            {{ "UserType" | localize }}
+          </label>
+          <div class="col-md-9">
+            <select
+              type="text"
+              class="form-control"
+              name="userType"
+              id="usetType"
+              required
+              [(ngModel)]="user.userTypeId"
+              #userTypeModel="ngModel"
+              disabled
+              #userTypeEl
+            >
+              <option *ngFor="let userType of userTypes" [value]="userType.id">
+                {{ userType.name }}
+              </option>
+            </select>
+            <abp-validation-summary
+              [control]="userTypeModel"
+              [controlEl]="userTypeEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+        <div class="form-group row required">
+          <label class="col-md-3 col-form-label" for="emailAddress">
+            {{ "EmailAddress" | localize }}
+          </label>
+          <div class="col-md-9">
+            <input
+              type="email"
+              class="form-control"
+              name="emailAddress"
+              id="emailAddress"
+              required
+              maxlength="256"
+              pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
+              [(ngModel)]="user.emailAddress"
+              #emailAddressModel="ngModel"
+              #emailAddressEl
+            />
+            <abp-validation-summary
+              [control]="emailAddressModel"
+              [controlEl]="emailAddressEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6 required">
+            <div class="row">
+              <label class="col-md-7 col-form-label">
+                {{ "Can Open/Close Shop" | localize }}
+              </label>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    name="canOpenCloseShop"
+                    id="canOpenCloseShop"
+                    [(ngModel)]="user.canOpenCloseShop"
+                  />
+                  <label
+                    class="custom-control-label mt-2"
+                    for="canOpenCloseShop"
+                  ></label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-6 required">
+            <div class="row">
+              <label class="col-md-7 col-form-label">
+                {{ "Responsible For Stocks" | localize }}
+              </label>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    name="isResponsibleForStocks"
+                    id="isResponsibleForStocks"
+                    [(ngModel)]="user.isResponsibleForStocks"
+                  />
+                  <label
+                    class="custom-control-label mt-2"
+                    for="isResponsibleForStocks"
+                  ></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6 required">
+            <div class="row">
+              <label class="col-md-7 col-form-label">
+                {{ "Is Reception Allowed" | localize }}
+              </label>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    name="isReceptionAllowed"
+                    id="isReceptionAllowed"
+                    [(ngModel)]="user.isReceptionAllowed"
+                  />
+                  <label
+                    class="custom-control-label mt-2"
+                    for="isReceptionAllowed"
+                  ></label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-md-6 required">
+            <div class="row">
+              <label class="col-md-7 col-form-label">
+                {{ "Can Answer Phone Calls" | localize }}
+              </label>
+              <div class="col-md-4">
+                <div class="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    name="canAnswerPhoneCalls"
+                    id="canAnswerPhoneCalls"
+                    [(ngModel)]="user.canAnswerPhoneCalls"
+                  />
+                  <label
+                    class="custom-control-label mt-2"
+                    for="canAnswerPhoneCalls"
+                  ></label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row mb-0">
+          <label class="col-md-3 col-form-label">
+            {{ "IsActive" | localize }}
+          </label>
+          <div class="col-md-9">
+            <div class="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                name="isActive"
+                id="isActive"
+                [(ngModel)]="user.isActive"
+              />
+              <label class="custom-control-label mt-2" for="isActive"></label>
+            </div>
+          </div>
+        </div>
+      </tab>
+      <!-- <tab [heading]="'UserRoles' | localize" class="pt-3 px-2">
+        <div class="form-group row mb-0">
+          <ng-container *ngFor="let role of roles; let i = index">
+            <div class="col-md-6">
+              <div class="custom-control custom-checkbox">
+                <input
+                  type="checkbox"
+                  class="custom-control-input"
+                  [id]="'role_' + i"
+                  [checked]="isRoleChecked(role.normalizedName)"
+                  (change)="onRoleChange(role, $event)"
+                />
+                <label class="custom-control-label" [for]="'role_' + i">
+                  {{ role.name }}
+                </label>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </tab> -->
+      <!-- <tab [heading]="'Products' | localize" class="pt-3 px-2">
+        <app-products [userId]="id"></app-products>
+      </tab>
+      <tab [heading]="'Customers' | localize" class="pt-3 px-2">
+        <app-Customers [userId]="id"></app-Customers>
+      </tab> -->
+    </tabset>
+  </div>
+ 
+</form>

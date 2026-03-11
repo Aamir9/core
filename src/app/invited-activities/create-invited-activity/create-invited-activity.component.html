@@ -1,0 +1,72 @@
+
+<abp-modal-header
+[title]="'Invite Group User ' | localize"
+(onCloseClick)="bsModalRef.hide()"
+></abp-modal-header>
+
+<div class="modal-body">
+<div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group d-flex flex-column ">
+            <label class="col-form-label" for="name">
+              {{ "Activity Name" | localize }}
+            </label>
+            <div >
+              <input
+              type="text"
+              class="form-control"
+              name="name"
+              id="name"
+              disabled
+              [(ngModel)]="activity.name"
+            />
+        
+            </div>
+          </div>
+        </div>
+
+   
+
+         <div class="col-md-6">
+          <div class="form-group d-flex flex-column ">
+            <label class="col-form-label" for="name">
+              {{ "Activity Date" | localize }}
+            </label>
+            <div >
+              <input
+                type="date"
+                class="form-control"
+                name="date"
+                id="date"
+                disabled
+                [ngModel]="activityDate | date:'yyyy-MM-dd'"
+                
+                
+              />
+           
+            </div>
+          </div>
+        </div>
+       </div>
+
+       <hr>
+       <div>
+          <tabset>
+            <tab heading="{{ 'Tasks' | localize }}">
+              <div class="py-3">
+             <app-tasks [activityId]="activity.id"></app-tasks>
+            </div>
+            </tab>
+            
+            <!-- tab Invites -->
+            <tab heading="{{ 'Invites' | localize }}">
+              <div class="py-3">
+                <app-create-invite [activityId]="activity.id"> </app-create-invite>
+                
+              </div> 
+              </tab>
+          </tabset>
+       </div>
+    
+</div>

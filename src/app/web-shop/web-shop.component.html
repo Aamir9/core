@@ -1,0 +1,130 @@
+<div [@routerTransition]>
+    <div class="row m-0 p-0 pt-3">
+        <div class="col-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="list-group scroll">
+                        <button type="button"
+                            class="list-group-item list-group-item-action active list-group-numbered fw-bold p-3"
+                            [ngClass]="{ 'active': this.selectedIndex == i}"
+                            *ngFor="let item of this.categories; let i = index" (click)="setCategoryId(i, item)">
+                            {{item.name}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <section class="content">
+                <div class="card ">
+                    <div class="card-body">
+                        <ul class="d-flex flex-row  flex-wrap fw-bold p-0 m-0" style="cursor: pointer;">
+                            <li class="list-group-item col border-0" style="padding: 1rem !important;"
+                                [ngClass]="{ 'active': this.selectedBrandIndex == i}"
+                                *ngFor="let item of this.brands; let i = index" (click)="setBrandId(i, item)">
+                                {{item.name}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <section class="content">
+                <div class="">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row ">
+                                <div class="col-md-6">
+                                    <h3>Web Shop</h3>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="keyword"
+                                            [placeholder]="'SearchWithThreeDot' | localize" [(ngModel)]="keyword"
+                                            (keyup.enter)="getDataPage(1)" (ngModelChange)="getDataPage(1)" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="card-body">
+                            <div class="table-responsive overflow-hidden">
+                                <div class="d-flex justify-content-center row">
+                                    <div class="col-md-10">
+                                        <div class="row p-2 bg-white border rounded mt-2" *ngFor="let itemProduct of products
+                                  | paginate
+                                    : {
+                                        id: 'server',
+                                        itemsPerPage: pageSize,
+                                        currentPage: pageNumber,
+                                        totalItems: totalItems
+                                      }">
+                                            <div class="col-md-3 mt-1"><img
+                                                    class="img-fluid img-responsive rounded product-image"
+                                                    [src]="itemProduct.base64Picture"></div>
+                                            <div class="col-md-6 mt-1">
+                                                <h5>{{itemProduct.name}}</h5>
+                                                <h6><b>Brand: </b>{{itemProduct.brandName}}</h6>
+                                                <h6><b>Category: </b>{{itemProduct.categoryName}}</h6>
+                                                <div class="d-flex flex-row">
+                                                </div>
+                                                <p class="text-justify text-truncate para mb-0">
+                                                    {{itemProduct.description}}<br><br></p>
+                                            </div>
+                                            <div
+                                                class="align-items-center align-content-center col-md-3 border-left mt-1">
+                                                <div class="d-flex flex-row align-items-center">
+                                                    <h4 class="mr-1">{{itemProduct.salesPrice}} $</h4><span
+                                                        class="strike-text"></span>
+                                                </div>
+                                                <div class="d-flex flex-column mt-4">
+                                                    <div class="form-group d-flex flex-column required">
+                                                        <label class="col-form-label" for="salesPrice">
+                                                            {{ "Quantity" | localize }}
+                                                        </label>
+                                                        <div>
+                                                            <input type="number" class="form-control-sm w-100"
+                                                                name="qtny" id="qtny" min="1" required
+                                                                [(ngModel)]="itemProduct.quantityToBeAddInCart"
+                                                                [max]="itemProduct.inStock" #qtnyModel="ngModel"
+                                                                #qtnyEl />
+                                                            <abp-validation-summary [control]="qtnyModel"
+                                                                [controlEl]="qtnyEl"></abp-validation-summary>
+                                                        </div>
+                                                    </div>
+                                                    <button class="btn btn-outline-primary btn-sm mt-2"
+                                                        (click)="addProductToCart(itemProduct)" type="button">Add to
+                                                        Cart</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer table-card-footer bg-light border-top">
+                            <div class="row">
+                                <div class="col-sm-4 col-12 text-sm-left text-center">
+                                    <button class="btn btn-secondary" (click)="refresh()">
+                                        <i class="fas fa-redo-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="col-sm-4 col-12 text-center">
+                                    <p class="mb-0 my-2">
+                                        {{ "TotalRecordsCount" | localize: totalItems }}
+                                    </p>
+                                </div>
+                                <div class="col-sm-4 col-12">
+                                    <div class="float-sm-right m-auto">
+                                        <abp-pagination-controls id="server" (pageChange)="getDataPage($event)">
+                                        </abp-pagination-controls>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

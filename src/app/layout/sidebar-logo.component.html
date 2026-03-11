@@ -1,0 +1,28 @@
+<div class=" mb-3 " >
+  <div class="sidebar-logo"   >
+    <!-- <img
+      *ngIf="companyInfo && companyInfo.logoUrl"
+      [src]="companyInfo.logoUrl"
+      class="img-fluid "
+     style="background-color: var(--primary); padding: 5px;"
+      alt="logo"
+    /> -->
+    <div class="sidebar-logo"   >
+    <img
+      
+     src="../../assets/img/CoreLogo.png"
+      class="img-fluid "
+     
+      alt="logo"
+    />
+    <img
+      *ngIf="!companyInfo || !companyInfo.logoUrl"
+      class="img-fluid"
+      src="https://res.cloudinary.com/dneay7bqq/image/upload/v1686058235/qo468pvyhs1qlrstazze.png"
+      alt=""
+    />
+    <!-- <h3 class="text-center text-primary"> {{ companyInfo.name}}</h3> -->
+  </div>
+   
+  <!-- <h4 class="tenant-name text-dark mt-2">Alert It <hr></h4>  -->
+</div>

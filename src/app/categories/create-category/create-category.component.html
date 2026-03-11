@@ -1,0 +1,27 @@
+    
+<form autocomplete="off" #form1="ngForm"  (ngSubmit)="save()">
+
+    <abp-modal-header [title]="'Create Category' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group d-flex flex-column required">
+                  <label class="col-form-label" for="name">
+                    {{ "Name" | localize }}
+                  </label>
+                  <div>
+                    <input type="text" class="form-control" name="name" id="name" required [(ngModel)]="categoryDto.name"
+                      #nameModel="ngModel" #nameKindEl />
+                    <abp-validation-summary [control]="nameModel" [controlEl]="nameKindEl"></abp-validation-summary>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+    </div>
+   
+    <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!form1.form.valid || saving"
+    (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>
+

@@ -1,0 +1,41 @@
+<ul class="navbar-nav">
+  <!-- <li class="nav-item">
+    <a class="nav-link" href="javascript:;" (click)="toggleSidebar()">
+      <i 
+       class="fas fa-bars"></i>
+    </a>
+    
+  </li> -->
+   <span dropdown (onShown)="onShown()" (onHidden)="onHidden()" (isOpenChange)="isOpenChange()" 
+   
+   class="d-block d-sm-none">
+    <a href id="basic-link" dropdownToggle (click)="false"
+       aria-controls="basic-link-dropdown"> <i 
+       class="fas fa-bars"></i></a>
+    <ul id="basic-link-dropdown" *dropdownMenu class="dropdown-menu sidebar bg-light border border-0"
+        role="menu" aria-labelledby="basic-link">
+      <li>
+       
+  <div >
+    <ng-container   >
+          <sidebar-logo></sidebar-logo>
+          <sidebar-menu></sidebar-menu>
+          &nbsp;&nbsp;
+        </ng-container>
+       </div> 
+      </li>
+    </ul>
+  </span>
+  
+<!--   <li class="nav-item d-none d-sm-inline-block">
+    <a class="nav-link" [routerLink]="['home']">
+      {{ "HomePage" | localize }}
+    </a>
+  </li>
+  <li class="nav-item d-none d-sm-inline-block">
+    <a class="nav-link" [routerLink]="['about']">
+      {{ "About" | localize }}
+    </a>
+  </li> -->
+  
+</ul>

@@ -1,0 +1,22 @@
+/* User icon styling */
+.user-icon {
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.user-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Navbar hover shadow effect */
+.navbar:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Dropdown menu rounded edges */
+.dropdown-menu {
+  border-radius: 12px;
+}

@@ -1,0 +1,102 @@
+<div class="content">
+<div>
+    <div class="row mb-5 bg-white   ">
+  <div class="col-md-6 ">
+    <h3 class="text-primary">Oversigt</h3>
+    <p class="small mb-1">
+      Velkommen til Jeres forsikringsoverblik, som er en generel opsummering af de forsikringer, der er tilknyttet jeres virksomhed.
+    </p>
+    <p class="small mb-0">
+     Bemærk venligst, at det altid er selve policen, tillæg, betingelser mv. der er gældende. Der tages forbehold for evt. fejl.
+    </p>
+  </div>
+
+ <div class="col-md-4 offset-md-1 ">
+  <h3 class="text-primary mb-2 ">Jeres information</h3>
+ <p class="small mb-1 mt-2 ">Firmanavn : {{ userparentCustomer?.name }}</p>
+  <p class="small mb-0 ">CVRnr. : {{ userparentCustomer?.vatNumber }}</p>
+</div>
+
+</div>
+
+
+  <!-- Policies Table -->
+  <div class="card-body p-0 mt-3">
+    <div class="table-responsive">
+      <table class="table table-bordered parent-table mb-0" [busy]="isTableLoading">
+        <thead>
+          <tr>
+            <th>{{ "Branche" | localize }}</th>
+            <th>{{ "Selskab" | localize }}</th>
+            <th>{{ "Bemærkning" | localize }}</th>
+            <th>{{ "Police nr." | localize }}</th>
+            <th>{{ "Fornyelsesdato" | localize }}</th>
+            <th>{{ "Årlig præmie" | localize }}</th>
+            <th>{{ "Policer" | localize }}</th>
+            <th>{{ "Certifikat" | localize }}</th>
+            <!-- <th >{{ "Actions" | localize }}</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let policy of policies">
+            <td>{{ policy.branch }}</td>
+            <td>{{ policy.company }}</td>
+            <td>{{ policy.comment }}</td>
+            <td>{{ policy.policyNumber }}</td>
+            <td>{{ policy.renewalDate | date:'shortDate' }}</td>
+            <td>{{ policy.annualPremium }}</td>
+            <td>
+  <span
+    class="badge"
+    [ngClass]="policy.isActive ? 'bg-success' : 'bg-danger'">
+    {{ policy.isActive ? 'Active' : 'Inactive' }}
+  </span>
+</td>
+
+            <td>
+              <a *ngIf="policy.policyPdfPath" [href]="policy.policyPdfPath" target="_blank">
+                View PDF
+              </a>
+            </td>
+            <!-- <td>
+              <button class="btn btn-sm btn-info " (click)="showCreateOrEditDialog(policy.id)"*ngIf="!_appSessionService.isCustomerUser()">
+                <i class="fas fa-edit"></i>
+              </button> &nbsp;
+                <button class="btn btn-sm btn-secondary" (click)="viewDetails(policy.id)">
+                <i class="fas fa-eye"></i>
+              </button>&nbsp;
+              <button class="btn btn-sm btn-danger" (click)="delete(policy)"*ngIf="!_appSessionService.isCustomerUser()">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td> -->
+          </tr>
+          <tr *ngIf="policies.length === 0">
+            <td colspan="8" class="text-center">No Policies Found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="">
+    <div class="row" style="background-color: #f8f9fa; ">
+      <div class="col-md-4 col-12 text-sm-left text-center">
+        <button class="btn btn-primary" (click)="refresh()">
+          <i class="fas fa-redo-alt"></i>
+        </button>
+      </div>
+      <div class="col-md-4 col-12 text-center">
+        <p class="mb-0 my-2">{{ "TotalRecordsCount" | localize : totalItems }}</p>
+      </div>
+      <div class="col-md-4 col-12 p-2">
+        <div class="float-sm-right m-auto">
+          <abp-pagination-controls
+            id="server"
+            (pageChange)="getDataPage($event)">
+          </abp-pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<div [@routerTransition]>
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row">
+        
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="name">{{ 'Group' | localize }}</label>
+            <select class="form-control" [(ngModel)]="groupId" >
+              <option value="">Select Group</option>
+              <option *ngFor="let group of groups"  [ngValue]="group.id">{{group.name}}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ngvalue in dropdown -->
+        <div class="col-md-6">
+          <label for="name" style="margin-top:2.3rem;"> &nbsp;</label>
+          <button type="button btn-lg " class="btn btn-primary" (click)="addInvite()">
+            {{ 'Invite Group' | localize }}
+          </button>
+          
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

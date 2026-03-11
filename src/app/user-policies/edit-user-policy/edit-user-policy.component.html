@@ -1,0 +1,103 @@
+<form class="form-horizontal" autocomplete="off" #editUserPolicyModal="ngForm" (ngSubmit)="save()">
+  <abp-modal-header 
+    [title]="'Edit User Policy' | localize" 
+    (onCloseClick)="bsModalRef.hide()">
+  </abp-modal-header>
+
+  <div class="modal-body" style="height: 60vh; overflow: auto;">
+    <tabset>
+      <!-- Basic Information Tab -->
+      <tab [heading]="'Basic Information' | localize">
+        <div class="basic-info-form sleek-form mt-2">
+          <div class="form-grid p-3">
+            <div class="form-field">
+              <label for="branch">{{ "Branch" | localize }}</label>
+              <input type="text" id="branch" name="branch" maxlength="128"
+                     [(ngModel)]="updateDto.branch" placeholder="Enter branch" />
+            </div>
+            <div class="form-field">
+              <label for="company">{{ "Company" | localize }}</label>
+              <input type="text" id="company" name="company" maxlength="128"
+                     [(ngModel)]="updateDto.company" placeholder="Enter company" />
+            </div>
+            <div class="form-field">
+              <label for="policyNumber">{{ "Policy Number" | localize }}</label>
+              <input type="text" id="policyNumber" name="policyNumber" maxlength="64"
+                     [(ngModel)]="updateDto.policyNumber" placeholder="Enter policy number" />
+            </div>
+            <div class="form-field">
+              <label for="renewalDate">{{ "Renewal Date" | localize }}</label>
+              <input type="date" id="renewalDate" name="renewalDate"
+                       [ngModel]="updateDto.renewalDate | date:'yyyy-MM-dd'"
+       (ngModelChange)="onRenewalDateChange($event)"
+                      placeholder="Select renewal date" />
+            </div>
+            
+            <div class="form-field">
+              <label for="annualPremium">{{ "Annual Premium" | localize }}</label>
+              <input type="text" id="annualPremium" name="annualPremium" maxlength="32"
+                     [(ngModel)]="updateDto.annualPremium" placeholder="Enter annual premium" />
+            </div>
+            <div *ngIf="!loading">
+  <div class="custom-control custom-switch">
+    <input type="checkbox"
+           class="custom-control-input"
+           id="isActive"
+           name="isActive"
+           [(ngModel)]="updateDto.isActive">
+
+    <label class="custom-control-label" for="isActive">
+      <span [ngClass]="{'text-success': updateDto.isActive, 'text-danger': !updateDto.isActive}">
+        {{ updateDto.isActive ? ('Active' | localize) : ('Inactive' | localize) }}
+      </span>
+    </label>
+  </div>
+</div>
+
+   
+
+
+            <div class="form-field">
+              <label for="comment">{{ "Comment" | localize }}</label>
+              <textarea id="comment" name="comment" rows="4"
+                        [(ngModel)]="updateDto.comment" placeholder="Enter comment"></textarea>
+            </div>
+            
+          </div>
+        </div>
+      </tab>
+
+      <!-- Upload PDF Tab -->
+      <tab [heading]="'Upload Policy PDF' | localize">
+        <div class="additional-info-form sleek-form mt-2">
+          <div class="form-grid p-3">
+            <div class="form-field">
+              <label for="policyPdf">{{ "Policy PDF" | localize }}</label>
+
+              <!-- File Upload Component -->
+              <app-upload-file (onFileUpload)="onPdfUploaded($event)"></app-upload-file>
+
+              <!-- Show existing uploaded file or selected file -->
+              <div *ngIf="uploadedFile">
+                <p>
+                  <strong>File:</strong> {{ uploadedFile.name }}
+                  <span *ngIf="uploadedFile.size"> ({{ uploadedFile.size | number }} bytes)</span>
+                  <span *ngIf="uploadedFile.type"> [{{ uploadedFile.type }}]</span>
+                </p>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="uploadedFile = null">
+                  Remove File
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+
+  <abp-modal-footer 
+    [cancelDisabled]="saving" 
+    [saveDisabled]="saving || !editUserPolicyModal.form.valid || loading"
+    (onCancelClick)="bsModalRef.hide()">
+  </abp-modal-footer>
+</form>

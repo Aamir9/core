@@ -1,0 +1,26 @@
+/* .pick-image {
+    padding: 10px;
+    width: 100px;
+  } */
+  .pick-image:hover {
+    cursor: pointer;
+  }
+  
+  input[type="file"] {
+    visibility: hidden;
+    display: none;
+  }
+  
+  /* .image-preview {
+    height: 140px;
+    margin: 0;
+    padding: 0;
+    width:200px;
+  } */
+  .image-preview img {
+    height:7rem !important;
+    /* height: 100%;
+    width: 100%; */
+    object-fit: fill;
+
+  }

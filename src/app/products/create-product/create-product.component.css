@@ -1,0 +1,40 @@
+.custom-list {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    background-color: #f7f7f7;
+    padding: 10px;
+  }
+
+  .custom-list-item {
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .custom-list-item:hover {
+    background-color: #e0e0e0;
+    cursor: pointer;
+  }
+
+  .list-group-item {
+    background-color: #f7f7f7; /* set default background color */
+    border-color: #ddd; /* set border color */
+    color: #333; /* set font color */
+    font-weight: bold; /* set font weight */
+    border-radius: 5px; /* set border radius */
+    margin-bottom: 5px; /* add some space between items */
+  }
+  
+  .list-group-item:nth-child(odd) {
+    background-color: #d9edf7; /* set background color for odd items */
+  }
+  
+  .list-group-item:nth-child(even) {
+    background-color: #dff0d8; /* set background color for even items */
+  }
+  

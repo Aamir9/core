@@ -1,0 +1,35 @@
+<div class="container chat-box">
+  <div class="row">
+    <div class="col-12">
+      <div class="messaging">
+        <div class="inbox_msg">
+          <div class="mesgs">
+            <div #message class="msg_history">
+              <div *ngFor="let msg of messages">
+                <div class="incoming_msg" *ngIf="msg.type == 'received'">
+                  <div class="incoming_msg_img"> </div>
+                  <div class="received_msg">
+                    <div class="received_withd_msg">
+                      <p>
+                        {{msg.message}}
+                      </p>
+                      <span class="time_date"> {{localDate(msg.date) | date:'medium'}} </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="outgoing_msg" *ngIf="msg.type == 'sent'">
+                  <div class="sent_msg">
+                    <p>
+                      {{msg.message}}
+                    </p>
+                    <span class="time_date"> {{localDate(msg.date) | date:'medium'}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

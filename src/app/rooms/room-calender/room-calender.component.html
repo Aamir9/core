@@ -1,0 +1,12 @@
+<div [@routerTransition]>
+  <section class="content-header">
+    <div class="container-fluid">
+      <h2>{{ room.name | localize }}</h2>
+    </div>
+  </section>
+  <section class="content px-2">
+    <div class="container-fluid">
+      <app-calendar [roomId]="this.roomId"></app-calendar>
+    </div>
+  </section>
+</div>

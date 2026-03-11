@@ -1,0 +1,64 @@
+<form #form1="ngForm" (ngSubmit)="save()">
+    <abp-modal-header [title]="'Create Product Item' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group d-flex flex-column required">
+                    <label class="col-form-label" for="name">
+                        {{ "Product" | localize }}
+                    </label>
+                    <select class="form-control" name="productId" [(ngModel)]="productItem.productId" required>
+                        <option *ngFor="let product of products" [value]="product.id">{{ product.name }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group d-flex flex-column required">
+                    <label class="col-form-label" for="csvFile">
+                        {{ "CSV File" | localize }}
+                    </label>
+                    <input type="file" class="form-control-file" name="csvFile" accept=".csv"
+                        (change)="onFileChange($event)">
+                </div>
+            </div>
+        </div>
+        <div class="row serialNumbers">
+            <div class="col-md-12">
+                <div class="form-group d-flex flex-column required">
+                    <label class="col-form-label" for="serialNumbers">{{ "Serial Numbers And Codes" | localize }}</label>
+                    <div class="d-flex flex-column">
+                        <div class="d-flex mb-2" *ngFor="let number of productItem.serialNumbers; let i = index">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="text" [class.is-invalid]="number.isRepeated" class="form-control" name="serialNumbers+{{i}}"
+                                        [(ngModel)]="number.value" required placeholder="Serial Number">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" name="codes+{{i}}" [(ngModel)]="number.code">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <input type="text" placeholder="Description" class="form-control" name="description" [(ngModel)]="number.description">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-danger btn-block" (click)="removeSerialNumber(i)"
+                                        [disabled]="productItem.serialNumbers.length === 1">Remove</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" (click)="addSerialNumber()">Add Row</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!form1.form.valid || saving ||isDublicateRecord"
+        (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

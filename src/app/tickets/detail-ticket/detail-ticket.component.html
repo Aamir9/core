@@ -1,0 +1,164 @@
+<div class="container-fluid">
+  <div class="row p-3">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-6 py-3">
+          <h4>
+            {{ "Ticket Information" | localize }}
+          </h4>
+          <div class="my-3">
+            <b class="mr-2"> TicketNumber: </b> {{ ticketDto.ticketNumber }}
+          </div>
+
+          <div class="my-3">
+            <b class="mr-2"> Email: </b> {{ ticketDto.email }}
+          </div>
+          <div class="my-3">
+            <b class="mr-2"> Date: </b> {{ ticketDto.date | date }}
+          </div>
+
+          <div class="my-3">
+            <b class="mr-2"> Status: </b> {{ ticketDto.status }}
+          </div>
+
+          <div class="my-3">
+            <b class="mr-2">Ticket Description : </b>
+            <!-- <b class="mr-2"> Description: </b> {{ ticketDto.comment }} -->
+            <textarea class="form-control w-100" disabled>{{ ticketDto.comment }}</textarea>
+          </div>
+          <div class="d-block mb-3" *ngIf="ticketDto?.users?.length > 1">
+            <div class="d-flex align-items-center justify-content-start">
+              <b class="mr-2 mb-2 mt-2"> Group Name: </b>
+              {{ ticketDto.group.name }}
+            </div>
+            <div class="mb-3"><b>Group Employees </b></div>
+            <ul class="list-group">
+              <li
+                class="d-flex align-items-center justify-content-between border border-info shadow p-3 mb-2 rounded"
+                *ngFor="let item of ticketDto.users"
+              >
+                {{ item.ticketAssignee.fullName }}
+                <div>{{ ticketUserStatus(item) }}</div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="my-3">
+            <b class="mr-2"> Solution Note: </b>
+            <textarea
+              id="solutionNote"
+              name="solutionNote"
+              class="form-control"
+              [(ngModel)]="ticketDto.solutionNote"
+              rows="3"
+            ></textarea>
+          </div>
+          <div class="form-group d-flex flex-row justify-content-end">
+            <button class="btn btn-primary ms-auto" (click)="addSolutionNote()">
+              Save
+            </button>
+          </div>
+
+          <div class="my-3">
+            <hr />
+            <b>{{ "Add Comment" | localize }}</b>
+
+            <div class="form-group mt-3">
+              <textarea
+                name="comment"
+                id="comment"
+                [(ngModel)]="commentDto.commentText"
+                class="form-control"
+                [disabled]="isFaultResolved()"
+                rows="3"
+              ></textarea>
+            </div>
+
+            <div class="form-group mt-3 d-flex flex-row justify-content-end">
+              <button
+                [disabled]="isFaultResolved()"
+                class="btn btn-primary ms-auto"
+                (click)="addComment()"
+              >
+                Save
+              </button>
+            </div>
+
+            <div class="container py-2">
+              <h4>{{ "Comments" | localize }}</h4>
+              <hr />
+              <div class="row">
+                <div class="col-12">
+                  <div class="py-2" *ngFor="let comment of comments">
+                    <img
+                      src="../../../assets/img/user.png"
+                      class="icon mr-3"
+                      alt=""
+                    />
+                    <b>{{ comment.userName }}</b>
+                    <p class="pl-5">
+                      {{ comment.commentText }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 py-3">
+          <div class="d-flex">
+            <!-- If Status is Pending -->
+            <ng-container *ngIf="ticketAssignee?.status === 0">
+              <button
+                class="btn btn-outline-success mr-5"
+                (click)="updateTicketUserStatus(1)"
+              >
+                <img
+                  src="../../../assets/img/greenCheck.png"
+                  class="icon pr-2"
+                  alt=""
+                />
+                {{ "Accept" | localize }}
+              </button>
+              <button
+                class="btn btn-outline-danger"
+                (click)="updateTicketUserStatus(2)"
+              >
+                <img
+                  src="../../../assets/img/cross_without_circle.png"
+                  class="icon pr-2"
+                  alt=""
+                />
+                {{ "Reject" | localize }}
+              </button>
+            </ng-container>
+
+            <!-- If current employee has accepted the ticket  -->
+            <button
+              class="btn btn-outline-success mr-5"
+              *ngIf="
+                ticketAssignee?.status === 1 && ticketDto.status !== 'Resolved'
+              "
+              (click)="updateTicketStatus(2)"
+            >
+              <img
+                src="../../../assets/img/greenCheck.png"
+                class="icon pr-2"
+                alt=""
+              />
+              {{ "Mark As Resolved" | localize }}
+            </button>
+          </div>
+          <div class="mt-3">
+            <img
+              class="img-fluid img-responsive rounded product-image w-100"
+              style="height: 250px"
+              [src]="ticketDto.imageUrl"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+.cell-content{
+    max-height: 40px !important; /* Adjust the height as needed */
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }

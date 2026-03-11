@@ -1,0 +1,927 @@
+<form
+  class="form-horizontal"
+  autocomplete="off"
+  #activityFrm="ngForm"
+  style="margin: 10px"
+>
+  <div class="row" *ngIf="customers.length">
+    <div class="col-md-3 col-12">
+      <div class="form-group d-flex flex-column required">
+        <label class="col-form-label" for="name">
+          {{ "Customer" | localize }}
+        </label>
+        <ng-select
+          id="customer"
+          name="customer"
+          type="text"
+          class="form-control"
+          placeholder="Select Customer"
+          required
+          [disabled]="isEditMode()"
+          style="padding: 0 0.75rem"
+          [(ngModel)]="selectedCustomerId"
+          (ngModelChange)="onCustomerChange($event)"
+          #CustomerModel="ngModel"
+          #CustomerEl
+        >
+          <ng-option *ngFor="let customer of customers" [value]="customer.id">
+            {{ customer.name }}
+          </ng-option>
+        </ng-select>
+        <abp-validation-summary
+          [control]="CustomerModel"
+          [controlEl]="CustomerEl"
+        ></abp-validation-summary>
+      </div>
+    </div>
+    <div class="col-md-3 col-12">
+      <div class="form-group d-flex flex-column">
+        <label class="col-form-label" for="name">
+          {{ "SubCustomer" | localize }}
+        </label>
+        <ng-select
+          id="subcustomer"
+          name="subcustomer"
+          type="text"
+          class="form-control"
+          style="padding: 0 0.75rem"
+          placeholder="Select Sub Customer"
+          [disabled]="isEditMode()"
+          [(ngModel)]="selectedSubCustomerId"
+          (ngModelChange)="onSubCustomerChange($event)"
+          #activityKindModel="ngModel"
+          #activityKindEl
+        >
+          <ng-option
+            *ngFor="let customer of subCustomers"
+            [value]="customer.id"
+          >
+            {{ customer.fullName }}
+          </ng-option>
+        </ng-select>
+
+        <abp-validation-summary
+          [control]="activityKindModel"
+          [controlEl]="activityKindEl"
+        ></abp-validation-summary>
+      </div>
+    </div>
+    <div class="col-md-6 col-12"></div>
+  </div>
+  <hr *ngIf="customers.length" />
+
+  <ng-container *ngIf="selectedCustomer">
+    <!-- Activity Type & Status -->
+    <div class="row mb-3">
+      <!-- Activity Type Selector -->
+      <div class="col-md-6 col-12">
+        <label class="col-form-label"  *ngIf="!isEditMode()">
+          {{ "Activity Type" | localize }}
+        </label>
+        <div class="d-flex" *ngIf="!isEditMode()">
+          <a
+            class="selector"
+            [class.active-type]="selectedActivityType.id === type.id"
+            *ngFor="let type of activityTypeList"
+            (click)="selectedActivityType = type"
+            >{{ type.name }}</a
+          >
+        </div>
+        <!-- <div class="d-flex" *ngIf="isEditMode()">
+          <a
+            class="selector"
+            [class.active-type]="selectedActivityType.id === type.id"
+            *ngFor="let type of activityTypeList"
+            >{{ type.name }}</a
+          >
+        </div> -->
+      </div>
+      <div class="col-md-6 col-12 d-flex justify-content-end">
+        <div *ngIf="selectedActivityType.name !== 'Note'">
+          <label class="col-form-label">
+            {{ "Activity Status" | localize }}
+          </label>
+          <div class="d-flex">
+            <a
+              *ngFor="let status of activityStatusList"
+              class="selector {{ status.name.toLowerCase() }}"
+              [class.active-status]="selectedActivityStatus.id === status.id"
+              (click)="selectedActivityStatus = status"
+              >{{ status.name }}</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Type & Status -->
+    <div class="no-activity-type" *ngIf="!selectedActivityType">
+      Select an Activity Type to continue
+    </div>
+
+    <!-- Ticket Detail View -->
+    <div *ngIf="selectedActivityType.name == 'Ticket'">
+      <div class="row">
+        <div class="col-md-6 col-12 form-group d-flex flex-column required">
+          <label class="col-form-label">
+            {{ "Title" | localize }}
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            required
+            [disabled]="isEditMode()"
+            id="title"
+            name="title"
+            [(ngModel)]="ticketTitle"
+            #titleModel="ngModel"
+            #titleEl
+          />
+          <abp-validation-summary
+            [control]="titleModel"
+            [controlEl]="titleEl"
+          ></abp-validation-summary>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-12 form-group d-flex flex-column">
+          <label class="col-form-label">
+            {{ "Description" | localize }}
+          </label>
+          <textarea
+            class="form-control"
+            [disabled]="isEditMode()"
+            id="ticketDescription"
+            name="ticketDescription"
+            [(ngModel)]="ticketDescription"
+            #titleModel="ngModel"
+            rows="5"
+            #titleEl
+          ></textarea>
+        </div>
+      </div>
+      <div class="row" *ngIf="viewMode == ViewMode.Edit">
+        <div class="col-md-6 col-12">
+          <label class="col-form-label">
+            {{ "Comments" | localize }}
+          </label>
+          <div class="comments-container">
+            <div class="comments">
+              <div
+                class="row"
+                *ngFor="let comment of comments"
+                style="width: 100% !important; margin: 0px"
+              >
+                <div class="comment-wrapper">
+                  <div class="comment-info">
+                    <div class="comment-user">
+                      <span class="online-status"></span>
+                      <span class="user-name">{{ comment.userName }}</span>
+                    </div>
+                    <!-- <div class="comment-date">12/12/2020</div> -->
+                  </div>
+                  <div class="comment-detail">
+                    <span>
+                      {{ comment.commentText }}
+                    </span>
+                    <!-- <span class="actions">
+                      <a class="text-muted"><i class="fas fa-trash"></i></a>
+                    </span> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="add-comment">
+              <input
+                name="comment"
+                id="comment"
+                [(ngModel)]="commentText"
+                class="form-control"
+                placeholder="Type here..."
+              />
+              <button class="btn btn-primary" (click)="addComment()">
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-12 pl-5">
+          <label class="col-form-label">
+            {{ "Solution Note" | localize }}
+          </label>
+          <div class="solution-container">
+            <div class="solution-info">
+              <div class="solution-user">
+                <div class="online-status"></div>
+                <div class="user-name">
+                  {{ this._appSessionService.getShownLoginName() }}
+                </div>
+              </div>
+              <!-- <div>12/12/2020</div> -->
+            </div>
+            <div class="solution-editor">
+              <textarea
+                id="txt-area"
+                name="text-area"
+                class="form-control"
+                [(ngModel)]="solutionNote"
+                rows="5"
+                placeholder="A section for text describing the solution"
+              ></textarea>
+              <div class="actions">
+                <!-- <a class="text-muted mr-2"><i class="fas fa-pencil-alt"></i></a>
+              <a class="text-muted"><i class="fas fa-trash"></i></a> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assign To Ticket -->
+    <div *ngIf="selectedActivityType.name != 'Ticket'">
+      <div class="row">
+        <!-- Assign to Ticket -->
+        <div class="col-md-4 col-12">
+          <label class="col-form-label">
+            {{ "Assign to Ticket" | localize }}
+          </label>
+          <div class="d-flex" *ngIf="!isEditMode()">
+            <a
+              class="selector"
+              *ngFor="let assignTo of assignToTicketList"
+              [class.active-type]="selectedAssignToTicket === assignTo"
+              (click)="selectedAssignToTicket = assignTo"
+              >{{ assignTo }}</a
+            >
+          </div>
+          <div class="d-flex" *ngIf="isEditMode()">
+            <a
+              class="selector"
+              *ngFor="let assignTo of assignToTicketList"
+              [class.active-type]="selectedAssignToTicket === assignTo"
+              >{{ assignTo }}</a
+            >
+          </div>
+        </div>
+        <div class="col-md-2 col-12">
+          <div *ngIf="selectedAssignToTicket == 'Existing'">
+            <label class="col-form-label">
+              {{ "Ticket #" | localize }}
+            </label>
+            <ng-select
+              id="ticketno"
+              name="ticketno"
+              type="text"
+              class="form-control"
+              style="padding: 0 0.75rem"
+              required
+              [disabled]="isEditMode()"
+              [(ngModel)]="selectedTicketId"
+              (ngModelChange)="onTicketChange($event)"
+              #TicketModel="ngModel"
+              #TicketEl
+            >
+              <ng-option class="text-muted" value="" selected disabled>
+                Select Ticket Number
+              </ng-option>
+              <ng-option *ngFor="let ticket of tickets" [value]="ticket.id">
+                {{ "Ticket   #" + ticket.ticketNumber }}
+              </ng-option>
+            </ng-select>
+            <!-- <abp-validation-summary
+            [control]="TicketModel"
+            [controlEl]="TicketEl"
+          ></abp-validation-summary> -->
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <div
+            class="form-group d-flex flex-column required"
+            *ngIf="selectedAssignToTicket != 'None'"
+          >
+            <label class="col-form-label">
+              {{ "Ticket Title" | localize }}
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              name="title"
+              required
+              [(ngModel)]="ticketTitle"
+              [disabled]="selectedAssignToTicket == 'Existing' || isEditMode()"
+              #TicketTitleModel="ngModel"
+              #TicketTitleEl
+            />
+            <abp-validation-summary
+              [control]="TicketTitleModel"
+              [controlEl]="TicketTitleEl"
+            ></abp-validation-summary>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+
+    <!-- Fault Details -->
+    <div *ngIf="selectedActivityType.name == 'Fault'">
+      <div class="row">
+        <!-- <div class="col-md-6">
+        <div class="form-group d-flex flex-column required">
+            <label class="col-form-label" for="name">
+                {{ "Serial No" | localize }}
+            </label>
+            <ng-select type="text" name="{{'productItem'}}" required
+                (ngModelChange)="onProductItemChange($event)" [(ngModel)]="selectedSerialNo"
+                #productItemModel="ngModel" #productItemEl>
+
+                <ng-option *ngFor="let product of productItems" [value]="product.id">
+                    {{ product.name }}
+                </ng-option>
+            </ng-select>
+            <abp-validation-summary [control]="productItemModel" [controlEl]="productItemEl">
+            </abp-validation-summary>
+        </div>
+       </div>
+      <div class="col-md-6">
+          <div class="form-group d-flex flex-column required">
+              <label class="col-form-label" for="name">
+                  {{ "Product" | localize }}
+              </label>
+              <input type="text" class="form-control" name="productName" required id="productName" disabled
+                  [(ngModel)]="productName" />
+          </div>
+
+      </div> -->
+
+        <div class="col-md-6 col-12">
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <!-- <div class="form-group d-flex flex-column required">
+              <label class="col-form-label" for="name">
+                {{ "Serial No." | localize }}
+              </label>
+              <div>
+                <ng-select
+                  id="serial-no"
+                  name="serial-no"
+                  class="form-control"
+                  style="padding: 0 0.75rem"
+                  required
+                  [(ngModel)]="selectedSerialNo"
+                  (ngModelChange)="onProductChange($event)"
+                  #serialNoModel="ngModel"
+                  #serialNoEl
+                >
+                  <ng-option
+                    *ngFor="let item of productItems"
+                    [value]="item.id"
+                  >
+                    {{ item.name }}
+                  </ng-option>
+                </ng-select>
+                <abp-validation-summary
+                  [control]="serialNoModel"
+                  [controlEl]="serialNoEl"
+                ></abp-validation-summary>
+              </div>
+            </div> -->
+              <div class="form-group d-flex flex-column required">
+                <label class="col-form-label" for="name">
+                  {{ "Serial No" | localize }}
+                </label>
+                <ng-select
+                  type="text"
+                  name="{{ 'productItem' }}"
+                  required
+                  [disabled]="isEditMode()"
+                  (ngModelChange)="onProductItemChange($event)"
+                  [(ngModel)]="selectedSerialNo"
+                  #productItemModel="ngModel"
+                  #productItemEl
+                >
+                  <ng-option
+                    *ngFor="let product of productItems"
+                    [value]="product.id"
+                  >
+                    {{ product.name }}
+                  </ng-option>
+                </ng-select>
+                <abp-validation-summary
+                  [control]="productItemModel"
+                  [controlEl]="productItemEl"
+                >
+                </abp-validation-summary>
+              </div>
+            </div>
+            <div class="col-md-6 col-12">
+              <!-- <div class="form-group d-flex flex-column">
+              <label class="col-form-label" for="affproduct">
+                {{ "Affected Product" | localize }}
+              </label>
+              <div>
+                <ng-select
+                  id="affproduct"
+                  name="affproduct"
+
+                  placeholder="Select Affected Product"
+                  class="form-control"
+                  style="padding: 0 0.75rem"
+                  [(ngModel)]="selectedAffectedProduct"
+
+                >
+                  <ng-option *ngFor="let item of products" [value]="item.id">
+                    {{ item.name }}
+                  </ng-option>
+                </ng-select>
+              </div>
+            </div> -->
+
+              <div class="form-group d-flex flex-column required">
+                <label class="col-form-label" for="name">
+                  {{ "Affected Product" | localize }}
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="productName"
+                  [disabled]="isEditMode()"
+                  required
+                  id="productName"
+                  disabled
+                  [(ngModel)]="productName"
+                />
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group d-flex flex-column required">
+                <label class="col-form-label" for="name">
+                  {{ "Fault Title" | localize }}
+                </label>
+                <div>
+                  <input
+                    id="fault-tile"
+                    name="fault-tile"
+                    type="text"
+                    class="form-control"
+                    required
+                    [disabled]="isEditMode()"
+                    [(ngModel)]="createFaultDto.comment"
+                    #faultTitleModel="ngModel"
+                    #faultTitleEl
+                  />
+                  <abp-validation-summary
+                    [control]="faultTitleModel"
+                    [controlEl]="faultTitleEl"
+                  ></abp-validation-summary>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Solution Note -->
+        <div class="col-md-6 col-12 pl-5" *ngIf="viewMode == ViewMode.Edit">
+          <label class="col-form-label">
+            {{ "Solution Note" | localize }}
+          </label>
+          <div class="solution-container">
+            <div class="solution-info">
+              <div class="solution-user">
+                <div class="online-status"></div>
+                <div class="user-name">
+                  {{ this._appSessionService.getShownLoginName() }}
+                </div>
+              </div>
+              <!-- <div>12/12/2020</div> -->
+            </div>
+            <div class="solution-editor">
+              <textarea
+                id="txt-area"
+                name="text-area"
+                class="form-control"
+                [(ngModel)]="solutionNote"
+                rows="5"
+                placeholder="A section for text describing the solution"
+              ></textarea>
+              <div class="actions">
+                <!-- <a class="text-muted mr-2"><i class="fas fa-pencil-alt"></i></a>
+              <a class="text-muted"><i class="fas fa-trash"></i></a> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Description and Files -->
+        <div class="col-md-6 col-12 mt-2">
+          <label class="col-form-label">
+            {{ "Description" | localize }}
+          </label>
+          <div class="description-n-files">
+            <div class="description">
+              <textarea
+                id="fault-description"
+                name="fault-description"
+                cols="30"
+                rows="6"
+                [disabled]="isEditMode()"
+                [(ngModel)]="createFaultDto.description"
+              ></textarea>
+            </div>
+            <div class="files">
+              <div class="file-list">
+                <div
+                  *ngIf="!dbFilesList.length"
+                  class="m-auto pt-4"
+                  style="width: 80%"
+                >
+                  Click on "Upload Files" to add files to this fault
+                </div>
+                <div
+                  class="file-list-item"
+                  *ngFor="let file of dbFilesList; let i = index"
+                >
+                  <span (click)="preview(file.imageUrl)">{{ file.name }}</span>
+                  <div class="actions">
+                    <!-- <a class="text-muted" (click)="removeFile(i)"
+                    ><i class="fas fa-trash"></i
+                  ></a> -->
+                  </div>
+                </div>
+                <div
+                  class="file-list-item"
+                  *ngFor="let file of files; let i = index"
+                >
+                  <span (click)="preview(file.imageUrl)">{{ file.name }}</span>
+                  <div class="actions">
+                    <a class="text-muted" (click)="removeFile(i)"
+                      ><i class="fas fa-trash"></i
+                    ></a>
+                  </div>
+                </div>
+              </div>
+              <input
+                id="file-select"
+                name="file-select"
+                #fileSelect
+                type="file"
+                [disabled]="isEditMode()"
+                hidden
+                (change)="onFileSelect($event)"
+              />
+              <div class="upload-files" (click)="fileSelect.click()">
+                Upload Files
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Comments -->
+        <div
+          class="col-md-6 col-12 mt-2 pl-5"
+          *ngIf="viewMode == ViewMode.Edit"
+        >
+          <label class="col-form-label">
+            {{ "Comments" | localize }}
+          </label>
+          <div class="comments-container">
+            <div class="comments1">
+              <div
+                *ngFor="let comment of comments"
+                style="width: 100% !important; margin: 0px"
+              >
+                <div class="comment-info">
+                  <div class="comment-user">
+                    <div
+                      class="online-status1"
+                      style="display: inline-block"
+                    ></div>
+                    <span class="user-name f-600">{{ comment.userName }}</span>
+                  </div>
+                </div>
+                <div class="comment-detail1">
+                  <span>
+                    {{ comment.commentText }}
+                  </span>
+                  <span class="actions1">
+                    <!-- <a class="text-muted"><i class="fas fa-trash"></i></a> -->
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="add-comment">
+              <input
+                name="comment"
+                id="comment"
+                [(ngModel)]="commentText"
+                class="form-control"
+                placeholder="Type here..."
+              />
+              <button class="btn btn-primary" (click)="addComment()">
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Note Details -->
+    <div *ngIf="selectedActivityType.name == 'Note'">
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <div class="form-group d-flex flex-column required">
+            <label class="col-form-label" for="name">
+              {{ "Note Title" | localize }}
+            </label>
+            <div>
+              <input
+                id="note-tile"
+                name="note-tile"
+                type="text"
+                class="form-control"
+                required
+                [disabled]="isEditMode()"
+                [(ngModel)]="noteActivityInput.title"
+                #NoteTitleModel="ngModel"
+                #NoteTitleEl
+              />
+              <abp-validation-summary
+                [control]="NoteTitleModel"
+                [controlEl]="NoteTitleEl"
+              ></abp-validation-summary>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-12 pl-5">
+          <label class="col-form-label">
+            {{ "Note Type" | localize }}
+          </label>
+          <div class="d-flex">
+            <a
+              class="selector"
+              *ngFor="let type of noteTypeList"
+              [class.active-type]="selectedNoteType.id === type.id"
+              (click)="selectedNoteType = type"
+              >{{ type.name }}</a
+            >
+          </div>
+        </div>
+        <div class="col-md-6 col-12 mt-2">
+          <label class="col-form-label">
+            {{ "Description" | localize }}
+          </label>
+          <textarea
+            id="note-description"
+            name="note-description"
+            class="form-control"
+            placeholder="Type here ..."
+            rows="6"
+            [disabled]="isEditMode()"
+            [(ngModel)]="noteActivityInput.description"
+          ></textarea>
+        </div>
+        <div class="col-md-6 col-12 mt-2 pl-5">
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <label class="col-form-label">
+                {{ "Time" | localize }}
+              </label>
+              <div class="form-group d-flex flex-column required">
+                <input
+                  id="date-time"
+                  name="date-time"
+                  type="date"
+                  class="form-control"
+                  required
+                  [disabled]="isEditMode()"
+                  [(ngModel)]="activityDate"
+                  #dateTimeModel="ngModel"
+                  #dateTimeEl
+                />
+                <!-- <abp-validation-summary
+                [control]="dateTimeModel"
+                [controlEl]="dateTimeEl"
+              ></abp-validation-summary> -->
+              </div>
+            </div>
+            <div class="col-md-6 col-12"></div>
+            <div class="col-md-6 col-12">
+              <label class="col-form-label">
+                {{ "Customer E-Mail" | localize }}
+              </label>
+              <div class="form-group d-flex flex-column required">
+                <input
+                  id="customer-email"
+                  name="customer-email"
+                  type="text"
+                  class="form-control"
+                  disabled
+                  required
+                  [disabled]="isEditMode()"
+                  [(ngModel)]="
+                    selectedSubCustomer
+                      ? selectedSubCustomer.emailAddress
+                      : selectedCustomer.emailAddress
+                  "
+                  #customerEmailModel="ngModel"
+                  #customerEmailEl
+                />
+                <!-- <abp-validation-summary
+                [control]="customerEmailModel"
+                [controlEl]="customerEmailEl"
+              ></abp-validation-summary> -->
+              </div>
+            </div>
+            <div class="col-md-6 col-12">
+              <label class="col-form-label">
+                {{ "Customer Phone Number" | localize }}
+              </label>
+              <div class="form-group d-flex flex-column required">
+                <input
+                  id="phone"
+                  [disabled]="isEditMode()"
+                  name="phone"
+                  type="text"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assign People & Follow up -->
+    <div *ngIf="selectedActivityType.name != 'Ticket'">
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <label class="col-form-label">
+                {{ "Assign People" | localize }}
+              </label>
+              <div class="d-flex">
+                <a
+                  class="selector"
+                  *ngFor="let item of assignToPeopleList"
+                  [class.active-type]="selectedAssignToPeople === item"
+                  (click)="selectedAssignToPeople = item"
+                  >{{ item }}</a
+                >
+              </div>
+            </div>
+            <div class="col-md-6 col-12">
+              <ng-container *ngIf="selectedAssignToPeople == 'Employee'">
+                <label class="col-form-label">
+                  {{ "Employee" | localize }}
+                </label>
+                <div class="form-group d-flex flex-column required">
+                  <select
+                    id="select-employe"
+                    name="select-employe"
+                    type="text"
+                    class="form-control"
+                    placeholder="Select Employee"
+                    required
+                    [disabled]="isEditMode()"
+                    [(ngModel)]="assignedTo"
+                    (ngModelChange)="onEmployeeChange($event)"
+                    #assignedToModel="ngModel"
+                    #assignedToEl
+                  >
+                    <option
+                      *ngFor="let employee of employees"
+                      [value]="employee.id"
+                    >
+                      {{ employee.fullName }}
+                    </option>
+                  </select>
+                  <abp-validation-summary
+                    [control]="assignedToModel"
+                    [controlEl]="assignedToEl"
+                  ></abp-validation-summary>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="selectedAssignToPeople == 'Group'">
+                <label class="col-form-label"> {{ "Group" | localize }} </label>
+                <div class="form-group d-flex flex-column required">
+                  <select
+                    id="group"
+                    name="group"
+                    type="text"
+                    placeholder="Select Group"
+                    class="form-control"
+                    required
+                    [disabled]="isEditMode()"
+                    [(ngModel)]="assignedTo"
+                    (ngModelChange)="onGroupChange($event)"
+                    #assignedToModel="ngModel"
+                    #assignedToEl
+                  >
+                    <option *ngFor="let group of groups" [value]="group.id">
+                      {{ group.name }}
+                    </option>
+                  </select>
+                  <abp-validation-summary
+                    [control]="assignedToModel"
+                    [controlEl]="assignedToEl"
+                  ></abp-validation-summary>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <!-- selected Employees/Groups -->
+          <div class="d-flex flex-wrap">
+            <ng-container *ngIf="selectedAssignToPeople == 'Employee'">
+              <div class="custom-badge" *ngFor="let emp of selectedEmployees">
+                <span class="mr-2">{{ emp.fullName }}</span>
+                <a class="text-muted" (click)="removeEmployee(emp.id)"
+                  ><i class="fas fa-times"></i
+                ></a>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="selectedAssignToPeople == 'Group'">
+              <div class="custom-badge" *ngFor="let group of selectedGroups">
+                <span class="mr-2">{{ group.name }}</span>
+                <a class="text-muted" (click)="removeGroup(group.id)"
+                  ><i class="fas fa-times"></i
+                ></a>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div
+          class="col-md-6 col-12 pl-5"
+          *ngIf="selectedActivityType.name == 'Note'"
+        >
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <label class="col-form-label">
+                {{ "Followup Type" | localize }}
+              </label>
+              <div class="form-group d-flex flex-column required">
+                <select
+                  id="followuptype"
+                  name="followuptype"
+                  type="text"
+                  class="form-control"
+                  required
+                  [disabled]="isEditMode()"
+                  [(ngModel)]="selectedFollowUpTypeId"
+                  #followuptypeModel="ngModel"
+                  #followuptypeEl
+                >
+                  <option
+                    *ngFor="let item of allActivityTypes"
+                    [value]="item.id"
+                  >
+                    {{ item.name }}
+                  </option>
+                </select>
+                <!-- <abp-validation-summary
+                [control]="followuptypeModel"
+                [controlEl]="followuptypeEl"
+              ></abp-validation-summary> -->
+              </div>
+            </div>
+            <div class="col-md-6 col-12">
+              <label class="col-form-label">
+                {{ "Followup Date" | localize }}
+              </label>
+              <div class="form-group d-flex flex-column required">
+                <input
+                  id="Followup-date"
+                  name="Followup-date"
+                  type="date"
+                  class="form-control"
+                  required
+                  [disabled]="isEditMode()"
+                  [(ngModel)]="followUpDate"
+                  #followupdateModel="ngModel"
+                  #followupdateEl
+                />
+                <!-- <abp-validation-summary
+                [control]="followupdateModel"
+                [controlEl]="followupdateEl"
+              ></abp-validation-summary> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-end">
+      <button class="btn btn-outline-secondary mr-4" (click)="goBack()">
+        Go Back
+      </button>
+      <button
+        class="btn btn-primary mr-2"
+        (click)="onSaveClick()"
+        [disabled]="saving"
+      >
+        Save
+      </button>
+    </div>
+  </ng-container>
+</form>

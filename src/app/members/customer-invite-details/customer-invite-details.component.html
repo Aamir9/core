@@ -1,0 +1,124 @@
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-6 py-3">
+      <h4>
+        {{ "ActivityInfo" | localize }}
+      </h4>
+      <div class="my-3">
+     <b class="mr-2 "> {{activityDto.name }}  </b>
+      </div>
+
+      <div class="my-3">
+       <b class="mr-2 ">{{activityDto.date  | date}} </b> 
+      </div>
+    </div>
+
+    <div class="col-md-6 py-3" *ngIf="!isAdminUser()" >
+
+      <h4>
+        {{ "SetStatus" | localize }}
+      </h4>
+
+      <button class="btn btn-outline-primary mr-3"   (click)="updateInviteResponse(1)">
+        <img src="../../../assets/img/greenCheck.png" class="icon pr-2" alt=""> 
+        {{ "Comming" | localize }}
+        
+      </button>
+
+      <button class="btn btn-outline-danger"  (click)="updateInviteResponse(0)">
+        <img src="../../../assets/img/cross.png"   class="icon pr-2" alt="">
+        {{ "NotComming" | localize }}
+      </button>
+
+    </div>
+
+   
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row">
+    <div class="col-md-6 py-3">
+
+      <h4>   {{ "UserStatus" | localize }} </h4>
+      <div>
+        <h4 class="mt-4"> <img src=".../../../assets/img/greenCheck.png" class="img-fluid" alt="">   {{ "Comming" | localize }}</h4>
+        <hr>
+
+        
+        <div class="py-2 " *ngFor="let comming of acceptedInvites">
+          <img src="../../../assets/img/user.png" class="icon mr-3" alt="">
+          <span>{{comming.name}}</span>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="mt-5"> <img src="../../../assets/img/cross.png" class="icon mr-2">  {{ "NotComming" | localize }} </h4>
+        <hr>
+
+        <div class="py-2" *ngFor="let notComming of declinedInvites">
+          <img src="../../../assets/img/user.png" class="icon mr-3" alt="">
+          <span>{{notComming.name}}</span>
+        </div>
+      </div>
+
+
+      <div>
+        <h4 class="mt-5"> <img src="../../../assets/img/question.png" class="icon mr-2">
+          {{ "NotAnswer" | localize }}
+        </h4>
+        <hr>
+
+        <div class="py-2" *ngFor="let pending of pendingInvites">
+          <img src="../../../assets/img/user.png" class="icon mr-3" alt="">
+          <span> {{pending.name}}</span>
+        </div>
+      </div>
+
+
+    
+    </div>
+
+    
+
+    <div class="col-md-6 py-3">
+      
+      <hr>
+      <h4> {{ "AddComment" | localize }} </h4>
+
+      <div class="form-group mt-3">
+        <textarea  name="comment" id="comment" [(ngModel)]="commentDto.commentText" class="form-control" rows="3"></textarea>
+          
+      </div>
+
+      <div class="form-group mt-3 d-flex flex-row justify-content-end">
+        <button class="btn btn-primary ms-auto" (click)="addComment()" >
+          Save
+        </button>
+      </div>
+
+      <div class="container py-2">
+        <h4> {{ "Comments" | localize }}  </h4>
+        <hr>
+        <div class="row">
+          <div class="col-12"  >
+            <div class="py-2" *ngFor="let comment of comments">
+              <img src="../../../assets/img/user.png" class="icon mr-3"  alt="">
+              <b>{{comment.userName}}</b>
+              <p class="pl-5" >
+                {{comment.commentText}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+

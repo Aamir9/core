@@ -1,0 +1,376 @@
+<form autocomplete="off" #productForm="ngForm" (ngSubmit)="save()">
+  <div class="container-fluid px-3">
+    <div class="row mt-3">
+      <div class="col-md-9">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group d-flex flex-column required">
+                  <label class="col-form-label" for="name">
+                    {{ "Name" | localize }}
+                  </label>
+                  <div>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="name"
+                      id="name"
+                      required
+                      [(ngModel)]="model.name"
+                      #nameModel="ngModel"
+                      #nameKindEl
+                    />
+                    <abp-validation-summary
+                      [control]="nameModel"
+                      [controlEl]="nameKindEl"
+                    ></abp-validation-summary>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group d-flex flex-column required">
+                  <label class="col-form-label" for="instock">
+                    {{ "InStock" | localize }}
+                  </label>
+                  <div>
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="inStock"
+                      required=""
+                      id="inStock"
+                      [(ngModel)]="model.inStock"
+                      #inStockModel="ngModel"
+                      #inStockKindEl
+                    />
+                    <abp-validation-summary
+                      [control]="inStockModel"
+                      [controlEl]="inStockKindEl"
+                    ></abp-validation-summary>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-md-4 required">
+                <label class="col-form-label" for="group">
+                  {{ "Group" | localize }}
+                </label>
+                <ng-select
+                  type="text"
+                  name="group"
+                  id="group"
+                  required
+                  [(ngModel)]="model.responsibleGroupIds"
+                  [multiple]="true"
+                  #groupModel="ngModel"
+                  #groupEl
+                >
+                  <ng-option *ngFor="let group of groups" [value]="group.id">
+                    {{ group.name }}
+                  </ng-option>
+                </ng-select>
+
+                <abp-validation-summary
+                  [control]="groupModel"
+                  [controlEl]="groupEl"
+                ></abp-validation-summary>
+              </div>
+
+              <div class="form-group col-md-4 required">
+                <label class="col-form-label" for="supplier">
+                  {{ "Supplier" | localize }}
+                </label>
+                <select
+                  type="text"
+                  class="form-control"
+                  name="supplier"
+                  id="supplier"
+                  required
+                  [(ngModel)]="model.supplierId"
+                  #supplierModel="ngModel"
+                  #supplierEl
+                >
+                  <option
+                    *ngFor="let supplier of suppliers"
+                    [value]="supplier.id"
+                  >
+                    {{ supplier.name }}
+                  </option>
+                </select>
+
+                <abp-validation-summary
+                  [control]="supplierModel"
+                  [controlEl]="supplierEl"
+                ></abp-validation-summary>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group d-flex flex-column">
+                  <label class="col-form-label" for="productGroup">
+                    {{ "ProductGroup" | localize }}
+                  </label>
+                  <div>
+                    <select
+                      class="form-control"
+                      name="productGroup"
+                      id="productGroup"
+                      [(ngModel)]="model.productGroupNumber"
+                      #productGroupModel="ngModel"
+                      #productGroupEl
+                    >
+                      <option
+                        *ngFor="let productGroup of productGroups"
+                        [value]="productGroup.id"
+                      >
+                        {{ productGroup.name }}
+                      </option>
+                    </select>
+                    <abp-validation-summary
+                      [control]="productGroupModel"
+                      [controlEl]="productGroupEl"
+                    ></abp-validation-summary>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group d-flex flex-column">
+                  <label class="col-form-label" for="category">
+                    {{ "Category" | localize }}
+                  </label>
+                  <div>
+                    <select
+                      class="form-control"
+                      name="category"
+                      id="category"
+                      [(ngModel)]="model.categoryId"
+                      #categoryModel="ngModel"
+                      #categoryEl
+                    >
+                      <option
+                        *ngFor="let category of categories"
+                        [value]="category.id"
+                      >
+                        {{ category.name }}
+                      </option>
+                    </select>
+                    <abp-validation-summary
+                      [control]="categoryModel"
+                      [controlEl]="categoryEl"
+                    ></abp-validation-summary>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group d-flex flex-column required">
+                  <label class="col-form-label" for="brand">
+                    {{ "Brand" | localize }}
+                  </label>
+                  <div>
+                    <select
+                      class="form-control"
+                      name="brand"
+                      id="brand"
+                      [(ngModel)]="model.brandId"
+                      #brandModel="ngModel"
+                      #brandEl
+                    >
+                      <option *ngFor="let brand of brands" [value]="brand.id">
+                        {{ brand.name }}
+                      </option>
+                    </select>
+                    <abp-validation-summary
+                      [control]="brandModel"
+                      [controlEl]="brandEl"
+                    ></abp-validation-summary>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-2">
+                <div class="form-group d-flex flex-column required">
+                  <label class="col-form-label" for="salesPrice">
+                    {{ "SalesPrice" | localize }}
+                  </label>
+                  <div>
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="salesPrice"
+                      id="salesPrice"
+                      required
+                      [(ngModel)]="model.salesPrice"
+                      #salesPriceModel="ngModel"
+                      #salesPriceEl
+                    />
+                    <abp-validation-summary
+                      [control]="salesPriceModel"
+                      [controlEl]="salesPriceEl"
+                    ></abp-validation-summary>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-2">
+                <div class="form-group d-flex flex-column required">
+                  <label class="col-form-label" for="costPrice">
+                    {{ "CostPrice" | localize }}
+                  </label>
+                  <div>
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="costPrice"
+                      id="costPrice"
+                      required
+                      [(ngModel)]="model.costPrice"
+                      #costPriceModel="ngModel"
+                      #costPriceEl
+                    />
+                    <abp-validation-summary
+                      [control]="costPriceModel"
+                      [controlEl]="costPriceEl"
+                    ></abp-validation-summary>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group d-flex flex-column required">
+                  <label class="col-form-label" for="location">
+                    {{ "Location" | localize }}
+                  </label>
+                  <div>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="location"
+                      id="location"
+                      required
+                      [(ngModel)]="model.location"
+                      #locationModel="ngModel"
+                      #locationEl
+                    />
+                    <abp-validation-summary
+                      [control]="locationModel"
+                      [controlEl]="locationEl"
+                    ></abp-validation-summary>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <!-- mode.description -->
+                <div class="form-group d-flex flex-column required">
+                  <label class="col-form-label" for="description">
+                    {{ "Description" | localize }}
+                  </label>
+                  <div>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="description"
+                      id="description"
+                      required
+                      [(ngModel)]="model.description"
+                      #descriptionModel="ngModel"
+                      #descriptionEl
+                    />
+                    <abp-validation-summary
+                      [control]="descriptionModel"
+                      [controlEl]="descriptionEl"
+                    ></abp-validation-summary>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mt-5">
+                <div class="form-group row mb-0">
+                  <label class="col-md-6 col-form-label">
+                    {{ "Is Medical Device" | localize }}
+                  </label>
+                  <div class="col-md-6">
+                    <div class="custom-control custom-checkbox">
+                      <input
+                        type="checkbox"
+                        class="custom-control-input"
+                        name="isActive"
+                        id="isActive"
+                        [(ngModel)]="model.isMedicalDevice"
+                      />
+                      <label
+                        class="custom-control-label mt-2"
+                        for="isActive"
+                      ></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-4">
+                            <div class="form-group">
+
+                                <app-upload-photo [imageUrl]='model.pictureUrl'
+                                    (onFileUpload)='onFileUploadHandler($event)'></app-upload-photo>
+                                <div class="text-danger" *ngIf="isPhotoUploaded===false">
+                                    {{'kindly upload image' | localize}}
+                                </div>
+                            </div>
+                        </div> -->
+              <!-- <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-form-label" for="companyLogo">
+                                    {{ "Product Image" | localize }}
+                                </label>
+
+                            </div>
+                        </div> -->
+
+              <div class="col-md-6 mt-3">
+                <button
+                  class="btn btn-primary btn-lg btn-block mt-3"
+                  [disabled]="!productForm.form.valid || saving"
+                  (onCancelClick)="onCancelClick()"
+                >
+                  Add Item
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="">Upload Product Image</h5>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <app-upload-photo
+                [imageUrl]="model.pictureUrl"
+                (onFileUpload)="onFileUploadHandler($event)"
+              ></app-upload-photo>
+              <div class="text-danger" *ngIf="isPhotoUploaded === false">
+                {{ "kindly upload image" | localize }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="row"> -->
+    <!-- <div class="col-md-6">
+                <ng-container *ngIf="this.id>0">
+                    <h4>Serial No</h4>
+                    <div class="list-group custom-list" style="height: 150px; width: 400px; overflow-y: scroll;">
+                      <a *ngFor="let serial of this.model.productSerials" class="list-group-item custom-list-item">{{ serial }}</a>
+                    </div>
+                </ng-container>
+            </div> -->
+
+    <!-- </div> -->
+  </div>
+  <!-- <app-custom-fields *ngIf="isCustomFieldsAvailable" [disabled]="false"
+        [customFields]="model.customFields"></app-custom-fields>
+    <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!productForm.form.valid || saving"
+        (onCancelClick)="onCancelClick()"></abp-modal-footer> -->
+</form>

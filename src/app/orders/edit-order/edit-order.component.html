@@ -1,0 +1,144 @@
+<form class="form-horizontal" autocomplete="off" #createOrderForm="ngForm" (ngSubmit)="save()">
+
+  <abp-modal-header [title]="'Update Order' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+  <fieldset disabled>
+    <div class="modal-body">
+      <div class="row">
+        <div class="form-group col-md-3  required">
+          <label class="col-form-label" for="orderNumber">
+            {{ "Order Number" | localize }}
+          </label>
+          <input type="text" class="form-control" name="orderNumber" id="orderNumber" required disabled=""
+            [(ngModel)]="order.orderNumber" #orderModel="ngModel" #orderEl />
+          <abp-validation-summary [control]="orderModel" [controlEl]="orderEl"></abp-validation-summary>
+        </div>
+        <div class="form-group col-md-3  required">
+          <label class="col-form-label" for="orderDate">
+            {{ "Order Date" | localize }}
+          </label>
+          <input type="date" class="form-control" name="orderDate" id="orderDate" required
+            [ngModel]="orderDate | date:'yyyy-MM-dd'" (change)="orderDate = $event.target.value"
+            #orderDateModel="ngModel" #orderDateEl />
+          <abp-validation-summary [control]="orderDateModel" [controlEl]="orderDateEl"></abp-validation-summary>
+        </div>
+        <div class="form-group col-md-3  required">
+          <label class="col-form-label" for="employee">
+            {{ "Employee" | localize }}
+          </label>
+          <select type="text" class="form-control" name="employee" id="employee" required [(ngModel)]="order.employeeId"
+            #employeeModel="ngModel" #employeeEl>
+            <option *ngFor="let employee of employees" [value]="employee.id">
+              {{ employee.name }}
+            </option>
+          </select>
+
+          <abp-validation-summary [control]="employeeModel" [controlEl]="employeeEl"></abp-validation-summary>
+        </div>
+        <div class="form-group col-md-3  required">
+          <label class="col-form-label" for="supplier">
+            {{ "Supplier" | localize }}
+          </label>
+          <select type="text" class="form-control" name="supplier" id="supplier" required [(ngModel)]="order.supplierId"
+            #supplierModel="ngModel" #supplierEl>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.id">
+              {{ supplier.name }}
+            </option>
+          </select>
+
+          <abp-validation-summary [control]="supplierModel" [controlEl]="supplierEl"></abp-validation-summary>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-12  required">
+          <label class="col-form-label" for="note">
+            {{ "Note" | localize }}
+          </label>
+          <input type="textarea" class="form-control" name="note" id="note" required [(ngModel)]="order.note"
+            #noteModel="ngModel" #noteEl />
+          <abp-validation-summary [control]="noteModel" [controlEl]="noteEl"></abp-validation-summary>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <button type="button" class="btn bg-blue" (click)="addProduct()">
+                <i class="fa fa-plus-square"></i>
+                {{ "Add Product" | localize }}
+              </button>
+            </div>
+            <div class="card-body table-responsive p-0">
+              <table class="table table-hover text-nowrap">
+                <thead class="bg-light">
+                  <tr>
+                    <th class="w-25">Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Promised Date</th>
+                    <th class="w-25">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let orderLine of orderLines">
+                    <td>
+                      <div class="form-group required">
+                        <select type="text" class="form-control" name="product" id="product" required
+                          [(ngModel)]="orderLine.productId" #productModel="ngModel" #productEl>
+                          <option *ngFor="let product of products" [value]="product.id">
+                            {{ product.name }}
+                          </option>
+                        </select>
+                        <abp-validation-summary [control]="supplierModel" [controlEl]="supplierEl">
+                        </abp-validation-summary>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group required">
+                        <input type="text" class="form-control" name="quantity" id="quantity" required
+                          (change)="calculateOderLineTotal(orderLine)" [(ngModel)]="orderLine.quantity"
+                          #quantityModel="ngModel" #quantityEl />
+                        <abp-validation-summary [control]="quantityModel" [controlEl]="quantityEl">
+                        </abp-validation-summary>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group required">
+                        <input type="text" class="form-control" name="price" id="price" required
+                          (change)="calculateOderLineTotal(orderLine)" [(ngModel)]="orderLine.price"
+                          #priceModel="ngModel" #priceEl />
+                        <abp-validation-summary [control]="priceModel" [controlEl]="priceEl">
+                        </abp-validation-summary>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group required">
+                        <input type="date" class="form-control" name="promisedDate" id="promisedDate" required
+                          (change)="setOrderLinePromisedDate(orderLine)"
+                          [ngModel]="orderLine.promissedDate| date:'yyyy-MM-dd'" #promisedDateModel="ngModel"
+                          #promisedDateEl />
+                        <abp-validation-summary [control]="promisedDateModel" [controlEl]="promisedDateEl">
+                        </abp-validation-summary>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group required">
+                        <span class="form-control">{{orderLine.total}}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="mt-2 ml-2">
+                <h4>
+                  {{ "Total:"| localize }}{{ orderTotal | number }}
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createOrderForm.form.valid || saving ||true"
+    (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

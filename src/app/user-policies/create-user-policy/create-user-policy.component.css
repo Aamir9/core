@@ -1,0 +1,14 @@
+.preview {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    width: 100%;
+    background-color: #dfebef;
+    border-radius: 12px;
+    margin-bottom: 8px;
+}
+::ng-deep .ng-select .ng-select-container {
+    /* border-radius: 20px !important;  */
+    border: 2px solid rgba(0, 0, 0, 0.5) !important;
+  }

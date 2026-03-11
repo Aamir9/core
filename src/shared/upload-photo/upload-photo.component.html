@@ -1,0 +1,22 @@
+<div class="image">
+  <div class="image-preview" *ngIf="!isCapturing && imagePreview">
+    <img [src]="imagePreview" class="img-fluid">
+  </div>
+
+  <div *ngIf="isCapturing">
+    <video #video width="145" autoplay></video>
+  </div>
+
+  <div class="buttons mt-1">
+    &nbsp;&nbsp;<button class="btn btn-outline-primary shadow-sm" type="button" (click)="filePicker.click()" title="Upload Image">
+      <i class="fas fa-upload fa-lg"></i>
+    </button>
+    <input type="file" #filePicker (change)="onImagePicked($event)" style="display: none;">
+    &nbsp;
+
+    <!-- Add responsive utility class to hide the button on mobile -->
+    <button class="btn btn-outline-secondary shadow-sm d-none d-md-inline" type="button" (click)="captureImage()" title="Capture Image">
+      <i class="fas fa-camera fa-lg"></i>
+    </button>
+  </div>
+</div>

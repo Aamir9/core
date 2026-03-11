@@ -1,0 +1,17 @@
+<div class="parent">
+  <sidebar></sidebar>
+  <div class="right-side">
+    <app-header></app-header>
+    <div class="main-body">
+      <router-outlet></router-outlet>
+    </div>
+    <app-footer></app-footer>
+  </div>
+  <app-chat *ngIf="isMessengerVisible"></app-chat>
+  <div class="chat-message-button">
+    <button class="msg_send_btn" (click)="onChatClick()" type="button">
+      <i class="fa fa-comments"></i>
+    </button>
+  </div>
+  <div id="sidebar-overlay" (click)="toggleSidebar()"></div>
+</div>

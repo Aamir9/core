@@ -1,0 +1,91 @@
+<form class="form-horizontal" #createOrderForm="ngForm" autocomplete="off" (ngSubmit)="save()">
+    <abp-modal-header [title]="'Create Sale Invoice' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="name">
+                        {{ "Customer" | localize }}
+                    </label>
+                    <div class="col-md-9" *ngIf="this.selectedCustomer">
+                        <input type="text" [value]="selectedCustomer.fullName" class="form-control" disabled>
+                    </div>
+                    <div class="col-md-9" *ngIf="!this.selectedCustomer">
+                        <div class="form-group required">
+                            <select type="text" class="form-control" name="{{customerId}}" required
+                                [(ngModel)]="this.invoice.customerId" #customerModel="ngModel" #customerEl>
+                                <option *ngFor="let customer of customers" [value]="customer.customerUserId">
+                                    {{ customer.name }}
+                                </option>
+                            </select>
+                            <abp-validation-summary [control]="customerModel" [controlEl]="customerEl">
+                            </abp-validation-summary> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <button type="button" class="btn bg-blue" (click)="addProduct()">
+                            <i class="fa fa-plus-square"></i>
+                            {{ "Add Product" | localize }}
+                        </button>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="w-25">Product</th>
+                                    <th>Quantity</th>
+                                    <th>Actions</th>
+                                    <!-- <th>Promised Date</th>
+                                    <th class="w-25">Total</th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let orderLine of invoiceLines;let i=index">
+                                    <td>
+                                        <div class="form-group required">
+                                            <select type="text" class="form-control" name="{{'product'+i}}" required
+                                                [(ngModel)]="orderLine.productId" #productModel="ngModel"
+                                                #productEl>
+                                                <option *ngFor="let product of products" [value]="product.id">
+                                                    {{ product.name }}
+                                                </option>
+                                            </select>
+                                            <!-- <abp-validation-summary [control]="supplierModel" [controlEl]="supplierEl">
+                                            </abp-validation-summary> -->
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group required">
+                                            <input type="text" class="form-control" name="{{'quantity'+i}}" required
+                                                [(ngModel)]="orderLine.quantity"
+                                                (change)="calculateInvoiceLineTotal(orderLine)" #quantityModel="ngModel"
+                                                #quantityEl />
+                                            <!-- <abp-validation-summary [control]="quantityModel" [controlEl]="quantityEl">
+                                            </abp-validation-summary> -->
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <a href="javascript:;" class="btn bg-red mr-1" (click)="delete(orderLine)">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createOrderForm.form.valid || saving"
+        (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

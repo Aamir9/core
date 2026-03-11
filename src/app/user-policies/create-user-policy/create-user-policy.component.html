@@ -1,0 +1,130 @@
+<form class="form-horizontal" autocomplete="off" #createUserPolicyModal="ngForm" (ngSubmit)="save()">
+  <abp-modal-header [title]="'Create User Policy' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+
+  <div class="modal-body" style="height: 60vh; overflow: auto;">
+    <tabset>
+      <!-- Basic Information Tab -->
+      <tab [heading]="'Basic Information' | localize">
+        <div class="basic-info-form sleek-form mt-2">
+          <div class="form-grid p-3">
+            <div class="form-field">
+              <label for="branch">{{ "Branch" | localize }}</label>
+              <input type="text" id="branch" name="branch" maxlength="128"
+                     [(ngModel)]="createDto.branch" placeholder="Enter branch" />
+            </div>
+            <div class="form-field">
+              <label for="company">{{ "Company" | localize }}</label>
+              <input type="text" id="company" name="company" maxlength="128"
+                     [(ngModel)]="createDto.company" placeholder="Enter company" />
+            </div>
+            <div class="form-field">
+              <label for="policyNumber">{{ "Policy Number" | localize }}</label>
+              <input type="text" id="policyNumber" name="policyNumber" maxlength="64"
+                     [(ngModel)]="createDto.policyNumber" placeholder="Enter policy number" />
+            </div>
+            <div class="form-field">
+              <label for="renewalDate">{{ "Renewal Date" | localize }}</label>
+              <input type="date" id="renewalDate" name="renewalDate"
+                     [(ngModel)]="createDto.renewalDate" placeholder="Select renewal date" />
+            </div>
+            <div class="form-field">
+              <label for="annualPremium">{{ "Annual Premium" | localize }}</label>
+              <input type="text" id="annualPremium" name="annualPremium" maxlength="32"
+                     [(ngModel)]="createDto.annualPremium" placeholder="Enter annual premium" />
+            </div>
+            <div class="form-field">
+              <label for="comment">{{ "Comment" | localize }}</label>
+              <textarea id="comment" name="comment" rows="4"
+                        [(ngModel)]="createDto.comment" placeholder="Enter comment"></textarea>
+            </div>
+          </div>
+        </div>
+      </tab>
+
+      <!-- Upload File-->
+          <tab [heading]="'Upload Files' | localize">
+          <ngx-file-drop
+              class="mb-2"
+              dropZoneLabel="Drop files here"
+              (onFileDrop)="dropped($event)"
+            >
+              <ng-template
+                ngx-file-drop-content-tmp
+                let-openFileSelector="openFileSelector"
+              >
+                <div>
+                  <div class="text-center">
+                    Drage and drop file here, or click to Browse file
+                  </div>
+                  <div class="text-center mt-3">
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-outline"
+                      (click)="openFileSelector()"
+                    >
+                      Browse Files
+                    </button>
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-file-drop>
+
+             <!-- <div class="d-flex flex-wrap mt-2" *ngIf="createDto.files.length">
+              <ng-container *ngFor="let file of createDto.files; let i = index">
+                <div class="preview">
+                  <p>{{ file.name }}</p>
+                  <button
+                    type="button"
+                    class="btn btn-danger "
+                    (click)="removeFile(i)"
+                         data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"
+                  >
+                   <i class="fas fa-trash text-white fs-5"></i>
+                  </button>
+                </div>
+              </ng-container>
+            </div> -->
+            <div class="d-flex flex-wrap mt-3" *ngIf="createDto.files.length">
+  <ng-container *ngFor="let file of createDto.files; let i = index">
+    <div class="card shadow-sm mr-2 mb-2" style="width: 200px;">
+      <div class="card-body p-2 d-flex flex-column justify-content-between">
+        <p class="mb-2 text-truncate" title="{{ file.name }}">
+          <i class="fa fa-file mr-1"></i> {{ file.name }}
+        </p>
+
+        <button
+          type="button"
+          class="btn btn-sm btn-danger w-100"
+          (click)="removeFile(i)"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="Delete"
+        >
+          <i class="fas fa-trash"></i> Remove
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+            </tab>
+      <!-- Upload PDF Tab -->
+      <tab [heading]="'Upload Certificate PDF' | localize">
+        <div class="additional-info-form sleek-form mt-2">
+          <div class="form-grid p-3">
+            <div class="form-field">
+              <label for="policyPdf">{{ "Policy Certificate PDF" | localize }}</label>
+               <app-upload-file (onFileUpload)="onPdfUploaded($event)"></app-upload-file>
+              <div *ngIf="uploadedFile">
+                <p>Selected file: {{ uploadedFile.name }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+
+  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="saving || !createUserPolicyModal.form.valid"
+                   (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+</form>

@@ -1,0 +1,233 @@
+<div class="container mt-3">
+
+  <!-- Header -->
+  <div class="ticket-header p-3 mb-3 border rounded d-flex align-items-center justify-content-between bg-white shadow-sm">
+    <div>
+      <h4 class="mb-0 text-primary">
+        <i class="fas fa-file-alt me-2"></i>
+        Policy #{{ policy.policyNumber }}
+      </h4>
+      <small class="text-muted">Created on: {{ policy.creationTime | date:'medium' }}</small>
+    </div>
+
+    <div>
+      <button class="btn btn-light border shadow-sm mr-2" (click)="goBack()">
+        <i class="fas fa-arrow-left me-2 text-secondary"></i>
+        Back
+      </button>
+
+      <button class="btn btn-primary" (click)="editPolicy()" *ngIf="!_appSessionService.isCustomerUser()">
+        <i class="fas fa-edit me-2"></i> Edit
+      </button>
+    </div>
+  </div>
+ <tabset class="">
+  <!-- Policy Details -->
+   <tab heading="Policy Details " >
+  <div class="row mt-4">
+
+    <div class="col-md-6">
+      <div class="mb-3">
+        <small class="d-block text-muted">Branch</small>
+        <p class="fs-5 text-secondary mb-0">{{ policy.branch }}</p>
+      </div>
+
+      <div class="mb-3">
+        <small class="d-block text-muted">Company</small>
+        <p class="fs-5 text-secondary mb-0">{{ policy.company }}</p>
+      </div>
+
+      <div class="mb-3">
+        <small class="d-block text-muted">Comment</small>
+        <p class="text-secondary mb-0">{{ policy.comment }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="mb-3">
+        <small class="d-block text-muted">Policy Number</small>
+        <p class="fs-5 text-secondary mb-0">{{ policy.policyNumber }}</p>
+      </div>
+
+      <div class="mb-3">
+        <small class="d-block text-muted">Renewal Date</small>
+        <p class="fs-5 text-secondary mb-0">{{ policy.renewalDate | date:'mediumDate' }}</p>
+      </div>
+
+      <div class="mb-3">
+        <small class="d-block text-muted">Annual Premium</small>
+        <p class="fs-5 text-secondary mb-0">{{ policy.annualPremium }}</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+  <div class="mb-3">
+    <small class="d-block text-muted">Policy Status</small>
+    <p class="fs-5 text-secondary mb-0">
+      {{ policy.isActive ? ("Active" | localize) : ("Inactive" | localize) }}
+    </p>
+  </div>
+</div>
+
+
+  </div>
+  </tab>
+
+  <!-- PDF -->
+  <!-- FILES -->
+<tab heading="Files">
+  <div class="mt-4">
+    <strong class="text-muted">Files</strong>
+
+    <div class="p-3 bg-light border rounded mt-2">
+
+      <!-- If files exist -->
+      <div *ngIf="files && files.length > 0; else noFiles">
+
+        <div 
+          class="d-flex justify-content-between align-items-center mb-2"
+          *ngFor="let file of files; let i = index"
+        >
+          <div>
+            <small class="text-muted">PDF File {{ i + 1 }}</small>
+          </div>
+
+          <a
+            [href]="file.base64"
+            target="_blank"
+            class="btn btn-sm btn-outline-info"
+          >
+            <i class="fas fa-file-pdf"></i> View File
+          </a>
+        </div>
+
+      </div>
+
+      <!-- No files -->
+      <ng-template #noFiles>
+        <div class="text-muted fst-italic">
+          No files uploaded
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+</tab>
+  <!-- CERTIFICATE DOCUMENT -->
+    <tab heading="Certificate Document">
+  <div class="mt-4">
+    <strong class="text-muted">Certificate Document</strong>
+
+    <div class="p-3 bg-light border rounded mt-2 d-flex justify-content-between align-items-center">
+      <div>
+        <small class="text-muted">PDF File</small>
+      </div>
+
+      <a
+        *ngIf="policy.policyPdfPath"
+        [href]="policy.policyPdfPath"
+        target="_blank"
+        class="btn btn-sm btn-outline-info"
+      >
+        <i class="fas fa-file-pdf"></i> View PDF
+      </a>
+
+      <div *ngIf="!policy.policyPdfPath" class="text-muted fst-italic">
+        No Certificate Document uploaded
+      </div>
+    </div>
+  </div>
+</tab>
+
+
+</tabset>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- <div class="container">
+
+
+  <div class="row d-flex bg-white mt-3 shadow-sm p-3 rounded justify-content-between">
+    <div>
+      <h4 class="text-primary mb-0">
+        <i class="fas fa-file-alt me-2"></i>
+        Policy #{{ policy.policyNumber }}
+      </h4>
+      <small class="text-muted">Branch: {{ policy.branch }}</small>
+    </div>
+
+    <button class="btn btn-light border" (click)="goBack()">
+      <i class="fas fa-arrow-left me-2"></i> Back
+    </button>
+  </div>
+
+
+  <tabset class="mt-3">
+
+    <tab heading="Details">
+      <div class="row mt-3">
+
+        <div class="col-md-6">
+          <div class="info-box">
+            <small class="text-muted d-block">Branch</small>
+            <p class="text-dark fw-semibold">{{ policy.branch }}</p>
+          </div>
+
+          <div class="info-box">
+            <small class="text-muted d-block">Company</small>
+            <p class="text-dark fw-semibold">{{ policy.company }}</p>
+          </div>
+
+          <div class="info-box">
+            <small class="text-muted d-block">Policy Number</small>
+            <p class="text-dark fw-semibold">{{ policy.policyNumber }}</p>
+          </div>
+
+          <div class="info-box">
+            <small class="text-muted d-block">Renewal Date</small>
+            <p class="text-dark fw-semibold">{{ policy.renewalDate | date:'mediumDate' }}</p>
+          </div>
+
+          <div class="info-box">
+            <small class="text-muted d-block">Annual Premium</small>
+            <p class="text-dark fw-semibold">{{ policy.annualPremium }}</p>
+          </div>
+
+          <div class="info-box">
+            <small class="text-muted d-block">Comment</small>
+            <p class="text-dark">{{ policy.comment }}</p>
+          </div>
+        </div>
+
+      </div>
+    </tab>
+
+
+    <tab heading="Policy PDF">
+      <div class="mt-3">
+        <div *ngIf="pdfUrl; else noPdf">
+          <strong>Policy Document</strong>
+
+          <div class="mt-3">
+            <iframe [src]="pdfUrl | safeUrl" width="100%" height="600px"></iframe>
+          </div>
+
+          <a class="btn btn-primary mt-3" [href]="pdfUrl" target="_blank">
+            Open Full PDF
+          </a>
+        </div>
+
+        <ng-template #noPdf>
+          <div class="text-muted">No PDF uploaded.</div>
+        </ng-template>
+      </div>
+    </tab>
+
+  </tabset>
+</div> -->

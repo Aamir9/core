@@ -1,0 +1,22 @@
+<div class="d-flex" style="min-height: 100vh;">
+  <!-- Sidebar -->
+  <app-side-navigation></app-side-navigation>
+
+  <div class="d-flex flex-column flex-grow-1">
+    <app-header></app-header>
+
+    <!-- MAIN CONTENT AREA -->
+     
+    <div class="flex-grow-1" style="background-color: #fff; padding: 15px;">
+      <router-outlet></router-outlet>   <!-- IMPORTANT -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer m-0 p-2" style="background-color: #fff;">
+      <strong>
+        Copyright &copy; {{ currentYear }} <a href="javascript:;">BeckCRM</a>.
+      </strong>
+    </footer>
+
+  </div>
+</div>

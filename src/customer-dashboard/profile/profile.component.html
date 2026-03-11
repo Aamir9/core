@@ -1,0 +1,41 @@
+<div class="profile-wrapper d-flex justify-content-center py-4">
+  <div class="profile-card shadow-lg rounded-4 overflow-hidden">
+
+    <!-- Header -->
+    <div class="profile-header text-center text-white p-4">
+      <img [src]="customer.base64Picture || 'assets/img/user.png'" 
+           alt="Profile Picture" class="profile-img mb-2">
+      <h3 class="mb-1">{{ customer.name }} {{ customer.surname }}</h3>
+      <span class="customer-no">Customer No: {{ customer.customerNo }}</span>
+    </div>
+
+    <!-- Info Section -->
+    <div class="profile-info p-4 bg-white">
+      <div class="info-row">
+        <i class="fas fa-envelope"></i>
+        <span>{{ customer.emailAddress }}</span>
+      </div>
+      <div class="info-row">
+        <i class="fas fa-phone-alt"></i>
+        <span>{{ customer.telephoneFax }}</span>
+      </div>
+      <div class="info-row">
+        <i class="fas fa-globe"></i>
+        <span>{{ customer.website }}</span>
+      </div>
+      <div class="info-row">
+        <i class="fas fa-user-tie"></i>
+        <span>{{ customer.responsibleEmployee }}</span>
+      </div>
+      <div class="info-row">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>{{ customer.address }}</span>
+      </div>
+      <div class="info-row">
+        <i class="fas fa-flag"></i>
+        <span>{{ customer.country }}</span>
+      </div>
+    </div>
+
+  </div>
+</div>

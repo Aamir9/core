@@ -1,0 +1,86 @@
+.pointer {
+  cursor: pointer;
+  color: #01928f;
+}
+
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-input {
+  border-radius: 50px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.search-input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 8px rgba(13, 110, 253, 0.25);
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 1.1rem;
+  pointer-events: none; /* So clicking icon doesn’t block input */
+}
+
+@media (max-width: 576px) {
+  .search-input {
+    font-size: 0.95rem;
+    padding: 9px 14px;
+  }
+
+  .search-icon {
+    right: 12px;
+    font-size: 1rem;
+  }
+}
+
+
+/* Remove arrow completely */
+.tooltip .tooltip-arrow {
+  display: none !important;
+}
+
+/* Modern sleek tooltip */
+.tooltip .tooltip-inner {
+  background: rgba(30, 30, 30, 0.85) !important; /* dark glass */
+  backdrop-filter: blur(8px);
+  padding: 8px 14px;
+  font-size: 13px;
+  border-radius: 10px;           /* Sleek rounded pillish look */
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  border: none !important;       /* No border */
+  transform: translateY(6px);    /* Hidden starting position */
+  transition: 
+    opacity .25s ease,
+    transform .25s ease;
+}
+
+/* For smooth floating animation */
+.tooltip.show .tooltip-inner {
+  transform: translateY(0px); /* Float upward smoothly */
+}
+
+/* Premium child row base */
+.child-table tbody tr {
+   
+  /* border-left: 2px solid #01928f !important; */
+  font-weight: 500;
+  font-size: smaller;
+    /* position: relative; */
+}
+
+
+
+
