@@ -78,7 +78,7 @@ export class CustomersComponent
   }
 
   ngOnInit() {
-    this._layoutService.updateHeaderTitle("Companies");
+    this._layoutService.updateHeaderTitle("Virksomheder");
     this.getUserTypes();
     this.refresh();
   }

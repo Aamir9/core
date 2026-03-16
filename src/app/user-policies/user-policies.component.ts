@@ -51,7 +51,7 @@ export class UserPoliciesComponent extends PagedListingComponentBase<UserPolicie
     // this.userIdLogedIn = this._appSessionService.userId;
 
     this.getDataPage(1);
-    this._layoutService.updateHeaderTitle('User Policies');
+    this._layoutService.updateHeaderTitle('Bruger politikker');
   }
 
   protected list(

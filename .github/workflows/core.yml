@@ -1,0 +1,99 @@
+name: Angular Build and Deploy
+
+on:
+  push:
+    branches: [ "main" ]   # ✅ Only trigger on upgrade branch
+env:
+
+  SERVER_DIR: '/core-erp/'
+  # ====== FTP TARGET (Simply.com / UnoEuro) ======
+  FTP_SERVER: 'nt43.unoeuro.com'
+  FTP_USERNAME: 'beckcrm.dk'
+  FTP_PASSWORD: 'mdBnp6k3Hwry'
+  FTP_PORT: '21'
+  FTP_PROTOCOL: 'ftps'      # use 'ftps' for TLS, or 'ftp' for plain FTP
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'npm'
+
+      - name: Verify Node & npm versions
+        run: |
+          node -v
+          npm -v
+
+      - name: Install dependencies
+        run: npm ci || npm install --legacy-peer-deps
+
+      - name: Show Angular/CLI versions
+        run: npx ng version
+
+      - name: Install Chromium (for headless tests)
+        run: sudo apt-get install -y chromium-browser
+
+      - name: Build Angular Project with Base HREF
+        run: npx ng build --configuration=production --base-href /
+
+      # - name: Run Unit Tests
+      #   run: npx ng test --watch=false --browsers=ChromeHeadlessNoSandbox --no-progress --code-coverage
+      - name: Copy web.config to dist
+        run: |
+          cp src/web.config dist/browser/web.config 2>/dev/null || cp src/web.config dist/web.config
+
+      - name: List dist files
+        run: ls -R ./dist || true
+
+      # - name: Upload Code Coverage to Codacy
+      #   if: always()
+      #   continue-on-error: true
+      #   uses: codacy/codacy-coverage-reporter-action@master
+      #   env:
+      #     CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_CODE_COVERAGE_TOKEN }}
+      #   with:
+      #     project-token: ${{ secrets.CODACY_CODE_COVERAGE_TOKEN }}
+      #     coverage-reports: coverage/**/lcov.info
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+    # Optional: show files before deploy
+      - name: Show downloaded dist
+        run: ls -R dist
+
+      # === FTP DEPLOY ===
+      - name: FTP Deploy Angular app
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ env.FTP_SERVER }}
+          username: ${{ env.FTP_USERNAME }}
+          password: ${{ env.FTP_PASSWORD }}
+          protocol: ftp
+          port: 21
+          local-dir: dist/   
+          server-dir: ${{ env.SERVER_DIR }}
+          dangerous-clean-slate: true  
+          exclude: |
+            **/.git*
+            **/.github*

@@ -1,321 +1,246 @@
 <form class="form-horizontal" autocomplete="off" #createUserModal="ngForm" (ngSubmit)="save()">
-  <abp-modal-header [title]="'Create Company' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
+  <abp-modal-header [title]="'CreateCompany' | localize" (onCloseClick)="bsModalRef.hide()"></abp-modal-header>
   <div class="modal-body" style="height: 60vh;overflow: scroll !important;">
-  
-   
 
-  <div class="basic-info-form sleek-form mt-2 ">
-    <div class="form-grid p-3">
-      <!-- Each form-field is same, only styles updated -->
-      <div class="form-field">
-        <label for="name">{{ "Company Name" | localize }}</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          maxlength="32"
-          [(ngModel)]="customer.name"
-          #nameModel="ngModel"
-          #nameEl
-          placeholder="Enter company name"
-        />
-        <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
-      </div>
-
-      <!-- <div class="form-field">
-        <label for="surname">{{ "Last Name" | localize }}</label>
-        <input
-          type="text"
-          id="surname"
-          name="surname"
-          maxlength="32"
-          [(ngModel)]="customer.surname"
-          #surnameModel="ngModel"
-          #surnameEl
-          placeholder="Enter last name"
-        />
-        <abp-validation-summary [control]="surnameModel" [controlEl]="surnameEl"></abp-validation-summary>
-      </div> -->
-
-      <div class="form-field">
-        <label for="userName">{{ "Username" | localize }}</label>
-        <input
-          type="text"
-          id="userName"
-          name="userName"
-          minlength="2"
-          maxlength="32"
-          [(ngModel)]="customer.userName"
-          #userNameModel="ngModel"
-          #userNameEl
-          placeholder="Enter username"
-        />
-        <abp-validation-summary [control]="userNameModel" [controlEl]="userNameEl"></abp-validation-summary>
-      </div>
-
-      <div class="form-field">
-        <label for="emailAddress">{{ "Email" | localize }}</label>
-        <input
-          type="email"
-          id="emailAddress"
-          name="emailAddress"
-          required
-          maxlength="256"
-          pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
-          [(ngModel)]="customer.emailAddress"
-          #emailAddressModel="ngModel"
-          #emailAddressEl
-          placeholder="Enter email address"
-        />
-        <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl"></abp-validation-summary>
-      </div>
-         <div class="form-field">
-  <label for="vatNumber">{{ "VAT Number" | localize }}</label>
-  <input
-    type="text"
-    id="vatNumber"
-    name="vatNumber"
-    maxlength="32"
-    [(ngModel)]="customer.vatNumber"
-    #vatNumberModel="ngModel"
-    #vatNumberEl
-    placeholder="Enter VAT number "
-  />
-  <abp-validation-summary
-    [control]="vatNumberModel"
-    [controlEl]="vatNumberEl">
-  </abp-validation-summary>
-
-
-      <!-- <div class="form-field checkbox-field">
-        <label for="isActive">{{ "Is Active" | localize }}</label>
-        <input type="checkbox" id="isActive" name="isActive" [(ngModel)]="customer.isActive" />
-      </div> -->
-    </div>
-
-      <div class="form-field">
-        <label for="password">{{ "Password" | localize }}</label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          required
-          maxlength="32"
-          validateEqual="confirmPassword"
-          reverse="true"
-          [(ngModel)]="customer.password"
-          #passwordModel="ngModel"
-          #passwordEl
-          placeholder="Enter password"
-        />
-        <abp-validation-summary [control]="passwordModel" [controlEl]="passwordEl"></abp-validation-summary>
-      </div>
-
-      <div class="form-field">
-        <label for="confirmPassword">{{ "Confirm Password" | localize }}</label>
-        <input
-          type="password"
-          id="confirmPassword"
-          name="confirmPassword"
-          required
-          maxlength="32"
-          validateEqual="password"
-          reverse="false"
-          ngModel
-          #confirmPasswordModel="ngModel"
-          #confirmPasswordEl
-          placeholder="Confirm password"
-        />
-        <abp-validation-summary [control]="confirmPasswordModel" [controlEl]="confirmPasswordEl"></abp-validation-summary>
-      </div>
-      <div class="form-field">
-        <label for="telephoneFax">{{ "Telephone" | localize }}</label>
-        <input
-          type="text"
-          id="telephoneFax"
-          name="telephoneFax"
-          minlength="2"
-          maxlength="32"
-          [(ngModel)]="customer.telephoneFax"
-          #telephoneFaxModel="ngModel"
-          #telephoneFaxEl
-          placeholder="Enter phone number"
-        />
-        <abp-validation-summary [control]="telephoneFaxModel" [controlEl]="telephoneFaxEl"></abp-validation-summary>
-      </div>
-
-    
-
-   <div class="form-field " >
-        <label for="responsibleEmployee">{{ "Responsible Employee" | localize }}</label>
-        <ng-select
-          id="responsibleEmployee"
-          name="responsibleEmployee"
-          placeholder="Select Employee"
-          required
-          [(ngModel)]="customer.responsibleEmployeeId"
-          #responsibleEmployeeModel="ngModel"
-          #responsibleEmployeeEl
-        >
-          
-          <ng-option *ngFor="let employee of employees" [value]="employee.id">
-            {{ employee.name }}
-          </ng-option>
-        </ng-select>
-        <abp-validation-summary [control]="responsibleEmployeeModel" [controlEl]="responsibleEmployeeEl"></abp-validation-summary>
-      </div>
-  
-<div class="form-field">
-        <label for="website">{{ "Website" | localize }}</label>
-        <input
-          type="text"
-          id="website"
-          name="website"
-          minlength="2"
-          maxlength="150"
-          [(ngModel)]="customer.website"
-          #websiteModel="ngModel"
-          #websiteEl
-          placeholder="Enter website URL"
-        />
-        <abp-validation-summary [control]="websiteModel" [controlEl]="websiteEl"></abp-validation-summary>
-      </div>
-
-      <div class="form-field">
-        <label for="postcode">{{ "Post Code" | localize }}</label>
-        <input
-          type="text"
-          id="postcode"
-          name="postcode"
-          
-          minlength="2"
-          maxlength="32"
-          [(ngModel)]="customer.postcode"
-          #postCodeModel="ngModel"
-          #postCodeEl
-          placeholder="Enter postal code"
-        />
-        <abp-validation-summary [control]="postCodeModel" [controlEl]="postCodeEl"></abp-validation-summary>
-      </div>
-
-      <div class="form-field">
-        <label for="currency">{{ "Currency" | localize }}</label>
-        <input
-          type="text"
-          id="currency"
-          name="currency"
-         
-          minlength="2"
-          maxlength="32"
-          [(ngModel)]="customer.currency"
-          #currencyModel="ngModel"
-          #currencyEl
-          placeholder="Enter currency"
-        />
-        <!-- <abp-validation-summary [control]="currencyModel" [controlEl]="currencyEl"></abp-validation-summary>
-      -->
-      </div>
-
-      <div class="form-field">
-        <label for="address">{{ "Address" | localize }}</label>
-        <input
-          type="text"
-          id="address"
-          name="address"
-          
-          maxlength="250"
-          [(ngModel)]="customer.address"
-          #addressModel="ngModel"
-          #addressEl
-          placeholder="Enter address"
-        />
-        <abp-validation-summary [control]="addressModel" [controlEl]="addressEl"></abp-validation-summary>
-      </div>
-
-      <div class="form-field">
-        <label for="townCity">{{ "Town / City" | localize }}</label>
-        <input
-          type="text"
-          id="townCity"
-          name="townCity"
-         
-          minlength="2"
-          maxlength="32"
-          [(ngModel)]="customer.townCity"
-         
-          placeholder="Enter town or city"
-        />
-        <!-- <abp-validation-summary [control]="townCityModel" [controlEl]="townCityEl"></abp-validation-summary>
-       -->
-      </div>
-      <div class="form-field">
-  <label for="country">{{ "Country" | localize }}</label>
-  <input
-    type="text"
-    id="country"
-    name="country"
-  
-    minlength="2"
-    maxlength="32"
-    [(ngModel)]="customer.country"
-    class="sleek-input"
-  />
-  <!--
-  <abp-validation-summary [control]="countryModel" [controlEl]="countryEl"></abp-validation-summary>
-  -->
-</div>
-
-       <!-- <div class="form-field">
-       
-        <app-custom-fields
-      *ngIf="isCustomFieldsAvailable"
-      [customFields]="customer.customFields"
-    ></app-custom-fields>
-      </div> -->
-      
-      
-      <div class="form-field">
-        <label for="description">{{ "Note" | localize }}</label>
-        <textarea
-          id="description"
-          name="description"
-          maxlength="500"
-          rows="1"
-          [(ngModel)]="customer.description"
-          #descriptionModel="ngModel"
-          #descriptionEl
-          placeholder="Enter Note"
-        ></textarea>
-        <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl"></abp-validation-summary>
-      </div>
-
-   
-
-
- 
-      </div>
-    </div>
- 
-
-
-    
-      <!-- <tab [heading]="'Customer Roles' | localize" class="pt-3 px-2">
-        <div class="form-group row mb-0">
-          <ng-container *ngFor="let role of roles; let i = index">
-            <div class="col-md-6">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" [id]="'role_' + i"
-                  [checked]="isRoleChecked(role.normalizedName)" (change)="onRoleChange(role, $event)" />
-                <label class="custom-control-label" [for]="'role_' + i">
-                  {{ role.name }}
-                </label>
-              </div>
-            </div>
-          </ng-container>
+    <div class="basic-info-form sleek-form mt-2 ">
+      <div class="form-grid p-3">
+        <div class="form-field">
+          <label for="name">{{ 'CompanyName' | localize }}</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            maxlength="32"
+            [(ngModel)]="customer.name"
+            #nameModel="ngModel"
+            #nameEl
+            placeholder="{{ 'EnterCompanyName' | localize }}"
+          />
+          <abp-validation-summary [control]="nameModel" [controlEl]="nameEl"></abp-validation-summary>
         </div>
-      </tab> -->
-   
+
+        <div class="form-field">
+          <label for="userName">{{ 'UserName' | localize }}</label>
+          <input
+            type="text"
+            id="userName"
+            name="userName"
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="customer.userName"
+            #userNameModel="ngModel"
+            #userNameEl
+            placeholder="{{ 'EnterUserName' | localize }}"
+          />
+          <abp-validation-summary [control]="userNameModel" [controlEl]="userNameEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-field">
+          <label for="emailAddress">{{ 'Email' | localize }}</label>
+          <input
+            type="email"
+            id="emailAddress"
+            name="emailAddress"
+            required
+            maxlength="256"
+            pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$"
+            [(ngModel)]="customer.emailAddress"
+            #emailAddressModel="ngModel"
+            #emailAddressEl
+            placeholder="{{ 'EnterEmailAddress' | localize }}"
+          />
+          <abp-validation-summary [control]="emailAddressModel" [controlEl]="emailAddressEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-field">
+          <label for="vatNumber">{{ 'VATNumber' | localize }}</label>
+          <input
+            type="text"
+            id="vatNumber"
+            name="vatNumber"
+            maxlength="32"
+            [(ngModel)]="customer.vatNumber"
+            #vatNumberModel="ngModel"
+            #vatNumberEl
+            placeholder="{{ 'EnterVATNumber' | localize }}"
+          />
+          <abp-validation-summary [control]="vatNumberModel" [controlEl]="vatNumberEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-field">
+          <label for="password">{{ 'Password' | localize }}</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            maxlength="32"
+            validateEqual="confirmPassword"
+            reverse="true"
+            [(ngModel)]="customer.password"
+            #passwordModel="ngModel"
+            #passwordEl
+            placeholder="{{ 'EnterPassword' | localize }}"
+          />
+          <abp-validation-summary [control]="passwordModel" [controlEl]="passwordEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-field">
+          <label for="confirmPassword">{{ 'ConfirmPassword' | localize }}</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            required
+            maxlength="32"
+            validateEqual="password"
+            reverse="false"
+            ngModel
+            #confirmPasswordModel="ngModel"
+            #confirmPasswordEl
+            placeholder="{{ 'ConfirmPassword' | localize }}"
+          />
+          <abp-validation-summary [control]="confirmPasswordModel" [controlEl]="confirmPasswordEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-field">
+          <label for="telephoneFax">{{ 'Phone' | localize }}</label>
+          <input
+            type="text"
+            id="telephoneFax"
+            name="telephoneFax"
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="customer.telephoneFax"
+            #telephoneFaxModel="ngModel"
+            #telephoneFaxEl
+            placeholder="{{ 'EnterPhoneNumber' | localize }}"
+          />
+          <abp-validation-summary [control]="telephoneFaxModel" [controlEl]="telephoneFaxEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-field">
+          <label for="responsibleEmployee">{{ 'ResponsibleEmployee' | localize }}</label>
+          <ng-select
+            id="responsibleEmployee"
+            name="responsibleEmployee"
+            placeholder="{{ 'ResponsibleEmployee' | localize }}"
+            required
+            [(ngModel)]="customer.responsibleEmployeeId"
+            #responsibleEmployeeModel="ngModel"
+            #responsibleEmployeeEl
+          >
+            <ng-option *ngFor="let employee of employees" [value]="employee.id">
+              {{ employee.name }}
+            </ng-option>
+          </ng-select>
+          <abp-validation-summary [control]="responsibleEmployeeModel" [controlEl]="responsibleEmployeeEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-field">
+          <label for="website">{{ 'Website' | localize }}</label>
+          <input
+            type="text"
+            id="website"
+            name="website"
+            minlength="2"
+            maxlength="150"
+            [(ngModel)]="customer.website"
+            #websiteModel="ngModel"
+            #websiteEl
+            placeholder="{{ 'EnterWebsiteURL' | localize }}"
+          />
+          <abp-validation-summary [control]="websiteModel" [controlEl]="websiteEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-field">
+          <label for="postcode">{{ 'ZipCode' | localize }}</label>
+          <input
+            type="text"
+            id="postcode"
+            name="postcode"
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="customer.postcode"
+            #postCodeModel="ngModel"
+            #postCodeEl
+            placeholder="{{ 'EnterPostalCode' | localize }}"
+          />
+          <abp-validation-summary [control]="postCodeModel" [controlEl]="postCodeEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-field">
+          <label for="currency">{{ 'Currency' | localize }}</label>
+          <input
+            type="text"
+            id="currency"
+            name="currency"
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="customer.currency"
+            #currencyModel="ngModel"
+            #currencyEl
+            placeholder="{{ 'EnterCurrency' | localize }}"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="address">{{ 'Address' | localize }}</label>
+          <input
+            type="text"
+            id="address"
+            name="address"
+            maxlength="250"
+            [(ngModel)]="customer.address"
+            #addressModel="ngModel"
+            #addressEl
+            placeholder="{{ 'EnterAddress' | localize }}"
+          />
+          <abp-validation-summary [control]="addressModel" [controlEl]="addressEl"></abp-validation-summary>
+        </div>
+
+        <div class="form-field">
+          <label for="townCity">{{ 'Town/City' | localize }}</label>
+          <input
+            type="text"
+            id="townCity"
+            name="townCity"
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="customer.townCity"
+            placeholder="{{ 'EnterTownOrCity' | localize }}"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="country">{{ 'Country' | localize }}</label>
+          <input
+            type="text"
+            id="country"
+            name="country"
+            minlength="2"
+            maxlength="32"
+            [(ngModel)]="customer.country"
+            placeholder="{{ 'EnterCountry' | localize }}"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="description">{{ 'Note' | localize }}</label>
+          <textarea
+            id="description"
+            name="description"
+            maxlength="500"
+            rows="1"
+            [(ngModel)]="customer.description"
+            #descriptionModel="ngModel"
+            #descriptionEl
+            placeholder="{{ 'EnterNote' | localize }}"
+          ></textarea>
+          <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl"></abp-validation-summary>
+        </div>
+      </div>
+    </div>
   </div>
-  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createUserModal.form.valid || saving"
-    (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
+  <abp-modal-footer [cancelDisabled]="saving" [saveDisabled]="!createUserModal.form.valid || saving" (onCancelClick)="bsModalRef.hide()"></abp-modal-footer>
 </form>

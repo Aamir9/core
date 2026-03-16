@@ -12,7 +12,7 @@
 
       <div class="col-md-6 d-flex justify-content-end">
         <button class="btn btn-primary" (click)="showCreateOrEditDialog()">
-          <i class="fa fa-plus-square"></i> {{ "Contact Person" | localize }}
+          <i class="fa fa-plus-square"></i> {{ "ContactPerson" | localize }}
         </button>
 
       </div>
@@ -38,12 +38,12 @@
         <table class="table table-bordered parent-table mb-0" [busy]="isTableLoading">
           <thead >
             <tr>
-              <th>{{ "User Name" | localize }}</th>
-              <th>{{ "Full Name" | localize }}</th>
+              <th>{{ "UserName" | localize }}</th>
+              <th>{{ "FullName" | localize }}</th>
               <th>{{ "EmailAddress" | localize }}</th>
               <th>{{ "Telephone" | localize }}</th>
               <th>{{ "Active" | localize }}</th>
-              <th style="width: 7rem;">{{ "Actions" | localize }}</th>
+              <th>{{ "Actions" | localize }}</th>
             </tr>
           </thead>
           <tbody>
@@ -69,10 +69,10 @@
               </td>
 
               <td>
-                <button type="button" class="btn btn-sm btn-info mr-1" (click)="showEditSubCustomerDialog(customer)">
+                <button type="button" class="btn btn-sm btn-info mr-1" (click)="showEditSubCustomerDialog(customer)" title="{{ 'Edit' | localize }}">
                    <i class="fas fa-edit"></i>
                 </button>
-                <button type="button" class="btn btn-sm btn-danger" (click)="delete(customer)">
+                <button type="button" class="btn btn-sm btn-danger" (click)="delete(customer)" title="{{ 'Delete' | localize }}">
                   <i class="fas fa-trash"></i>
                 </button>
               </td>

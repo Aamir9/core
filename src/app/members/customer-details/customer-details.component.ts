@@ -67,7 +67,7 @@ private originalUpdate!: (title: string) => void;
 
   titleTb5 = "SMS Note";
   titleTb6 = "Email Note";
-  titleTb7 = "Policies";
+  titleTb7 = "Policies ";
 
   constructor(
     injector: Injector,

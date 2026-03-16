@@ -4,7 +4,7 @@
       (ngSubmit)="save()">
 
   <abp-modal-header 
-      [title]="'Contact Person' | localize"
+      [title]="'ContactPerson' | localize"
       (onCloseClick)="bsModalRef.hide()">
   </abp-modal-header>
 
@@ -15,12 +15,13 @@
       <!-- First Name -->
       <div class="col-md-6">
         <div class="form-group required">
-          <label>{{ "First Name" | localize }}</label>
+          <label>{{ "FirstName" | localize }}</label>
           <input 
             type="text" 
             class="form-control"
             name="name" 
             required maxlength="32"
+            placeholder="{{ 'EnterFirstName' | localize }}"
             [(ngModel)]="customer.name"
             #nameModel="ngModel" #nameEl />
           <abp-validation-summary 
@@ -33,14 +34,15 @@
       <!-- Last Name -->
       <div class="col-md-6">
         <div class="form-group required">
-          <label>{{ "Last Name" | localize }}</label>
+          <label>{{ "LastName" | localize }}</label>
           <input 
             type="text"
             class="form-control"
             name="surname"
             maxlength="32"
             [(ngModel)]="customer.surname"
-            #surnameModel="ngModel" #surnameEl />
+            #surnameModel="ngModel" #surnameEl
+            placeholder="{{ 'EnterLastName' | localize }}" />
           <abp-validation-summary 
             [control]="surnameModel"
             [controlEl]="surnameEl">
@@ -51,14 +53,15 @@
       <!-- Username -->
       <div class="col-md-6">
         <div class="form-group required">
-          <label>{{ "User Name" | localize }}</label>
+          <label>{{ "UserName" | localize }}</label>
           <input 
             type="text"
             class="form-control"
             name="userName"
             required minlength="2" maxlength="32"
             [(ngModel)]="customer.userName"
-            #userNameModel="ngModel" #userNameEl />
+            #userNameModel="ngModel" #userNameEl
+            placeholder="{{ 'EnterUserName' | localize }}" />
           <abp-validation-summary 
             [control]="userNameModel"
             [controlEl]="userNameEl">
@@ -77,7 +80,8 @@
             name="emailAddress"
             required maxlength="256"
             [(ngModel)]="customer.emailAddress"
-            #emailAddressModel="ngModel" #emailAddressEl />
+            #emailAddressModel="ngModel" #emailAddressEl
+            placeholder="{{ 'EnterEmailAddress' | localize }}" />
           <abp-validation-summary 
             [control]="emailAddressModel"
             [controlEl]="emailAddressEl">
@@ -88,7 +92,7 @@
       <!-- phone number-->
       <div class="col-md-6">
         <div class="form-group required">
-        <label for="telephoneFax">{{ "Phone Number" | localize }}</label>
+        <label for="telephoneFax">{{ "Phone" | localize }}</label>
         <input
           type="text"
           id="telephoneFax"
@@ -100,7 +104,7 @@
           [(ngModel)]="customer.telephoneFax"
           #telephoneFaxModel="ngModel"
           #telephoneFaxEl
-          placeholder="Enter phone number"
+          placeholder="{{ 'EnterPhoneNumber' | localize }}"
         />
         <abp-validation-summary [control]="telephoneFaxModel" [controlEl]="telephoneFaxEl"></abp-validation-summary>
       </div>
@@ -118,7 +122,8 @@
             validateEqual="confirmPassword"
             reverse="true"
             [(ngModel)]="customer.password"
-            #passwordModel="ngModel" #passwordEl />
+            #passwordModel="ngModel" #passwordEl
+            placeholder="{{ 'EnterPassword' | localize }}" />
           <abp-validation-summary 
             [control]="passwordModel"
             [controlEl]="passwordEl"
@@ -139,7 +144,8 @@
             validateEqual="password"
             reverse="false"
             ngModel
-            #confirmPasswordModel="ngModel" #confirmPasswordEl />
+            #confirmPasswordModel="ngModel" #confirmPasswordEl
+            placeholder="{{ 'EnterConfirmPassword' | localize }}" />
           <abp-validation-summary 
             [control]="confirmPasswordModel"
             [controlEl]="confirmPasswordEl"
@@ -162,7 +168,7 @@
           [(ngModel)]="customer.description"
           #descriptionModel="ngModel"
           #descriptionEl
-          placeholder="Enter Note"
+          placeholder="{{ 'EnterNote' | localize }}"
         ></textarea>
         <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl"></abp-validation-summary>
       </div>

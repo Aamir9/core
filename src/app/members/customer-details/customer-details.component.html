@@ -37,7 +37,7 @@
     <!-- </section> -->
     <div class="container-fluid">
       <tabset>
-        <tab [heading]="'Company Info' | localize" class="pt-3 px-2">
+        <tab [heading]="'CompanyInfo' | localize" class="pt-3 px-2">
           <div class="tab-wrapper">
             <div class="tab-body">
               <!-- Basic Information -->
@@ -340,7 +340,7 @@
           </div>
         </tab>
 
-        <tab [heading]="'Activies' | localize" class="pt-3 px-2">
+        <tab [heading]="'Activities' | localize" class="pt-3 px-2">
           <div class="  row mb-0 w-100">
             <div *ngIf="customer.userId > 0" class="w-100">
               <app-activities [customerId]="customer.userId"></app-activities>
@@ -364,7 +364,7 @@
           </div>
         </tab> -->
 
-        <tab [heading]="titleTb5">
+        <tab [heading]="'SMS Note' | localize">
           <div class="  row mb-0 w-100">
             <div *ngIf="customer.id > 0" class="w-100">
               <app-sms-activity [selectedCustomer]="customer">
@@ -373,7 +373,7 @@
           </div>
         </tab>
 
-      <tab [heading]="titleTb7">
+      <tab [heading]="'Policies' | localize">
           <div class="  row mb-0 w-100">
            <div *ngIf="customerUserId > 0" class="w-100">
                     <app-user-policies  [userIdParent]="customerUserId" [isDisplayCloseFaultButton]="false"></app-user-policies >
@@ -428,7 +428,7 @@
           </div>
         </tab>
      -->
-            <tab [heading]="'Contact Person' | localize">
+            <tab [heading]="'ContactPerson' | localize">
           <div class="  row mb-0 w-100">
             <div *ngIf="customer.id > 0" class="w-100">
               <app-sub-customers [customerId]="customer.id"></app-sub-customers>

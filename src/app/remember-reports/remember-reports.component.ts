@@ -54,7 +54,7 @@ export class RememberReportsComponent extends PagedListingComponentBase<Activity
     //this.getDataPage(1);
     this._activityService.getAllActivityTypes().subscribe(res => {
       this.activityTypes = res.items;
-      this._layoutService.updateHeaderTitle("Employee Remember Report");
+      this._layoutService.updateHeaderTitle("Påmindelsesrapport");
     })
   }
 

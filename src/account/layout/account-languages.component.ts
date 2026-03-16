@@ -7,6 +7,7 @@ import {
 import { AppComponentBase } from '@shared/app-component-base';
 import { filter as _filter } from 'lodash-es';
 
+
 @Component({
   selector: 'account-languages',
   templateUrl: './account-languages.component.html',
@@ -24,6 +25,21 @@ export class AccountLanguagesComponent extends AppComponentBase
   }
 
   ngOnInit() {
+      const defaultLang = 'da';
+
+  if (this.localization.currentLanguage.name !== defaultLang) {
+    this.changeLanguage(defaultLang);
+    return;
+  }
+
+  this.languages = _filter(
+    this.localization.languages,
+    (l) => !l.isDisabled
+  );
+
+  this.currentLanguage = this.localization.currentLanguage;
+    console.log('Current browser language:', navigator.language);
+    
     this.languages = _filter(
       this.localization.languages,
       (l) => !l.isDisabled
@@ -31,38 +47,17 @@ export class AccountLanguagesComponent extends AppComponentBase
     this.currentLanguage = this.localization.currentLanguage;
   }
 
-  // changeLanguage(languageName: string): void {
-  //   abp.utils.setCookieValue(
-  //     'Abp.Localization.CultureName',
-  //     languageName,
-  //     new Date(new Date().getTime() + 5 * 365 * 86400000), // 5 year
-  //     abp.appPath
-  //   );
+   changeLanguage(languageName: string): void {
+    abp.utils.setCookieValue(
+      'Abp.Localization.CultureName',
+     languageName,
+      new Date(new Date().getTime() + 5 * 365 * 86400000), // 5 year
+      abp.appPath
+     );
 
-  //   location.reload();
-  // }
-  changeLanguageToEnglish(): void {
-  const englishLanguage: abp.localization.ILanguageInfo = {
-    name: 'en',
-    displayName: 'English',
-    icon: 'famfamfam-flag-gb', // optional
-    isDefault: true,
-    isDisabled: false,
-    isRightToLeft: false
-  };
-
-  console.log('Current Language before change:', abp.localization.currentLanguage);
-
-  if (abp.localization.currentLanguage.name !== englishLanguage.name) {
-    abp.localization.currentLanguage = englishLanguage;
-    localStorage.setItem('Abp.Localization.CultureName', englishLanguage.name);
- 
-    location.reload();
-  } else {
-    console.log('Language is already English');
-    // alert('Language is already English'); // optional user feedback
-    abp.message.info(this.l('Language is already English'));
+   location.reload();
   }
-}
+  
+
 
 }

@@ -31,7 +31,7 @@
     [type]="showPassword ? 'text' : 'password'"
     class="password-input form-control"
      name="password"   required    
-    placeholder="Password"
+    [placeholder]="'Password' | localize"
     [(ngModel)]="authService.authenticateModel.password"
       #passwordModel="ngModel"
          #passwordEl

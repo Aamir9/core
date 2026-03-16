@@ -48,7 +48,7 @@ export class ContactPolicyComponent extends PagedListingComponentBase<UserPolici
       this.userIdLogedIn = this.userparentCustomer.userId;
     }
     this.getDataPage(1);
-    this._layoutService.updateHeaderTitle('Policies');
+    this._layoutService.updateHeaderTitle('Policer');
   }
   protected list(
     request: PagedUserPoliciesRequestDto,
