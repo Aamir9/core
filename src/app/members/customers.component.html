@@ -132,7 +132,7 @@
         type="button"
         class="btn btn-sm bg-danger"
         (click)="delete(customer)"
-        title="Delete">
+        title="{{ 'Delete' | localize }}">
     <i class="fas fa-trash"></i>
 </button>
  &nbsp;
@@ -198,7 +198,7 @@
            (click)="resetPassword(subCustomer)"
                      data-bs-toggle="tooltip"
                       data-bs-placement="top"
-                       title="Reset Password">
+                       title="{{ 'ResetPassword' | localize }}">
                      <i class="fas fa-lock"></i>
                     {{ "ResetPassword" | localize }}
                     </button>  
@@ -209,7 +209,7 @@
                          (click)="showEditSubCustomerDialog(subCustomer)"
                          data-bs-toggle="tooltip" 
     data-bs-placement="top"
-    title="{{ 'ViewDetails' | localize }}"
+    title="{{ 'Details' | localize }}"
                       >
                         <i class="fas fa-eye"></i>
                       </button> &nbsp;
@@ -217,7 +217,7 @@
         type="button"
         class="btn btn-sm bg-danger"
         (click)="deleteSubCustomer(subCustomer)"
-        title="Delete">
+        title="{{ 'Delete' | localize }}">
     <i class="fas fa-trash"></i>
 </button>
  

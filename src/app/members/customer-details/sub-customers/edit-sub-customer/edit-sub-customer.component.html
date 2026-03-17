@@ -43,6 +43,7 @@
             name="name" 
             required maxlength="32"
             [(ngModel)]="customer.name"
+            placeholder="{{ 'EnterFirstName' | localize }}"
             #nameModel="ngModel" #nameEl />
           <abp-validation-summary 
             [control]="nameModel"
@@ -61,6 +62,7 @@
             name="surname"
             maxlength="32"
             [(ngModel)]="customer.surname"
+            placeholder="{{ 'EnterLastName' | localize }}"
             #surnameModel="ngModel" #surnameEl />
           <abp-validation-summary 
             [control]="surnameModel"
@@ -80,6 +82,7 @@
             name="userName"
             required minlength="2" maxlength="32"
             [(ngModel)]="customer.userName"
+            placeholder="{{ 'EnterUserName' | localize }}"
             #userNameModel="ngModel" #userNameEl />
           <abp-validation-summary 
             [control]="userNameModel"
@@ -91,13 +94,14 @@
       <!-- Email Address -->
       <div class="col-md-6">
         <div class="form-group required">
-          <label>{{ "EmailAddress" | localize }}</label>
+          <label>{{ "EmailA" | localize }}</label>
           <input 
             type="email"
             class="form-control"
             name="emailAddress"
             required maxlength="256"
             [(ngModel)]="customer.emailAddress"
+            placeholder="{{ 'EnterEmailAddress' | localize }}"
             #emailAddressModel="ngModel" #emailAddressEl />
           <abp-validation-summary 
             [control]="emailAddressModel"

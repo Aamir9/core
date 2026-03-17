@@ -21,8 +21,9 @@
         
         <!-- Tenant Change -->
         <div *ngIf="showTenantChange()" class="card-header text-white text-center rounded-top" style="background-color: #3aa6b9;">
-       <app-change-tenant></app-change-tenant>
-        </div>
+        <!-- <tenant-change></tenant-change> -->
+        {{ "CurrentTenant" | localize }}: <strong>Core</strong>
+         </div>
 
         <!-- Main Content -->
         <div class="card-body p-4" style="background-color: #e6f2f1;">

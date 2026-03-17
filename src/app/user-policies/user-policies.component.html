@@ -7,7 +7,7 @@
         <input
           type="text"
           class="form-control search-input pe-5"
-          placeholder="Search..."
+          placeholder="{{ 'Search' | localize }}"
           [(ngModel)]="keyword"
           (ngModelChange)="getDataPage(1)"
         />
@@ -16,24 +16,24 @@
     </div>
      <!-- Status Filter -->
 <div class="col-md-4 col-12 d-flex justify-content-center align-items-center">
-  <strong class=" fw-bold p-1 text-center ">Status: </strong> <!-- Added label -->
+  <strong class=" fw-bold p-1 text-center ">{{ 'Status' | localize }}: </strong> <!-- Added label -->
 
   <div class="form-check form-check-inline">
     <input class="form-check-input" type="radio" name="statusFilter" id="statusAll"
            [value]="null" [(ngModel)]="isActiveFilter" (change)="getDataPage(1)">
-    <label class="form-check-label" for="statusAll">All</label>
+    <label class="form-check-label" for="statusAll">{{ 'All' | localize }}</label>
   </div>
 
   <div class="form-check form-check-inline">
     <input class="form-check-input" type="radio" name="statusFilter" id="statusActive"
            [value]="true" [(ngModel)]="isActiveFilter" (change)="getDataPage(1)">
-    <label class="form-check-label text-success" for="statusActive">Active</label>
+    <label class="form-check-label text-success" for="statusActive">{{ 'Active' | localize }}</label>
   </div>
 
   <div class="form-check form-check-inline">
     <input class="form-check-input" type="radio" name="statusFilter" id="statusInactive"
            [value]="false" [(ngModel)]="isActiveFilter" (change)="getDataPage(1)">
-    <label class="form-check-label text-danger" for="statusInactive">Inactive</label>
+    <label class="form-check-label text-danger" for="statusInactive">{{ 'Inactive' | localize }}</label>
   </div>
 </div>
 
@@ -42,7 +42,7 @@
     <!-- Create Policy Button -->
     <div class="col-md-4 d-flex justify-content-end"  *ngIf="!_appSessionService.isCustomerUser()">
       <button type="button" class="btn btn-primary" (click)="showCreateOrEditDialog()">
-        <i class="fa fa-plus-square"></i> Create Policy
+        <i class="fa fa-plus-square"></i> {{ 'Create' | localize }} {{ 'Policy' | localize }}
       </button>
     </div>
   </div>

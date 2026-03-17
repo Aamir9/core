@@ -99,12 +99,12 @@
                             <thead class="bg-light">
                                 <tr>
                                     <th>{{ "TenancyName" | localize }}</th>
-                                    <th>{{ "Company Name" | localize }}</th>
-                                    <th>{{ "Company Type" | localize }}</th>
+                                    <th>{{ "CompanyName" | localize }}</th>
+                                    <th>{{ "CompanyType" | localize }}</th>
                                     <th>{{ "Address" | localize }}</th>
-                                    <th>{{"Postal Code"|localize}}</th>
-                                    <th>{{ "Equipment Type Medical" | localize }}</th>
-                                    <th style="width: 7rem">{{ "Actions" | localize }}</th>
+                                    <th>{{"ZipCode"|localize}}</th>
+                                    <th>{{ "EquipmentTypeMedical" | localize }}</th>
+                                    <th >{{ "Actions" | localize }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -136,15 +136,13 @@
                                             <i class="fas fa-eye"></i>
                                           </a> -->
                                         <a href="javascript:;"  class="btn bg-secondary mr-1"
-                                            (click)="editTenant(tenant)">
+                                            (click)="editTenant(tenant)" title="{{ 'Edit' | localize }}">
                                             <i class="fas fa-pencil-alt"></i>
-                                            <!-- {{ "Edit" | localize }} -->
-                                    </a>
+                                        </a>
                                         <a href="javascript:;"  class="btn bg-danger mr-1"
-                                            (click)="delete(tenant)">
+                                            (click)="delete(tenant)" title="{{ 'Delete' | localize }}">
                                             <i class="fas fa-trash"></i>
-                                            <!-- {{ "Delete" | localize }} -->
-                                    </a>
+                                        </a>
                                     </td>
                                 </tr>
                             </tbody>
