@@ -1,5 +1,5 @@
 {
-  "remoteServiceBaseUrl": "https://careapi.beckcrm.dk",
+  "remoteServiceBaseUrl": "https://core-api.beckcrm.dk",
   "appBaseUrl": "http://core-erp.beckcrm.dk",
   "localeMappings": [
     {
