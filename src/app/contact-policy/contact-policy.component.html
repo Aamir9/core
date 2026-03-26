@@ -32,7 +32,7 @@
             <th>{{ "Police nr." | localize }}</th>
             <th>{{ "Fornyelsesdato" | localize }}</th>
             <th>{{ "Årlig præmie" | localize }}</th>
-            <th>{{ "Policer" | localize }}</th>
+            <!-- <th>{{ "Policer" | localize }}</th> -->
             <th>{{ "Certifikat" | localize }}</th>
             <!-- <th >{{ "Actions" | localize }}</th> -->
           </tr>
@@ -45,18 +45,23 @@
             <td>{{ policy.policyNumber }}</td>
             <td>{{ policy.renewalDate | date:'shortDate' }}</td>
             <td>{{ policy.annualPremium }}</td>
-            <td>
+            <!-- <td>
   <span
     class="badge"
     [ngClass]="policy.isActive ? 'bg-success' : 'bg-danger'">
     {{ policy.isActive ? 'Active' : 'Inactive' }}
   </span>
-</td>
+</td> -->
 
             <td>
               <a *ngIf="policy.policyPdfPath" [href]="policy.policyPdfPath" target="_blank">
                 View PDF
-              </a>
+              </a> <br>
+                <span
+    class="badge"
+    [ngClass]="policy.isActive ? 'bg-success' : 'bg-danger'">
+    {{ policy.isActive ? 'Active' : 'Inactive' }}
+  </span>
             </td>
             <!-- <td>
               <button class="btn btn-sm btn-info " (click)="showCreateOrEditDialog(policy.id)"*ngIf="!_appSessionService.isCustomerUser()">

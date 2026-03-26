@@ -132,6 +132,8 @@ export class CreateCustomerComponent extends AppComponentBase implements OnInit 
 
   save(): void {
     this.saving = true;
+    this.customer.userName = this.customer.emailAddress;
+    this.customer.password = 'Defualt@123';
     this.customer.site= this.customer.name + " " + this.customer.surname;
     this.customer.roleNames = ['ADMIN'];
     debugger;
