@@ -52,6 +52,7 @@ export class GroupsComponent extends PagedListingComponentBase<GroupDto> impleme
     request.keyword = this.keyword;
     this._groupService.getPagedResult(
       request.keyword,
+      undefined,
       request.skipCount,
       request.maxResultCount
     )

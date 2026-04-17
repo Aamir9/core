@@ -255,17 +255,15 @@ export class CreateActivityComponent
           let actStatus = this.activityStatusList.find(
             (a) => a.name == this.ticketDetail.status
           );
-          this.selectedActivityStatus = actStatus;
+          // this.selectedActivityStatus = actStatus;
 
-          let actType = this.activityTypeList.find(
-            (a) => a.name == this.viewType
-          );
-          this.selectedActivityType = actType;
+          // let actType = this.activityTypeList.find(
+          //   (a) => a.name == this.viewType
+          // );
+          // this.selectedActivityType = actType;
 
           //Faults changes
-          let fault = this.ticketDetail.faults.find(
-            (f) => f.id == this.faultId
-          );
+          this._faultService.getById(this.faultId).subscribe((fault) => {
           if (fault) {
             this.currentFaultDto = fault;
             this.getComments();
@@ -303,6 +301,7 @@ export class CreateActivityComponent
               this.dbFilesList.push(file);
             else this.dbFilesList.push(file);
           });
+          });
         });
       } else if (this.viewType.toString() == "Note") {
         this._ticketService.getById(this.id).subscribe((result) => {
@@ -328,26 +327,32 @@ export class CreateActivityComponent
           this.selectedActivityType = actType;
 
           //Notes changes
-          let note = this.ticketDetail.notes.find((n) => n.id == this.noteId);
+          let notes = (this.ticketDetail as any).notes;
+          let note = notes ? notes.find((n) => n.id == this.noteId) : undefined;
           console.log("this.note", note);
+          if (note) {
           this.noteActivityInput.title = note.title;
           this.noteActivityInput.description = note.description;
 
+          let activityDetail = note.activityDetail;
+          if (activityDetail) {
           this.selectedNoteType = this.noteTypeList.find(
-            (x) => x.id == note.activityDetail.activityTypeId
+            (x) => x.id == activityDetail.activityTypeId
           );
-          this.selectedFollowUpTypeId = note.activityDetail.followUpTypeId;
+          this.selectedFollowUpTypeId = activityDetail.followUpTypeId;
 
           this.activityDate = this._datePipe.transform(
-            DateHelper.toLocalDate(note.activityDetail.date),
+            DateHelper.toLocalDate(activityDetail.date),
             "yyyy-MM-dd"
           );
           this.followUpDate = this._datePipe.transform(
-            DateHelper.toLocalDate(note.activityDetail.followUpDate),
+            DateHelper.toLocalDate(activityDetail.followUpDate),
             "yyyy-MM-dd"
           );
+          }
 
           //this.selectedNoteType = note.
+          if (note.activityResponsibles) {
           note.activityResponsibles.forEach((element) => {
             if (element.employeeId) {
               let em = this.employees.find((x) => x.id == element.employeeId);
@@ -365,6 +370,8 @@ export class CreateActivityComponent
               );
             }
           });
+          }
+          }
         });
       }
     }
@@ -472,8 +479,6 @@ export class CreateActivityComponent
     if (this.selectedSubCustomer) {
       this._ticketService
         .getPagedResult(
-          this.selectedSubCustomer.id,
-          undefined,
           undefined,
           undefined,
           0,
@@ -485,8 +490,6 @@ export class CreateActivityComponent
     } else {
       this._ticketService
         .getPagedResult(
-          this.selectedCustomer.id,
-          undefined,
           undefined,
           undefined,
           0,

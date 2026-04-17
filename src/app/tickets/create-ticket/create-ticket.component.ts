@@ -4,7 +4,7 @@ import { UserTypes } from '@shared/AppConsts';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DateHelper } from '@shared/helpers/DateHelper';
 import { Base64Image } from '@shared/modals/base64image';
-import { CreateERPTicketDto, CreateTicketDto, GroupDto, GroupServiceProxy, TicketServiceProxy, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
+import { CreateERPTicketDto, GroupDto, GroupServiceProxy, TicketServiceProxy, UserDto, UserServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({

@@ -11,7 +11,6 @@ import {
   GroupServiceProxy,
   TicketDto,
   TicketServiceProxy,
-  TicketUser,
   UpdateTicketSolutionNote,
   UpdateTicketStatusDto,
   UserListDto,
@@ -33,7 +32,7 @@ export class DetailTicketComponent extends AppComponentBase implements OnInit {
   commentDto = new CreateCommentDto();
   userId: number;
   ticketDto = new TicketDto();
-  ticketAssignee: TicketUser;
+  ticketAssignee: any;
 
   constructor(
     public injector: Injector,
@@ -88,14 +87,14 @@ export class DetailTicketComponent extends AppComponentBase implements OnInit {
   getTicketDetail() {
     this._ticketService.getById(this.ticketId).subscribe((result) => {
       this.ticketDto = result;
-      this.ticketAssignee = this.ticketDto.users.find(
+      this.ticketAssignee = (this.ticketDto as any).users?.find(
         (u) => u.userId == this._sessionService.userId
       );
       this.getComments();
     });
   }
 
-  ticketUserStatus(ticketUser: TicketUser): string {
+  ticketUserStatus(ticketUser: any): string {
     let userStatus;
     switch (ticketUser.status) {
       case 0:

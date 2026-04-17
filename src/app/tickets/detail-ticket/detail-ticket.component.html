@@ -26,7 +26,7 @@
             <!-- <b class="mr-2"> Description: </b> {{ ticketDto.comment }} -->
             <textarea class="form-control w-100" disabled>{{ ticketDto.comment }}</textarea>
           </div>
-          <div class="d-block mb-3" *ngIf="ticketDto?.users?.length > 1">
+          <div class="d-block mb-3" *ngIf="$any(ticketDto)?.users?.length > 1">
             <div class="d-flex align-items-center justify-content-start">
               <b class="mr-2 mb-2 mt-2"> Group Name: </b>
               {{ ticketDto.group.name }}
@@ -35,7 +35,7 @@
             <ul class="list-group">
               <li
                 class="d-flex align-items-center justify-content-between border border-info shadow p-3 mb-2 rounded"
-                *ngFor="let item of ticketDto.users"
+                *ngFor="let item of $any(ticketDto).users"
               >
                 {{ item.ticketAssignee.fullName }}
                 <div>{{ ticketUserStatus(item) }}</div>

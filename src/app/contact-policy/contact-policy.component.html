@@ -33,6 +33,7 @@
             <th>{{ "Fornyelsesdato" | localize }}</th>
             <th>{{ "Årlig præmie" | localize }}</th>
             <!-- <th>{{ "Policer" | localize }}</th> -->
+            <th>{{ "Policer PDF" | localize }}</th>
             <th>{{ "Certifikat" | localize }}</th>
             <!-- <th >{{ "Actions" | localize }}</th> -->
           </tr>
@@ -53,6 +54,13 @@
   </span>
 </td> -->
 
+            <td>
+              <a *ngIf="policy.certificatePdfPath" [href]="policy.certificatePdfPath" target="_blank">
+                <i class="fas fa-file-pdf text-danger mr-1"></i>
+                {{ policy.certifivatePdfPublicKey ? policy.certifivatePdfPublicKey.split('/').pop() : 'View PDF' }}
+              </a>
+              <span *ngIf="!policy.certificatePdfPath" class="text-muted">—</span>
+            </td>
             <td>
               <a *ngIf="policy.policyPdfPath" [href]="policy.policyPdfPath" target="_blank">
                 View PDF
@@ -76,7 +84,7 @@
             </td> -->
           </tr>
           <tr *ngIf="policies.length === 0">
-            <td colspan="8" class="text-center">No Policies Found</td>
+            <td colspan="9" class="text-center">No Policies Found</td>
           </tr>
         </tbody>
       </table>

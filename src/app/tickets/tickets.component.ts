@@ -129,19 +129,16 @@ export class TicketsComponent
       request.employeeId = undefined;
     } else {
       request.customerId = undefined;
-      request.employeeId = this.appSession.userId;
     }
     request.keyword = this.keyword;
-    request.showOpenOnly = this.onlyShowOpen;
     
     this._ticketService
       .getPagedResult(
-        request.customerId,
-        request.employeeId,
+        
+        undefined,
         request.keyword,
-        request.showOpenOnly,
         request.skipCount,
-        request.maxResultCount
+        request.maxResultCount,
       )
       .pipe(
         finalize(() => {
@@ -193,28 +190,28 @@ export class TicketsComponent
     });
   }
 
-  ticketUserStatus(ticket: TicketDto): string {
-    const ticketUser = ticket.users?.find(
-      (t) => t.userId == this._appSessionService.userId
-    );
-    if (!ticketUser) return "";
-    let userStatus;
-    switch (ticketUser.status) {
-      case 0:
-        userStatus = "Pending";
-        break;
-      case 1:
-        userStatus = "Accepted";
-        break;
-      case 2:
-        userStatus = "Rejected";
-        break;
-      default:
-        userStatus = "Pending";
-        break;
-    }
-    return userStatus;
-  }
+  // ticketUserStatus(ticket: TicketDto): string {
+  //   const ticketUser = ticket.users?.find(
+  //     (t) => t.userId == this._appSessionService.userId
+  //   );
+  //   if (!ticketUser) return "";
+  //   let userStatus;
+  //   switch (ticketUser.status) {
+  //     case 0:
+  //       userStatus = "Pending";
+  //       break;
+  //     case 1:
+  //       userStatus = "Accepted";
+  //       break;
+  //     case 2:
+  //       userStatus = "Rejected";
+  //       break;
+  //     default:
+  //       userStatus = "Pending";
+  //       break;
+  //   }
+  //   return userStatus;
+  // }
 
   // public EditTicket(): void {
   //   let editTicketDialog: BsModalRef;

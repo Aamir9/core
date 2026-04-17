@@ -837,7 +837,7 @@ export class ActivityServiceProxy {
      * @param phoneNumber (optional) 
      * @return Success
      */
-    sendMessage(message: string | undefined, phoneNumber: string | undefined): Observable<void> {
+    sendMessage(message: string | undefined, phoneNumber: string | undefined): Observable<SmsResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Activity/SendMessage?";
         if (message === null)
             throw new globalThis.Error("The parameter 'message' cannot be null.");
@@ -853,6 +853,7 @@ export class ActivityServiceProxy {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -863,14 +864,14 @@ export class ActivityServiceProxy {
                 try {
                     return this.processSendMessage(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<SmsResultDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<SmsResultDto>;
         }));
     }
 
-    protected processSendMessage(response: HttpResponseBase): Observable<void> {
+    protected processSendMessage(response: HttpResponseBase): Observable<SmsResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -879,14 +880,17 @@ export class ActivityServiceProxy {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SmsResultDto.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(null as any);
+        return _observableOf<SmsResultDto>(null as any);
     }
 
     /**
@@ -1812,6 +1816,118 @@ export class ActivityServiceProxy {
             }));
         }
         return _observableOf<NoteListDtoListResultDto>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateActivityResponsible(body: ActivityResponsibleDto | undefined): Observable<ActivityResponsibleDto> {
+        let url_ = this.baseUrl + "/api/services/app/Activity/UpdateActivityResponsible";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateActivityResponsible(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateActivityResponsible(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ActivityResponsibleDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ActivityResponsibleDto>;
+        }));
+    }
+
+    protected processUpdateActivityResponsible(response: HttpResponseBase): Observable<ActivityResponsibleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ActivityResponsibleDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ActivityResponsibleDto>(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getActivityResponsibleByActivityId(id: number | undefined): Observable<ActivityResponsibleDto> {
+        let url_ = this.baseUrl + "/api/services/app/Activity/GetActivityResponsibleByActivityId?";
+        if (id === null)
+            throw new globalThis.Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetActivityResponsibleByActivityId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetActivityResponsibleByActivityId(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ActivityResponsibleDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ActivityResponsibleDto>;
+        }));
+    }
+
+    protected processGetActivityResponsibleByActivityId(response: HttpResponseBase): Observable<ActivityResponsibleDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ActivityResponsibleDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ActivityResponsibleDto>(null as any);
     }
 }
 
@@ -3799,6 +3915,63 @@ export class CustomerServiceProxy {
     }
 
     /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createSchool(body: CreateCustomerDto | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/api/services/app/Customer/CreateSchool";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateSchool(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateSchool(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<number>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<number>;
+        }));
+    }
+
+    protected processCreateSchool(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : null as any;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<number>(null as any);
+    }
+
+    /**
      * @param id (optional) 
      * @return Success
      */
@@ -3946,6 +4119,72 @@ export class CustomerServiceProxy {
     }
 
     protected processGetAllLazyLoading(response: HttpResponseBase): Observable<CustomerListDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CustomerListDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CustomerListDtoPagedResultDto>(null as any);
+    }
+
+    /**
+     * @param searchTerm (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @return Success
+     */
+    getRolesLazyLoading(searchTerm: string | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<CustomerListDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Customer/GetRolesLazyLoading?";
+        if (searchTerm === null)
+            throw new globalThis.Error("The parameter 'searchTerm' cannot be null.");
+        else if (searchTerm !== undefined)
+            url_ += "searchTerm=" + encodeURIComponent("" + searchTerm) + "&";
+        if (pageNumber === null)
+            throw new globalThis.Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "pageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new globalThis.Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetRolesLazyLoading(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetRolesLazyLoading(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CustomerListDtoPagedResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CustomerListDtoPagedResultDto>;
+        }));
+    }
+
+    protected processGetRolesLazyLoading(response: HttpResponseBase): Observable<CustomerListDtoPagedResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4169,6 +4408,102 @@ export class CustomerServiceProxy {
     }
 
     protected processGetPagedResult(response: HttpResponseBase): Observable<CustomerDtoPagedResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CustomerDtoPagedResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CustomerDtoPagedResultDto>(null as any);
+    }
+
+    /**
+     * @param keyword (optional) 
+     * @param customerNumber (optional) 
+     * @param name (optional) 
+     * @param emailAddress (optional) 
+     * @param telePhone (optional) 
+     * @param serialNumber (optional) 
+     * @param customerTypeId (optional) 
+     * @param skipCount (optional) 
+     * @param maxResultCount (optional) 
+     * @return Success
+     */
+    getPagedRoleResult(keyword: string | undefined, customerNumber: string | undefined, name: string | undefined, emailAddress: string | undefined, telePhone: string | undefined, serialNumber: string | undefined, customerTypeId: number[] | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<CustomerDtoPagedResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/Customer/GetPagedRoleResult?";
+        if (keyword === null)
+            throw new globalThis.Error("The parameter 'keyword' cannot be null.");
+        else if (keyword !== undefined)
+            url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (customerNumber === null)
+            throw new globalThis.Error("The parameter 'customerNumber' cannot be null.");
+        else if (customerNumber !== undefined)
+            url_ += "CustomerNumber=" + encodeURIComponent("" + customerNumber) + "&";
+        if (name === null)
+            throw new globalThis.Error("The parameter 'name' cannot be null.");
+        else if (name !== undefined)
+            url_ += "Name=" + encodeURIComponent("" + name) + "&";
+        if (emailAddress === null)
+            throw new globalThis.Error("The parameter 'emailAddress' cannot be null.");
+        else if (emailAddress !== undefined)
+            url_ += "EmailAddress=" + encodeURIComponent("" + emailAddress) + "&";
+        if (telePhone === null)
+            throw new globalThis.Error("The parameter 'telePhone' cannot be null.");
+        else if (telePhone !== undefined)
+            url_ += "TelePhone=" + encodeURIComponent("" + telePhone) + "&";
+        if (serialNumber === null)
+            throw new globalThis.Error("The parameter 'serialNumber' cannot be null.");
+        else if (serialNumber !== undefined)
+            url_ += "SerialNumber=" + encodeURIComponent("" + serialNumber) + "&";
+        if (customerTypeId === null)
+            throw new globalThis.Error("The parameter 'customerTypeId' cannot be null.");
+        else if (customerTypeId !== undefined)
+            customerTypeId && customerTypeId.forEach(item => { url_ += "CustomerTypeId=" + encodeURIComponent("" + item) + "&"; });
+        if (skipCount === null)
+            throw new globalThis.Error("The parameter 'skipCount' cannot be null.");
+        else if (skipCount !== undefined)
+            url_ += "SkipCount=" + encodeURIComponent("" + skipCount) + "&";
+        if (maxResultCount === null)
+            throw new globalThis.Error("The parameter 'maxResultCount' cannot be null.");
+        else if (maxResultCount !== undefined)
+            url_ += "MaxResultCount=" + encodeURIComponent("" + maxResultCount) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPagedRoleResult(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPagedRoleResult(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CustomerDtoPagedResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CustomerDtoPagedResultDto>;
+        }));
+    }
+
+    protected processGetPagedRoleResult(response: HttpResponseBase): Observable<CustomerDtoPagedResultDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5518,6 +5853,142 @@ export class FaultServiceProxy {
 }
 
 @Injectable()
+export class FileServiceServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createUsersFromExcel(body: UploadUsersFromExcelInput | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/api/services/app/FileService/CreateUsersFromExcel";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateUsersFromExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateUsersFromExcel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
+    }
+
+    protected processCreateUsersFromExcel(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : null as any;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<boolean>(null as any);
+    }
+}
+
+@Injectable()
+export class FileUploadServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @param file (optional) 
+     * @return Success
+     */
+    uploadUsersFromExcel(file: FileParameter | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/FileUpload/UploadUsersFromExcel";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (file === null || file === undefined)
+            throw new globalThis.Error("The parameter 'file' cannot be null.");
+        else
+            content_.append("File", file.data, file.fileName ? file.fileName : "File");
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUploadUsersFromExcel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUploadUsersFromExcel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUploadUsersFromExcel(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+}
+
+@Injectable()
 export class GroupServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -6024,16 +6495,21 @@ export class GroupServiceProxy {
 
     /**
      * @param keyword (optional) 
+     * @param customerId (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getPagedResult(keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<GroupDtoPagedResultDto> {
+    getPagedResult(keyword: string | undefined, customerId: number | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<GroupDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Group/GetPagedResult?";
         if (keyword === null)
             throw new globalThis.Error("The parameter 'keyword' cannot be null.");
         else if (keyword !== undefined)
             url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
+        if (customerId === null)
+            throw new globalThis.Error("The parameter 'customerId' cannot be null.");
+        else if (customerId !== undefined)
+            url_ += "CustomerId=" + encodeURIComponent("" + customerId) + "&";
         if (skipCount === null)
             throw new globalThis.Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -9080,6 +9556,281 @@ export class PageConfigServiceProxy {
 }
 
 @Injectable()
+export class ProblemTypeServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @return Success
+     */
+    getAll(): Observable<Int32LookUpDtoListResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/ProblemType/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Int32LookUpDtoListResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Int32LookUpDtoListResultDto>;
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<Int32LookUpDtoListResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Int32LookUpDtoListResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<Int32LookUpDtoListResultDto>(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getById(id: number | undefined): Observable<ProblemTypeDto> {
+        let url_ = this.baseUrl + "/api/services/app/ProblemType/GetById?";
+        if (id === null)
+            throw new globalThis.Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetById(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ProblemTypeDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ProblemTypeDto>;
+        }));
+    }
+
+    protected processGetById(response: HttpResponseBase): Observable<ProblemTypeDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ProblemTypeDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<ProblemTypeDto>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: ProblemTypeDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/ProblemType/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: ProblemTypeDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/ProblemType/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/ProblemType/Delete?";
+        if (id === null)
+            throw new globalThis.Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+}
+
+@Injectable()
 export class ProductServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -11853,6 +12604,281 @@ export class SiteServiceProxy {
 }
 
 @Injectable()
+export class SolutionTypeServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @return Success
+     */
+    getAll(): Observable<Int32LookUpDtoListResultDto> {
+        let url_ = this.baseUrl + "/api/services/app/SolutionType/GetAll";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Int32LookUpDtoListResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Int32LookUpDtoListResultDto>;
+        }));
+    }
+
+    protected processGetAll(response: HttpResponseBase): Observable<Int32LookUpDtoListResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Int32LookUpDtoListResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<Int32LookUpDtoListResultDto>(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getById(id: number | undefined): Observable<SolutionTypeDto> {
+        let url_ = this.baseUrl + "/api/services/app/SolutionType/GetById?";
+        if (id === null)
+            throw new globalThis.Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetById(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SolutionTypeDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SolutionTypeDto>;
+        }));
+    }
+
+    protected processGetById(response: HttpResponseBase): Observable<SolutionTypeDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SolutionTypeDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<SolutionTypeDto>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    create(body: SolutionTypeDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/SolutionType/Create";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    update(body: SolutionTypeDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/SolutionType/Update";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    delete(id: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/SolutionType/Delete?";
+        if (id === null)
+            throw new globalThis.Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "Id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+}
+
+@Injectable()
 export class SubCustomerServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -13896,58 +14922,6 @@ export class TicketServiceProxy {
      * @param body (optional) 
      * @return Success
      */
-    create(body: CreateTicketDto | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Ticket/Create";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreate(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreate(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processCreate(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
     createFromERP(body: CreateERPTicketDto | undefined): Observable<number> {
         let url_ = this.baseUrl + "/api/services/app/Ticket/CreateFromERP";
         url_ = url_.replace(/[?&]$/, "");
@@ -14002,32 +14976,22 @@ export class TicketServiceProxy {
     }
 
     /**
-     * @param customerUserId (optional) 
-     * @param employeeId (optional) 
+     * @param memberNumber (optional) 
      * @param keyword (optional) 
-     * @param showOnlyOpened (optional) 
      * @param skipCount (optional) 
      * @param maxResultCount (optional) 
      * @return Success
      */
-    getPagedResult(customerUserId: number | undefined, employeeId: number | undefined, keyword: string | undefined, showOnlyOpened: boolean | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<TicketDtoPagedResultDto> {
+    getPagedResult(memberNumber: string | undefined, keyword: string | undefined, skipCount: number | undefined, maxResultCount: number | undefined): Observable<TicketDtoPagedResultDto> {
         let url_ = this.baseUrl + "/api/services/app/Ticket/GetPagedResult?";
-        if (customerUserId === null)
-            throw new globalThis.Error("The parameter 'customerUserId' cannot be null.");
-        else if (customerUserId !== undefined)
-            url_ += "CustomerUserId=" + encodeURIComponent("" + customerUserId) + "&";
-        if (employeeId === null)
-            throw new globalThis.Error("The parameter 'employeeId' cannot be null.");
-        else if (employeeId !== undefined)
-            url_ += "EmployeeId=" + encodeURIComponent("" + employeeId) + "&";
+        if (memberNumber === null)
+            throw new globalThis.Error("The parameter 'memberNumber' cannot be null.");
+        else if (memberNumber !== undefined)
+            url_ += "MemberNumber=" + encodeURIComponent("" + memberNumber) + "&";
         if (keyword === null)
             throw new globalThis.Error("The parameter 'keyword' cannot be null.");
         else if (keyword !== undefined)
             url_ += "Keyword=" + encodeURIComponent("" + keyword) + "&";
-        if (showOnlyOpened === null)
-            throw new globalThis.Error("The parameter 'showOnlyOpened' cannot be null.");
-        else if (showOnlyOpened !== undefined)
-            url_ += "ShowOnlyOpened=" + encodeURIComponent("" + showOnlyOpened) + "&";
         if (skipCount === null)
             throw new globalThis.Error("The parameter 'skipCount' cannot be null.");
         else if (skipCount !== undefined)
@@ -14168,58 +15132,6 @@ export class TicketServiceProxy {
     }
 
     protected processUpdateTicketUserStatus(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(null as any);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf<void>(null as any);
-    }
-
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    updateTicketFollowType(body: UpdateTicketFollowUpDto | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/services/app/Ticket/UpdateTicketFollowType";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json-patch+json",
-            })
-        };
-
-        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdateTicketFollowType(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdateTicketFollowType(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processUpdateTicketFollowType(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -14400,6 +15312,237 @@ export class TicketServiceProxy {
             }));
         }
         return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createTicketFiles(body: CreateTicketFilesInput | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Ticket/CreateTicketFiles";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateTicketFiles(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateTicketFiles(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processCreateTicketFiles(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateTicketProblemType(body: UpdateTicketProblemTypeDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Ticket/UpdateTicketProblemType";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateTicketProblemType(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateTicketProblemType(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdateTicketProblemType(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateTicketSolutionType(body: UpdateTicketSolutionTypeDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/services/app/Ticket/UpdateTicketSolutionType";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json-patch+json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateTicketSolutionType(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateTicketSolutionType(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdateTicketSolutionType(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+}
+
+@Injectable()
+export class ServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @param ticketId (optional) 
+     * @return Success
+     */
+    getFilesByTicketId(ticketId: number | undefined): Observable<CreateTicketFileDto[]> {
+        let url_ = this.baseUrl + "/GetFilesByTicketId?";
+        if (ticketId === null)
+            throw new globalThis.Error("The parameter 'ticketId' cannot be null.");
+        else if (ticketId !== undefined)
+            url_ += "ticketId=" + encodeURIComponent("" + ticketId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetFilesByTicketId(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetFilesByTicketId(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CreateTicketFileDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CreateTicketFileDto[]>;
+        }));
+    }
+
+    protected processGetFilesByTicketId(response: HttpResponseBase): Observable<CreateTicketFileDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CreateTicketFileDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CreateTicketFileDto[]>(null as any);
     }
 }
 
@@ -16256,6 +17399,9 @@ export class Activity implements IActivity {
     note!: Note;
     booking!: Booking;
     productItem!: ProductItem;
+    acceptedCount!: number | undefined;
+    willRegisterCount!: number | undefined;
+    description!: string | undefined;
 
     constructor(data?: IActivity) {
         if (data) {
@@ -16301,6 +17447,9 @@ export class Activity implements IActivity {
             this.note = _data["note"] ? Note.fromJS(_data["note"]) : undefined as any;
             this.booking = _data["booking"] ? Booking.fromJS(_data["booking"]) : undefined as any;
             this.productItem = _data["productItem"] ? ProductItem.fromJS(_data["productItem"]) : undefined as any;
+            this.acceptedCount = _data["acceptedCount"];
+            this.willRegisterCount = _data["willRegisterCount"];
+            this.description = _data["description"];
         }
     }
 
@@ -16346,6 +17495,9 @@ export class Activity implements IActivity {
         data["note"] = this.note ? this.note.toJSON() : undefined as any;
         data["booking"] = this.booking ? this.booking.toJSON() : undefined as any;
         data["productItem"] = this.productItem ? this.productItem.toJSON() : undefined as any;
+        data["acceptedCount"] = this.acceptedCount;
+        data["willRegisterCount"] = this.willRegisterCount;
+        data["description"] = this.description;
         return data;
     }
 
@@ -16391,6 +17543,9 @@ export interface IActivity {
     note: Note;
     booking: Booking;
     productItem: ProductItem;
+    acceptedCount: number | undefined;
+    willRegisterCount: number | undefined;
+    description: string | undefined;
 }
 
 export class ActivityArt implements IActivityArt {
@@ -16457,6 +17612,9 @@ export class ActivityDto implements IActivityDto {
     followUpByEmployeeId!: number | undefined;
     roomId!: number | undefined;
     note!: string | undefined;
+    acceptedCount!: number | undefined;
+    willRegisterCount!: number | undefined;
+    description!: string | undefined;
 
     constructor(data?: IActivityDto) {
         if (data) {
@@ -16485,6 +17643,9 @@ export class ActivityDto implements IActivityDto {
             this.followUpByEmployeeId = _data["followUpByEmployeeId"];
             this.roomId = _data["roomId"];
             this.note = _data["note"];
+            this.acceptedCount = _data["acceptedCount"];
+            this.willRegisterCount = _data["willRegisterCount"];
+            this.description = _data["description"];
         }
     }
 
@@ -16513,6 +17674,9 @@ export class ActivityDto implements IActivityDto {
         data["followUpByEmployeeId"] = this.followUpByEmployeeId;
         data["roomId"] = this.roomId;
         data["note"] = this.note;
+        data["acceptedCount"] = this.acceptedCount;
+        data["willRegisterCount"] = this.willRegisterCount;
+        data["description"] = this.description;
         return data;
     }
 
@@ -16541,6 +17705,9 @@ export interface IActivityDto {
     followUpByEmployeeId: number | undefined;
     roomId: number | undefined;
     note: string | undefined;
+    acceptedCount: number | undefined;
+    willRegisterCount: number | undefined;
+    description: string | undefined;
 }
 
 export class ActivityListDto implements IActivityListDto {
@@ -16560,6 +17727,9 @@ export class ActivityListDto implements IActivityListDto {
     followUpByEmployeeId!: number | undefined;
     roomId!: number | undefined;
     note!: string | undefined;
+    acceptedCount!: number | undefined;
+    willRegisterCount!: number | undefined;
+    description!: string | undefined;
     customerName!: string | undefined;
     customerEmail!: string | undefined;
     customerUserId!: number | undefined;
@@ -16577,6 +17747,7 @@ export class ActivityListDto implements IActivityListDto {
     groupName!: string | undefined;
     ticketId!: number | undefined;
     customerType!: string | undefined;
+    responsibles!: ActivityResponsibleDto[] | undefined;
 
     constructor(data?: IActivityListDto) {
         if (data) {
@@ -16605,6 +17776,9 @@ export class ActivityListDto implements IActivityListDto {
             this.followUpByEmployeeId = _data["followUpByEmployeeId"];
             this.roomId = _data["roomId"];
             this.note = _data["note"];
+            this.acceptedCount = _data["acceptedCount"];
+            this.willRegisterCount = _data["willRegisterCount"];
+            this.description = _data["description"];
             this.customerName = _data["customerName"];
             this.customerEmail = _data["customerEmail"];
             this.customerUserId = _data["customerUserId"];
@@ -16622,6 +17796,11 @@ export class ActivityListDto implements IActivityListDto {
             this.groupName = _data["groupName"];
             this.ticketId = _data["ticketId"];
             this.customerType = _data["customerType"];
+            if (Array.isArray(_data["responsibles"])) {
+                this.responsibles = [] as any;
+                for (let item of _data["responsibles"])
+                    this.responsibles!.push(ActivityResponsibleDto.fromJS(item));
+            }
         }
     }
 
@@ -16650,6 +17829,9 @@ export class ActivityListDto implements IActivityListDto {
         data["followUpByEmployeeId"] = this.followUpByEmployeeId;
         data["roomId"] = this.roomId;
         data["note"] = this.note;
+        data["acceptedCount"] = this.acceptedCount;
+        data["willRegisterCount"] = this.willRegisterCount;
+        data["description"] = this.description;
         data["customerName"] = this.customerName;
         data["customerEmail"] = this.customerEmail;
         data["customerUserId"] = this.customerUserId;
@@ -16667,6 +17849,11 @@ export class ActivityListDto implements IActivityListDto {
         data["groupName"] = this.groupName;
         data["ticketId"] = this.ticketId;
         data["customerType"] = this.customerType;
+        if (Array.isArray(this.responsibles)) {
+            data["responsibles"] = [];
+            for (let item of this.responsibles)
+                data["responsibles"].push(item ? item.toJSON() : undefined as any);
+        }
         return data;
     }
 
@@ -16695,6 +17882,9 @@ export interface IActivityListDto {
     followUpByEmployeeId: number | undefined;
     roomId: number | undefined;
     note: string | undefined;
+    acceptedCount: number | undefined;
+    willRegisterCount: number | undefined;
+    description: string | undefined;
     customerName: string | undefined;
     customerEmail: string | undefined;
     customerUserId: number | undefined;
@@ -16712,6 +17902,7 @@ export interface IActivityListDto {
     groupName: string | undefined;
     ticketId: number | undefined;
     customerType: string | undefined;
+    responsibles: ActivityResponsibleDto[] | undefined;
 }
 
 export class ActivityListDtoListResultDto implements IActivityListDtoListResultDto {
@@ -16885,6 +18076,69 @@ export interface IActivityResponsible {
     employee: User;
     groupId: number | undefined;
     group: Group;
+}
+
+export class ActivityResponsibleDto implements IActivityResponsibleDto {
+    employeeId!: number | undefined;
+    employeeName!: string | undefined;
+    groupId!: number | undefined;
+    groupName!: string | undefined;
+    id!: number;
+    activityId!: number | undefined;
+
+    constructor(data?: IActivityResponsibleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.employeeId = _data["employeeId"];
+            this.employeeName = _data["employeeName"];
+            this.groupId = _data["groupId"];
+            this.groupName = _data["groupName"];
+            this.id = _data["id"];
+            this.activityId = _data["activityId"];
+        }
+    }
+
+    static fromJS(data: any): ActivityResponsibleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ActivityResponsibleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["employeeId"] = this.employeeId;
+        data["employeeName"] = this.employeeName;
+        data["groupId"] = this.groupId;
+        data["groupName"] = this.groupName;
+        data["id"] = this.id;
+        data["activityId"] = this.activityId;
+        return data;
+    }
+
+    clone(): ActivityResponsibleDto {
+        const json = this.toJSON();
+        let result = new ActivityResponsibleDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IActivityResponsibleDto {
+    employeeId: number | undefined;
+    employeeName: string | undefined;
+    groupId: number | undefined;
+    groupName: string | undefined;
+    id: number;
+    activityId: number | undefined;
 }
 
 export class ActivityTaskDto implements IActivityTaskDto {
@@ -18914,6 +20168,161 @@ export interface ICommentDtoListResultDto {
     items: CommentDto[] | undefined;
 }
 
+export class Company implements ICompany {
+    id!: number;
+    creationTime!: Date;
+    creatorUserId!: number | undefined;
+    lastModificationTime!: Date | undefined;
+    lastModifierUserId!: number | undefined;
+    isDeleted!: boolean;
+    deleterUserId!: number | undefined;
+    deletionTime!: Date | undefined;
+    tenantId!: number;
+    name!: string;
+    logoUrl!: string;
+    logoPublicId!: string;
+    primaryColor!: string;
+    secondaryColor!: string;
+    tenant!: Tenant;
+    economicAgreementGrantToken!: string | undefined;
+    economicAppSecretToken!: string | undefined;
+    billyAgreementGrantToken!: string | undefined;
+    billyAppSecretToken!: string | undefined;
+    billyAccessToken!: string | undefined;
+    syncApiId!: SyncApis;
+    companyType!: string | undefined;
+    address!: string | undefined;
+    postCode!: string | undefined;
+    country!: string | undefined;
+    isEquipmentTypeMedical!: boolean;
+    invoiceCurrency!: string | undefined;
+    webAddress!: string | undefined;
+    telephoneNumber!: string | undefined;
+
+    constructor(data?: ICompany) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? new Date(_data["creationTime"].toString()) : undefined as any;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? new Date(_data["lastModificationTime"].toString()) : undefined as any;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? new Date(_data["deletionTime"].toString()) : undefined as any;
+            this.tenantId = _data["tenantId"];
+            this.name = _data["name"];
+            this.logoUrl = _data["logoUrl"];
+            this.logoPublicId = _data["logoPublicId"];
+            this.primaryColor = _data["primaryColor"];
+            this.secondaryColor = _data["secondaryColor"];
+            this.tenant = _data["tenant"] ? Tenant.fromJS(_data["tenant"]) : undefined as any;
+            this.economicAgreementGrantToken = _data["economicAgreementGrantToken"];
+            this.economicAppSecretToken = _data["economicAppSecretToken"];
+            this.billyAgreementGrantToken = _data["billyAgreementGrantToken"];
+            this.billyAppSecretToken = _data["billyAppSecretToken"];
+            this.billyAccessToken = _data["billyAccessToken"];
+            this.syncApiId = _data["syncApiId"];
+            this.companyType = _data["companyType"];
+            this.address = _data["address"];
+            this.postCode = _data["postCode"];
+            this.country = _data["country"];
+            this.isEquipmentTypeMedical = _data["isEquipmentTypeMedical"];
+            this.invoiceCurrency = _data["invoiceCurrency"];
+            this.webAddress = _data["webAddress"];
+            this.telephoneNumber = _data["telephoneNumber"];
+        }
+    }
+
+    static fromJS(data: any): Company {
+        data = typeof data === 'object' ? data : {};
+        let result = new Company();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : undefined as any;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : undefined as any;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : undefined as any;
+        data["tenantId"] = this.tenantId;
+        data["name"] = this.name;
+        data["logoUrl"] = this.logoUrl;
+        data["logoPublicId"] = this.logoPublicId;
+        data["primaryColor"] = this.primaryColor;
+        data["secondaryColor"] = this.secondaryColor;
+        data["tenant"] = this.tenant ? this.tenant.toJSON() : undefined as any;
+        data["economicAgreementGrantToken"] = this.economicAgreementGrantToken;
+        data["economicAppSecretToken"] = this.economicAppSecretToken;
+        data["billyAgreementGrantToken"] = this.billyAgreementGrantToken;
+        data["billyAppSecretToken"] = this.billyAppSecretToken;
+        data["billyAccessToken"] = this.billyAccessToken;
+        data["syncApiId"] = this.syncApiId;
+        data["companyType"] = this.companyType;
+        data["address"] = this.address;
+        data["postCode"] = this.postCode;
+        data["country"] = this.country;
+        data["isEquipmentTypeMedical"] = this.isEquipmentTypeMedical;
+        data["invoiceCurrency"] = this.invoiceCurrency;
+        data["webAddress"] = this.webAddress;
+        data["telephoneNumber"] = this.telephoneNumber;
+        return data;
+    }
+
+    clone(): Company {
+        const json = this.toJSON();
+        let result = new Company();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICompany {
+    id: number;
+    creationTime: Date;
+    creatorUserId: number | undefined;
+    lastModificationTime: Date | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: Date | undefined;
+    tenantId: number;
+    name: string;
+    logoUrl: string;
+    logoPublicId: string;
+    primaryColor: string;
+    secondaryColor: string;
+    tenant: Tenant;
+    economicAgreementGrantToken: string | undefined;
+    economicAppSecretToken: string | undefined;
+    billyAgreementGrantToken: string | undefined;
+    billyAppSecretToken: string | undefined;
+    billyAccessToken: string | undefined;
+    syncApiId: SyncApis;
+    companyType: string | undefined;
+    address: string | undefined;
+    postCode: string | undefined;
+    country: string | undefined;
+    isEquipmentTypeMedical: boolean;
+    invoiceCurrency: string | undefined;
+    webAddress: string | undefined;
+    telephoneNumber: string | undefined;
+}
+
 export class CompanyLoginInfoDto implements ICompanyLoginInfoDto {
     id!: number;
     name!: string | undefined;
@@ -18995,6 +20404,9 @@ export class CreateActivityDto implements ICreateActivityDto {
     isInvited!: boolean;
     customerTableId!: number;
     groupId!: number | undefined;
+    acceptedCount!: number | undefined;
+    willRegisterCount!: number | undefined;
+    description!: string | undefined;
 
     constructor(data?: ICreateActivityDto) {
         if (data) {
@@ -19020,6 +20432,9 @@ export class CreateActivityDto implements ICreateActivityDto {
             this.isInvited = _data["isInvited"];
             this.customerTableId = _data["customerTableId"];
             this.groupId = _data["groupId"];
+            this.acceptedCount = _data["acceptedCount"];
+            this.willRegisterCount = _data["willRegisterCount"];
+            this.description = _data["description"];
         }
     }
 
@@ -19045,6 +20460,9 @@ export class CreateActivityDto implements ICreateActivityDto {
         data["isInvited"] = this.isInvited;
         data["customerTableId"] = this.customerTableId;
         data["groupId"] = this.groupId;
+        data["acceptedCount"] = this.acceptedCount;
+        data["willRegisterCount"] = this.willRegisterCount;
+        data["description"] = this.description;
         return data;
     }
 
@@ -19070,6 +20488,9 @@ export interface ICreateActivityDto {
     isInvited: boolean;
     customerTableId: number;
     groupId: number | undefined;
+    acceptedCount: number | undefined;
+    willRegisterCount: number | undefined;
+    description: string | undefined;
 }
 
 export class CreateActivityTaskDto implements ICreateActivityTaskDto {
@@ -19374,6 +20795,8 @@ export class CreateCustomerDto implements ICreateCustomerDto {
     tenantId!: number;
     vatNumber!: string | undefined;
     description!: string | undefined;
+    bridgeClubNumber!: string | undefined;
+    dbfMemberNumber!: string | undefined;
 
     constructor(data?: ICreateCustomerDto) {
         if (data) {
@@ -19424,6 +20847,8 @@ export class CreateCustomerDto implements ICreateCustomerDto {
             this.tenantId = _data["tenantId"];
             this.vatNumber = _data["vatNumber"];
             this.description = _data["description"];
+            this.bridgeClubNumber = _data["bridgeClubNumber"];
+            this.dbfMemberNumber = _data["dbfMemberNumber"];
         }
     }
 
@@ -19474,6 +20899,8 @@ export class CreateCustomerDto implements ICreateCustomerDto {
         data["tenantId"] = this.tenantId;
         data["vatNumber"] = this.vatNumber;
         data["description"] = this.description;
+        data["bridgeClubNumber"] = this.bridgeClubNumber;
+        data["dbfMemberNumber"] = this.dbfMemberNumber;
         return data;
     }
 
@@ -19516,6 +20943,8 @@ export interface ICreateCustomerDto {
     tenantId: number;
     vatNumber: string | undefined;
     description: string | undefined;
+    bridgeClubNumber: string | undefined;
+    dbfMemberNumber: string | undefined;
 }
 
 export class CreateERPFaultDto implements ICreateERPFaultDto {
@@ -19642,8 +21071,18 @@ export class CreateERPTicketDto implements ICreateERPTicketDto {
     base64ImageString!: string | undefined;
     groupId!: number | undefined;
     customerId!: number | undefined;
-    employeeId!: number;
+    tenantName!: string | undefined;
     customerUserId!: number | undefined;
+    customerNo!: string | undefined;
+    tenantId!: number | undefined;
+    employeeId!: number;
+    customerName!: string | undefined;
+    telephoneFax!: string | undefined;
+    files!: CreateTicketFileDto[] | undefined;
+    clubName!: string | undefined;
+    memberNumber!: string | undefined;
+    problemTypeId!: number | undefined;
+    solutionTypeId!: number | undefined;
 
     constructor(data?: ICreateERPTicketDto) {
         if (data) {
@@ -19664,8 +21103,22 @@ export class CreateERPTicketDto implements ICreateERPTicketDto {
             this.base64ImageString = _data["base64ImageString"];
             this.groupId = _data["groupId"];
             this.customerId = _data["customerId"];
-            this.employeeId = _data["employeeId"];
+            this.tenantName = _data["tenantName"];
             this.customerUserId = _data["customerUserId"];
+            this.customerNo = _data["customerNo"];
+            this.tenantId = _data["tenantId"];
+            this.employeeId = _data["employeeId"];
+            this.customerName = _data["customerName"];
+            this.telephoneFax = _data["telephoneFax"];
+            if (Array.isArray(_data["files"])) {
+                this.files = [] as any;
+                for (let item of _data["files"])
+                    this.files!.push(CreateTicketFileDto.fromJS(item));
+            }
+            this.clubName = _data["clubName"];
+            this.memberNumber = _data["memberNumber"];
+            this.problemTypeId = _data["problemTypeId"];
+            this.solutionTypeId = _data["solutionTypeId"];
         }
     }
 
@@ -19686,8 +21139,22 @@ export class CreateERPTicketDto implements ICreateERPTicketDto {
         data["base64ImageString"] = this.base64ImageString;
         data["groupId"] = this.groupId;
         data["customerId"] = this.customerId;
-        data["employeeId"] = this.employeeId;
+        data["tenantName"] = this.tenantName;
         data["customerUserId"] = this.customerUserId;
+        data["customerNo"] = this.customerNo;
+        data["tenantId"] = this.tenantId;
+        data["employeeId"] = this.employeeId;
+        data["customerName"] = this.customerName;
+        data["telephoneFax"] = this.telephoneFax;
+        if (Array.isArray(this.files)) {
+            data["files"] = [];
+            for (let item of this.files)
+                data["files"].push(item ? item.toJSON() : undefined as any);
+        }
+        data["clubName"] = this.clubName;
+        data["memberNumber"] = this.memberNumber;
+        data["problemTypeId"] = this.problemTypeId;
+        data["solutionTypeId"] = this.solutionTypeId;
         return data;
     }
 
@@ -19708,8 +21175,18 @@ export interface ICreateERPTicketDto {
     base64ImageString: string | undefined;
     groupId: number | undefined;
     customerId: number | undefined;
-    employeeId: number;
+    tenantName: string | undefined;
     customerUserId: number | undefined;
+    customerNo: string | undefined;
+    tenantId: number | undefined;
+    employeeId: number;
+    customerName: string | undefined;
+    telephoneFax: string | undefined;
+    files: CreateTicketFileDto[] | undefined;
+    clubName: string | undefined;
+    memberNumber: string | undefined;
+    problemTypeId: number | undefined;
+    solutionTypeId: number | undefined;
 }
 
 export class CreateEyeToolDto implements ICreateEyeToolDto {
@@ -21174,18 +22651,13 @@ export interface ICreateTenantDto {
     customFields: CustomFieldDto[] | undefined;
 }
 
-export class CreateTicketDto implements ICreateTicketDto {
-    status!: number;
-    comment!: string | undefined;
-    description!: string | undefined;
-    email!: string | undefined;
-    date!: string | undefined;
-    base64ImageString!: string | undefined;
-    groupId!: number | undefined;
-    customerId!: number | undefined;
-    employeeId!: number | undefined;
+export class CreateTicketFileDto implements ICreateTicketFileDto {
+    name!: string | undefined;
+    size!: number;
+    type!: string | undefined;
+    base64!: string | undefined;
 
-    constructor(data?: ICreateTicketDto) {
+    constructor(data?: ICreateTicketFileDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -21196,57 +22668,97 @@ export class CreateTicketDto implements ICreateTicketDto {
 
     init(_data?: any) {
         if (_data) {
-            this.status = _data["status"];
-            this.comment = _data["comment"];
-            this.description = _data["description"];
-            this.email = _data["email"];
-            this.date = _data["date"];
-            this.base64ImageString = _data["base64ImageString"];
-            this.groupId = _data["groupId"];
-            this.customerId = _data["customerId"];
-            this.employeeId = _data["employeeId"];
+            this.name = _data["name"];
+            this.size = _data["size"];
+            this.type = _data["type"];
+            this.base64 = _data["base64"];
         }
     }
 
-    static fromJS(data: any): CreateTicketDto {
+    static fromJS(data: any): CreateTicketFileDto {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateTicketDto();
+        let result = new CreateTicketFileDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["status"] = this.status;
-        data["comment"] = this.comment;
-        data["description"] = this.description;
-        data["email"] = this.email;
-        data["date"] = this.date;
-        data["base64ImageString"] = this.base64ImageString;
-        data["groupId"] = this.groupId;
-        data["customerId"] = this.customerId;
-        data["employeeId"] = this.employeeId;
+        data["name"] = this.name;
+        data["size"] = this.size;
+        data["type"] = this.type;
+        data["base64"] = this.base64;
         return data;
     }
 
-    clone(): CreateTicketDto {
+    clone(): CreateTicketFileDto {
         const json = this.toJSON();
-        let result = new CreateTicketDto();
+        let result = new CreateTicketFileDto();
         result.init(json);
         return result;
     }
 }
 
-export interface ICreateTicketDto {
-    status: number;
-    comment: string | undefined;
-    description: string | undefined;
-    email: string | undefined;
-    date: string | undefined;
-    base64ImageString: string | undefined;
-    groupId: number | undefined;
-    customerId: number | undefined;
-    employeeId: number | undefined;
+export interface ICreateTicketFileDto {
+    name: string | undefined;
+    size: number;
+    type: string | undefined;
+    base64: string | undefined;
+}
+
+export class CreateTicketFilesInput implements ICreateTicketFilesInput {
+    ticketId!: number;
+    files!: CreateTicketFileDto[] | undefined;
+
+    constructor(data?: ICreateTicketFilesInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.ticketId = _data["ticketId"];
+            if (Array.isArray(_data["files"])) {
+                this.files = [] as any;
+                for (let item of _data["files"])
+                    this.files!.push(CreateTicketFileDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateTicketFilesInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateTicketFilesInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["ticketId"] = this.ticketId;
+        if (Array.isArray(this.files)) {
+            data["files"] = [];
+            for (let item of this.files)
+                data["files"].push(item ? item.toJSON() : undefined as any);
+        }
+        return data;
+    }
+
+    clone(): CreateTicketFilesInput {
+        const json = this.toJSON();
+        let result = new CreateTicketFilesInput();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateTicketFilesInput {
+    ticketId: number;
+    files: CreateTicketFileDto[] | undefined;
 }
 
 export class CreateUpdateUserPoliciesDto implements ICreateUpdateUserPoliciesDto {
@@ -21258,6 +22770,7 @@ export class CreateUpdateUserPoliciesDto implements ICreateUpdateUserPoliciesDto
     renewalDate!: Date | undefined;
     annualPremium!: string | undefined;
     policyPdf!: CreateUserPolicyFileDto;
+    certificatePdfPath!: CreateUserPolicyFileDto;
     files!: CreateUserFileDto[] | undefined;
     isActive!: boolean;
 
@@ -21280,6 +22793,7 @@ export class CreateUpdateUserPoliciesDto implements ICreateUpdateUserPoliciesDto
             this.renewalDate = _data["renewalDate"] ? new Date(_data["renewalDate"].toString()) : undefined as any;
             this.annualPremium = _data["annualPremium"];
             this.policyPdf = _data["policyPdf"] ? CreateUserPolicyFileDto.fromJS(_data["policyPdf"]) : undefined as any;
+            this.certificatePdfPath = _data["certificatePdfPath"] ? CreateUserPolicyFileDto.fromJS(_data["certificatePdfPath"]) : undefined as any;
             if (Array.isArray(_data["files"])) {
                 this.files = [] as any;
                 for (let item of _data["files"])
@@ -21306,6 +22820,7 @@ export class CreateUpdateUserPoliciesDto implements ICreateUpdateUserPoliciesDto
         data["renewalDate"] = this.renewalDate ? this.renewalDate.toISOString() : undefined as any;
         data["annualPremium"] = this.annualPremium;
         data["policyPdf"] = this.policyPdf ? this.policyPdf.toJSON() : undefined as any;
+        data["certificatePdfPath"] = this.certificatePdfPath ? this.certificatePdfPath.toJSON() : undefined as any;
         if (Array.isArray(this.files)) {
             data["files"] = [];
             for (let item of this.files)
@@ -21332,6 +22847,7 @@ export interface ICreateUpdateUserPoliciesDto {
     renewalDate: Date | undefined;
     annualPremium: string | undefined;
     policyPdf: CreateUserPolicyFileDto;
+    certificatePdfPath: CreateUserPolicyFileDto;
     files: CreateUserFileDto[] | undefined;
     isActive: boolean;
 }
@@ -21570,6 +23086,8 @@ export class Customer implements ICustomer {
     notes!: Note[] | undefined;
     vatNumber!: string | undefined;
     description!: string | undefined;
+    bridgeClubNumber!: string | undefined;
+    dbfMemberNumber!: string | undefined;
 
     constructor(data?: ICustomer) {
         if (data) {
@@ -21614,6 +23132,8 @@ export class Customer implements ICustomer {
             }
             this.vatNumber = _data["vatNumber"];
             this.description = _data["description"];
+            this.bridgeClubNumber = _data["bridgeClubNumber"];
+            this.dbfMemberNumber = _data["dbfMemberNumber"];
         }
     }
 
@@ -21658,6 +23178,8 @@ export class Customer implements ICustomer {
         }
         data["vatNumber"] = this.vatNumber;
         data["description"] = this.description;
+        data["bridgeClubNumber"] = this.bridgeClubNumber;
+        data["dbfMemberNumber"] = this.dbfMemberNumber;
         return data;
     }
 
@@ -21694,6 +23216,8 @@ export interface ICustomer {
     notes: Note[] | undefined;
     vatNumber: string | undefined;
     description: string | undefined;
+    bridgeClubNumber: string | undefined;
+    dbfMemberNumber: string | undefined;
 }
 
 export class CustomerDto implements ICustomerDto {
@@ -21736,6 +23260,8 @@ export class CustomerDto implements ICustomerDto {
     vatNumber!: string | undefined;
     description!: string | undefined;
     parentCustomer!: CustomerDto;
+    bridgeClubNumber!: string | undefined;
+    dbfMemberNumber!: string | undefined;
 
     constructor(data?: ICustomerDto) {
         if (data) {
@@ -21799,6 +23325,8 @@ export class CustomerDto implements ICustomerDto {
             this.vatNumber = _data["vatNumber"];
             this.description = _data["description"];
             this.parentCustomer = _data["parentCustomer"] ? CustomerDto.fromJS(_data["parentCustomer"]) : undefined as any;
+            this.bridgeClubNumber = _data["bridgeClubNumber"];
+            this.dbfMemberNumber = _data["dbfMemberNumber"];
         }
     }
 
@@ -21862,6 +23390,8 @@ export class CustomerDto implements ICustomerDto {
         data["vatNumber"] = this.vatNumber;
         data["description"] = this.description;
         data["parentCustomer"] = this.parentCustomer ? this.parentCustomer.toJSON() : undefined as any;
+        data["bridgeClubNumber"] = this.bridgeClubNumber;
+        data["dbfMemberNumber"] = this.dbfMemberNumber;
         return data;
     }
 
@@ -21913,6 +23443,8 @@ export interface ICustomerDto {
     vatNumber: string | undefined;
     description: string | undefined;
     parentCustomer: CustomerDto;
+    bridgeClubNumber: string | undefined;
+    dbfMemberNumber: string | undefined;
 }
 
 export class CustomerDtoListResultDto implements ICustomerDtoListResultDto {
@@ -22040,6 +23572,8 @@ export class CustomerListDto implements ICustomerListDto {
     userTypeId!: number | undefined;
     vatNumber!: string | undefined;
     description!: string | undefined;
+    customerTypeId!: number | undefined;
+    roleName!: string | undefined;
 
     constructor(data?: ICustomerListDto) {
         if (data) {
@@ -22070,6 +23604,8 @@ export class CustomerListDto implements ICustomerListDto {
             this.userTypeId = _data["userTypeId"];
             this.vatNumber = _data["vatNumber"];
             this.description = _data["description"];
+            this.customerTypeId = _data["customerTypeId"];
+            this.roleName = _data["roleName"];
         }
     }
 
@@ -22100,6 +23636,8 @@ export class CustomerListDto implements ICustomerListDto {
         data["userTypeId"] = this.userTypeId;
         data["vatNumber"] = this.vatNumber;
         data["description"] = this.description;
+        data["customerTypeId"] = this.customerTypeId;
+        data["roleName"] = this.roleName;
         return data;
     }
 
@@ -22130,6 +23668,8 @@ export interface ICustomerListDto {
     userTypeId: number | undefined;
     vatNumber: string | undefined;
     description: string | undefined;
+    customerTypeId: number | undefined;
+    roleName: string | undefined;
 }
 
 export class CustomerListDtoListResultDto implements ICustomerListDtoListResultDto {
@@ -22696,6 +24236,85 @@ export class EconomicSyncHistoryDtoPagedResultDto implements IEconomicSyncHistor
 export interface IEconomicSyncHistoryDtoPagedResultDto {
     items: EconomicSyncHistoryDto[] | undefined;
     totalCount: number;
+}
+
+export class Edition implements IEdition {
+    id!: number;
+    creationTime!: Date;
+    creatorUserId!: number | undefined;
+    lastModificationTime!: Date | undefined;
+    lastModifierUserId!: number | undefined;
+    isDeleted!: boolean;
+    deleterUserId!: number | undefined;
+    deletionTime!: Date | undefined;
+    name!: string;
+    displayName!: string;
+
+    constructor(data?: IEdition) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? new Date(_data["creationTime"].toString()) : undefined as any;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? new Date(_data["lastModificationTime"].toString()) : undefined as any;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? new Date(_data["deletionTime"].toString()) : undefined as any;
+            this.name = _data["name"];
+            this.displayName = _data["displayName"];
+        }
+    }
+
+    static fromJS(data: any): Edition {
+        data = typeof data === 'object' ? data : {};
+        let result = new Edition();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : undefined as any;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : undefined as any;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : undefined as any;
+        data["name"] = this.name;
+        data["displayName"] = this.displayName;
+        return data;
+    }
+
+    clone(): Edition {
+        const json = this.toJSON();
+        let result = new Edition();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IEdition {
+    id: number;
+    creationTime: Date;
+    creatorUserId: number | undefined;
+    lastModificationTime: Date | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: Date | undefined;
+    name: string;
+    displayName: string;
 }
 
 export class EntityDto implements IEntityDto {
@@ -25737,6 +27356,8 @@ export class NoteActivityInputDto implements INoteActivityInputDto {
     isInvited!: boolean;
     customerTableId!: number | undefined;
     groupId!: number | undefined;
+    acceptedCount!: number | undefined;
+    willRegisterCount!: number | undefined;
     description!: string | undefined;
     title!: string | undefined;
     ticketId!: number | undefined;
@@ -25767,6 +27388,8 @@ export class NoteActivityInputDto implements INoteActivityInputDto {
             this.isInvited = _data["isInvited"];
             this.customerTableId = _data["customerTableId"];
             this.groupId = _data["groupId"];
+            this.acceptedCount = _data["acceptedCount"];
+            this.willRegisterCount = _data["willRegisterCount"];
             this.description = _data["description"];
             this.title = _data["title"];
             this.ticketId = _data["ticketId"];
@@ -25805,6 +27428,8 @@ export class NoteActivityInputDto implements INoteActivityInputDto {
         data["isInvited"] = this.isInvited;
         data["customerTableId"] = this.customerTableId;
         data["groupId"] = this.groupId;
+        data["acceptedCount"] = this.acceptedCount;
+        data["willRegisterCount"] = this.willRegisterCount;
         data["description"] = this.description;
         data["title"] = this.title;
         data["ticketId"] = this.ticketId;
@@ -25843,126 +27468,13 @@ export interface INoteActivityInputDto {
     isInvited: boolean;
     customerTableId: number | undefined;
     groupId: number | undefined;
+    acceptedCount: number | undefined;
+    willRegisterCount: number | undefined;
     description: string | undefined;
     title: string | undefined;
     ticketId: number | undefined;
     employeeIds: number[] | undefined;
     groupIds: number[] | undefined;
-}
-
-export class NoteDto implements INoteDto {
-    id!: number;
-    title!: string | undefined;
-    description!: string | undefined;
-    userId!: number | undefined;
-    customer!: Customer;
-    activityId!: number;
-    activity!: Activity;
-    ticketId!: number | undefined;
-    ticket!: Ticket;
-    activityDetail!: ActivityListDto;
-    employees!: User[] | undefined;
-    groups!: Group[] | undefined;
-    activityResponsibles!: ActivityResponsible[] | undefined;
-
-    constructor(data?: INoteDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.title = _data["title"];
-            this.description = _data["description"];
-            this.userId = _data["userId"];
-            this.customer = _data["customer"] ? Customer.fromJS(_data["customer"]) : undefined as any;
-            this.activityId = _data["activityId"];
-            this.activity = _data["activity"] ? Activity.fromJS(_data["activity"]) : undefined as any;
-            this.ticketId = _data["ticketId"];
-            this.ticket = _data["ticket"] ? Ticket.fromJS(_data["ticket"]) : undefined as any;
-            this.activityDetail = _data["activityDetail"] ? ActivityListDto.fromJS(_data["activityDetail"]) : undefined as any;
-            if (Array.isArray(_data["employees"])) {
-                this.employees = [] as any;
-                for (let item of _data["employees"])
-                    this.employees!.push(User.fromJS(item));
-            }
-            if (Array.isArray(_data["groups"])) {
-                this.groups = [] as any;
-                for (let item of _data["groups"])
-                    this.groups!.push(Group.fromJS(item));
-            }
-            if (Array.isArray(_data["activityResponsibles"])) {
-                this.activityResponsibles = [] as any;
-                for (let item of _data["activityResponsibles"])
-                    this.activityResponsibles!.push(ActivityResponsible.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): NoteDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new NoteDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["title"] = this.title;
-        data["description"] = this.description;
-        data["userId"] = this.userId;
-        data["customer"] = this.customer ? this.customer.toJSON() : undefined as any;
-        data["activityId"] = this.activityId;
-        data["activity"] = this.activity ? this.activity.toJSON() : undefined as any;
-        data["ticketId"] = this.ticketId;
-        data["ticket"] = this.ticket ? this.ticket.toJSON() : undefined as any;
-        data["activityDetail"] = this.activityDetail ? this.activityDetail.toJSON() : undefined as any;
-        if (Array.isArray(this.employees)) {
-            data["employees"] = [];
-            for (let item of this.employees)
-                data["employees"].push(item ? item.toJSON() : undefined as any);
-        }
-        if (Array.isArray(this.groups)) {
-            data["groups"] = [];
-            for (let item of this.groups)
-                data["groups"].push(item ? item.toJSON() : undefined as any);
-        }
-        if (Array.isArray(this.activityResponsibles)) {
-            data["activityResponsibles"] = [];
-            for (let item of this.activityResponsibles)
-                data["activityResponsibles"].push(item ? item.toJSON() : undefined as any);
-        }
-        return data;
-    }
-
-    clone(): NoteDto {
-        const json = this.toJSON();
-        let result = new NoteDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface INoteDto {
-    id: number;
-    title: string | undefined;
-    description: string | undefined;
-    userId: number | undefined;
-    customer: Customer;
-    activityId: number;
-    activity: Activity;
-    ticketId: number | undefined;
-    ticket: Ticket;
-    activityDetail: ActivityListDto;
-    employees: User[] | undefined;
-    groups: Group[] | undefined;
-    activityResponsibles: ActivityResponsible[] | undefined;
 }
 
 export class NoteListDto implements INoteListDto {
@@ -26992,6 +28504,100 @@ export class PermissionDtoListResultDto implements IPermissionDtoListResultDto {
 
 export interface IPermissionDtoListResultDto {
     items: PermissionDto[] | undefined;
+}
+
+export class ProblemType implements IProblemType {
+    id!: number;
+    name!: string | undefined;
+
+    constructor(data?: IProblemType) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): ProblemType {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProblemType();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+
+    clone(): ProblemType {
+        const json = this.toJSON();
+        let result = new ProblemType();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IProblemType {
+    id: number;
+    name: string | undefined;
+}
+
+export class ProblemTypeDto implements IProblemTypeDto {
+    id!: number;
+    name!: string | undefined;
+
+    constructor(data?: IProblemTypeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): ProblemTypeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProblemTypeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+
+    clone(): ProblemTypeDto {
+        const json = this.toJSON();
+        let result = new ProblemTypeDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IProblemTypeDto {
+    id: number;
+    name: string | undefined;
 }
 
 export class Product implements IProduct {
@@ -29497,6 +31103,155 @@ export interface ISiteDtoPagedResultDto {
     totalCount: number;
 }
 
+export class SmsResultDto implements ISmsResultDto {
+    success!: boolean;
+    message!: string | undefined;
+    apiResponse!: string | undefined;
+    error!: string | undefined;
+
+    constructor(data?: ISmsResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.success = _data["success"];
+            this.message = _data["message"];
+            this.apiResponse = _data["apiResponse"];
+            this.error = _data["error"];
+        }
+    }
+
+    static fromJS(data: any): SmsResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SmsResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["success"] = this.success;
+        data["message"] = this.message;
+        data["apiResponse"] = this.apiResponse;
+        data["error"] = this.error;
+        return data;
+    }
+
+    clone(): SmsResultDto {
+        const json = this.toJSON();
+        let result = new SmsResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISmsResultDto {
+    success: boolean;
+    message: string | undefined;
+    apiResponse: string | undefined;
+    error: string | undefined;
+}
+
+export class SolutionType implements ISolutionType {
+    id!: number;
+    name!: string | undefined;
+
+    constructor(data?: ISolutionType) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): SolutionType {
+        data = typeof data === 'object' ? data : {};
+        let result = new SolutionType();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+
+    clone(): SolutionType {
+        const json = this.toJSON();
+        let result = new SolutionType();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISolutionType {
+    id: number;
+    name: string | undefined;
+}
+
+export class SolutionTypeDto implements ISolutionTypeDto {
+    id!: number;
+    name!: string | undefined;
+
+    constructor(data?: ISolutionTypeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): SolutionTypeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SolutionTypeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+
+    clone(): SolutionTypeDto {
+        const json = this.toJSON();
+        let result = new SolutionTypeDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ISolutionTypeDto {
+    id: number;
+    name: string | undefined;
+}
+
 export class StringSingleValueDto implements IStringSingleValueDto {
     value!: string | undefined;
 
@@ -30400,6 +32155,11 @@ export interface ISupplierListDtoListResultDto {
     items: SupplierListDto[] | undefined;
 }
 
+export enum SyncApis {
+    _1 = 1,
+    _2 = 2,
+}
+
 export class SyncHistoryDetailDto implements ISyncHistoryDetailDto {
     id!: number;
     creationTime!: Date;
@@ -30485,6 +32245,117 @@ export interface ISyncHistoryDetailDto {
     historyObjectId: string | undefined;
     historyObjectTitle: string | undefined;
     economicSyncHistoryId: number;
+}
+
+export class Tenant implements ITenant {
+    id!: number;
+    creationTime!: Date;
+    creatorUserId!: number | undefined;
+    lastModificationTime!: Date | undefined;
+    lastModifierUserId!: number | undefined;
+    isDeleted!: boolean;
+    deleterUserId!: number | undefined;
+    deletionTime!: Date | undefined;
+    tenancyName!: string;
+    name!: string;
+    connectionString!: string | undefined;
+    isActive!: boolean;
+    edition!: Edition;
+    editionId!: number | undefined;
+    creatorUser!: User;
+    lastModifierUser!: User;
+    deleterUser!: User;
+    company!: Company;
+
+    constructor(data?: ITenant) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? new Date(_data["creationTime"].toString()) : undefined as any;
+            this.creatorUserId = _data["creatorUserId"];
+            this.lastModificationTime = _data["lastModificationTime"] ? new Date(_data["lastModificationTime"].toString()) : undefined as any;
+            this.lastModifierUserId = _data["lastModifierUserId"];
+            this.isDeleted = _data["isDeleted"];
+            this.deleterUserId = _data["deleterUserId"];
+            this.deletionTime = _data["deletionTime"] ? new Date(_data["deletionTime"].toString()) : undefined as any;
+            this.tenancyName = _data["tenancyName"];
+            this.name = _data["name"];
+            this.connectionString = _data["connectionString"];
+            this.isActive = _data["isActive"];
+            this.edition = _data["edition"] ? Edition.fromJS(_data["edition"]) : undefined as any;
+            this.editionId = _data["editionId"];
+            this.creatorUser = _data["creatorUser"] ? User.fromJS(_data["creatorUser"]) : undefined as any;
+            this.lastModifierUser = _data["lastModifierUser"] ? User.fromJS(_data["lastModifierUser"]) : undefined as any;
+            this.deleterUser = _data["deleterUser"] ? User.fromJS(_data["deleterUser"]) : undefined as any;
+            this.company = _data["company"] ? Company.fromJS(_data["company"]) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): Tenant {
+        data = typeof data === 'object' ? data : {};
+        let result = new Tenant();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : undefined as any;
+        data["creatorUserId"] = this.creatorUserId;
+        data["lastModificationTime"] = this.lastModificationTime ? this.lastModificationTime.toISOString() : undefined as any;
+        data["lastModifierUserId"] = this.lastModifierUserId;
+        data["isDeleted"] = this.isDeleted;
+        data["deleterUserId"] = this.deleterUserId;
+        data["deletionTime"] = this.deletionTime ? this.deletionTime.toISOString() : undefined as any;
+        data["tenancyName"] = this.tenancyName;
+        data["name"] = this.name;
+        data["connectionString"] = this.connectionString;
+        data["isActive"] = this.isActive;
+        data["edition"] = this.edition ? this.edition.toJSON() : undefined as any;
+        data["editionId"] = this.editionId;
+        data["creatorUser"] = this.creatorUser ? this.creatorUser.toJSON() : undefined as any;
+        data["lastModifierUser"] = this.lastModifierUser ? this.lastModifierUser.toJSON() : undefined as any;
+        data["deleterUser"] = this.deleterUser ? this.deleterUser.toJSON() : undefined as any;
+        data["company"] = this.company ? this.company.toJSON() : undefined as any;
+        return data;
+    }
+
+    clone(): Tenant {
+        const json = this.toJSON();
+        let result = new Tenant();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITenant {
+    id: number;
+    creationTime: Date;
+    creatorUserId: number | undefined;
+    lastModificationTime: Date | undefined;
+    lastModifierUserId: number | undefined;
+    isDeleted: boolean;
+    deleterUserId: number | undefined;
+    deletionTime: Date | undefined;
+    tenancyName: string;
+    name: string;
+    connectionString: string | undefined;
+    isActive: boolean;
+    edition: Edition;
+    editionId: number | undefined;
+    creatorUser: User;
+    lastModifierUser: User;
+    deleterUser: User;
+    company: Company;
 }
 
 export enum TenantAvailabilityState {
@@ -30838,21 +32709,28 @@ export class Ticket implements ITicket {
     creationTime!: Date;
     creatorUserId!: number | undefined;
     tenantId!: number;
-    comment!: string;
+    tenant!: Tenant;
+    clubNumber!: string | undefined;
+    clubName!: string | undefined;
+    tittle!: string;
     description!: string;
     solutionNote!: string;
     email!: string;
     date!: Date;
     status!: TicketStatus;
-    imagePublicKey!: string | undefined;
-    imageUrl!: string | undefined;
     customerId!: number | undefined;
     ticketUserCustomer!: Customer;
-    groupId!: number | undefined;
-    group!: Group;
     activityId!: number | undefined;
     activity!: Activity;
     ticketNumber!: string | undefined;
+    memberName!: string | undefined;
+    memberNumber!: string | undefined;
+    phoneNumber!: string | undefined;
+    files!: TicketFile[] | undefined;
+    problemTypeId!: number | undefined;
+    problemType!: ProblemType;
+    solutionTypeId!: number | undefined;
+    solutionType!: SolutionType;
 
     constructor(data?: ITicket) {
         if (data) {
@@ -30869,21 +32747,32 @@ export class Ticket implements ITicket {
             this.creationTime = _data["creationTime"] ? new Date(_data["creationTime"].toString()) : undefined as any;
             this.creatorUserId = _data["creatorUserId"];
             this.tenantId = _data["tenantId"];
-            this.comment = _data["comment"];
+            this.tenant = _data["tenant"] ? Tenant.fromJS(_data["tenant"]) : undefined as any;
+            this.clubNumber = _data["clubNumber"];
+            this.clubName = _data["clubName"];
+            this.tittle = _data["tittle"];
             this.description = _data["description"];
             this.solutionNote = _data["solutionNote"];
             this.email = _data["email"];
             this.date = _data["date"] ? new Date(_data["date"].toString()) : undefined as any;
             this.status = _data["status"];
-            this.imagePublicKey = _data["imagePublicKey"];
-            this.imageUrl = _data["imageUrl"];
             this.customerId = _data["customerId"];
             this.ticketUserCustomer = _data["ticketUserCustomer"] ? Customer.fromJS(_data["ticketUserCustomer"]) : undefined as any;
-            this.groupId = _data["groupId"];
-            this.group = _data["group"] ? Group.fromJS(_data["group"]) : undefined as any;
             this.activityId = _data["activityId"];
             this.activity = _data["activity"] ? Activity.fromJS(_data["activity"]) : undefined as any;
             this.ticketNumber = _data["ticketNumber"];
+            this.memberName = _data["memberName"];
+            this.memberNumber = _data["memberNumber"];
+            this.phoneNumber = _data["phoneNumber"];
+            if (Array.isArray(_data["files"])) {
+                this.files = [] as any;
+                for (let item of _data["files"])
+                    this.files!.push(TicketFile.fromJS(item));
+            }
+            this.problemTypeId = _data["problemTypeId"];
+            this.problemType = _data["problemType"] ? ProblemType.fromJS(_data["problemType"]) : undefined as any;
+            this.solutionTypeId = _data["solutionTypeId"];
+            this.solutionType = _data["solutionType"] ? SolutionType.fromJS(_data["solutionType"]) : undefined as any;
         }
     }
 
@@ -30900,21 +32789,32 @@ export class Ticket implements ITicket {
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : undefined as any;
         data["creatorUserId"] = this.creatorUserId;
         data["tenantId"] = this.tenantId;
-        data["comment"] = this.comment;
+        data["tenant"] = this.tenant ? this.tenant.toJSON() : undefined as any;
+        data["clubNumber"] = this.clubNumber;
+        data["clubName"] = this.clubName;
+        data["tittle"] = this.tittle;
         data["description"] = this.description;
         data["solutionNote"] = this.solutionNote;
         data["email"] = this.email;
         data["date"] = this.date ? this.date.toISOString() : undefined as any;
         data["status"] = this.status;
-        data["imagePublicKey"] = this.imagePublicKey;
-        data["imageUrl"] = this.imageUrl;
         data["customerId"] = this.customerId;
         data["ticketUserCustomer"] = this.ticketUserCustomer ? this.ticketUserCustomer.toJSON() : undefined as any;
-        data["groupId"] = this.groupId;
-        data["group"] = this.group ? this.group.toJSON() : undefined as any;
         data["activityId"] = this.activityId;
         data["activity"] = this.activity ? this.activity.toJSON() : undefined as any;
         data["ticketNumber"] = this.ticketNumber;
+        data["memberName"] = this.memberName;
+        data["memberNumber"] = this.memberNumber;
+        data["phoneNumber"] = this.phoneNumber;
+        if (Array.isArray(this.files)) {
+            data["files"] = [];
+            for (let item of this.files)
+                data["files"].push(item ? item.toJSON() : undefined as any);
+        }
+        data["problemTypeId"] = this.problemTypeId;
+        data["problemType"] = this.problemType ? this.problemType.toJSON() : undefined as any;
+        data["solutionTypeId"] = this.solutionTypeId;
+        data["solutionType"] = this.solutionType ? this.solutionType.toJSON() : undefined as any;
         return data;
     }
 
@@ -30931,26 +32831,34 @@ export interface ITicket {
     creationTime: Date;
     creatorUserId: number | undefined;
     tenantId: number;
-    comment: string;
+    tenant: Tenant;
+    clubNumber: string | undefined;
+    clubName: string | undefined;
+    tittle: string;
     description: string;
     solutionNote: string;
     email: string;
     date: Date;
     status: TicketStatus;
-    imagePublicKey: string | undefined;
-    imageUrl: string | undefined;
     customerId: number | undefined;
     ticketUserCustomer: Customer;
-    groupId: number | undefined;
-    group: Group;
     activityId: number | undefined;
     activity: Activity;
     ticketNumber: string | undefined;
+    memberName: string | undefined;
+    memberNumber: string | undefined;
+    phoneNumber: string | undefined;
+    files: TicketFile[] | undefined;
+    problemTypeId: number | undefined;
+    problemType: ProblemType;
+    solutionTypeId: number | undefined;
+    solutionType: SolutionType;
 }
 
 export class TicketDto implements ITicketDto {
     id!: number;
     comment!: string | undefined;
+    customerName!: string | undefined;
     description!: string | undefined;
     email!: string | undefined;
     date!: Date;
@@ -30959,18 +32867,22 @@ export class TicketDto implements ITicketDto {
     imageUrl!: string | undefined;
     status!: string | undefined;
     activityId!: number;
-    groupId!: number | undefined;
-    employeeId!: number | undefined;
     creatorUserId!: number | undefined;
     creationTime!: Date;
     solutionNote!: string | undefined;
     ticketNumber!: string | undefined;
-    group!: Group;
-    users!: TicketUser[] | undefined;
     isExpanded!: boolean;
     customerId!: number | undefined;
-    faults!: FaultDto[] | undefined;
-    notes!: NoteDto[] | undefined;
+    tenantId!: number | undefined;
+    tenantName!: string | undefined;
+    memberNumber!: string | undefined;
+    customerNo!: string | undefined;
+    telephoneFax!: string | undefined;
+    clubName!: string | undefined;
+    problemTypeId!: number | undefined;
+    solutionTypeId!: number | undefined;
+    userId!: number | undefined;
+    phoneNumber!: string | undefined;
 
     constructor(data?: ITicketDto) {
         if (data) {
@@ -30985,6 +32897,7 @@ export class TicketDto implements ITicketDto {
         if (_data) {
             this.id = _data["id"];
             this.comment = _data["comment"];
+            this.customerName = _data["customerName"];
             this.description = _data["description"];
             this.email = _data["email"];
             this.date = _data["date"] ? new Date(_data["date"].toString()) : undefined as any;
@@ -30993,30 +32906,22 @@ export class TicketDto implements ITicketDto {
             this.imageUrl = _data["imageUrl"];
             this.status = _data["status"];
             this.activityId = _data["activityId"];
-            this.groupId = _data["groupId"];
-            this.employeeId = _data["employeeId"];
             this.creatorUserId = _data["creatorUserId"];
             this.creationTime = _data["creationTime"] ? new Date(_data["creationTime"].toString()) : undefined as any;
             this.solutionNote = _data["solutionNote"];
             this.ticketNumber = _data["ticketNumber"];
-            this.group = _data["group"] ? Group.fromJS(_data["group"]) : undefined as any;
-            if (Array.isArray(_data["users"])) {
-                this.users = [] as any;
-                for (let item of _data["users"])
-                    this.users!.push(TicketUser.fromJS(item));
-            }
             this.isExpanded = _data["isExpanded"];
             this.customerId = _data["customerId"];
-            if (Array.isArray(_data["faults"])) {
-                this.faults = [] as any;
-                for (let item of _data["faults"])
-                    this.faults!.push(FaultDto.fromJS(item));
-            }
-            if (Array.isArray(_data["notes"])) {
-                this.notes = [] as any;
-                for (let item of _data["notes"])
-                    this.notes!.push(NoteDto.fromJS(item));
-            }
+            this.tenantId = _data["tenantId"];
+            this.tenantName = _data["tenantName"];
+            this.memberNumber = _data["memberNumber"];
+            this.customerNo = _data["customerNo"];
+            this.telephoneFax = _data["telephoneFax"];
+            this.clubName = _data["clubName"];
+            this.problemTypeId = _data["problemTypeId"];
+            this.solutionTypeId = _data["solutionTypeId"];
+            this.userId = _data["userId"];
+            this.phoneNumber = _data["phoneNumber"];
         }
     }
 
@@ -31031,6 +32936,7 @@ export class TicketDto implements ITicketDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["comment"] = this.comment;
+        data["customerName"] = this.customerName;
         data["description"] = this.description;
         data["email"] = this.email;
         data["date"] = this.date ? this.date.toISOString() : undefined as any;
@@ -31039,30 +32945,22 @@ export class TicketDto implements ITicketDto {
         data["imageUrl"] = this.imageUrl;
         data["status"] = this.status;
         data["activityId"] = this.activityId;
-        data["groupId"] = this.groupId;
-        data["employeeId"] = this.employeeId;
         data["creatorUserId"] = this.creatorUserId;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : undefined as any;
         data["solutionNote"] = this.solutionNote;
         data["ticketNumber"] = this.ticketNumber;
-        data["group"] = this.group ? this.group.toJSON() : undefined as any;
-        if (Array.isArray(this.users)) {
-            data["users"] = [];
-            for (let item of this.users)
-                data["users"].push(item ? item.toJSON() : undefined as any);
-        }
         data["isExpanded"] = this.isExpanded;
         data["customerId"] = this.customerId;
-        if (Array.isArray(this.faults)) {
-            data["faults"] = [];
-            for (let item of this.faults)
-                data["faults"].push(item ? item.toJSON() : undefined as any);
-        }
-        if (Array.isArray(this.notes)) {
-            data["notes"] = [];
-            for (let item of this.notes)
-                data["notes"].push(item ? item.toJSON() : undefined as any);
-        }
+        data["tenantId"] = this.tenantId;
+        data["tenantName"] = this.tenantName;
+        data["memberNumber"] = this.memberNumber;
+        data["customerNo"] = this.customerNo;
+        data["telephoneFax"] = this.telephoneFax;
+        data["clubName"] = this.clubName;
+        data["problemTypeId"] = this.problemTypeId;
+        data["solutionTypeId"] = this.solutionTypeId;
+        data["userId"] = this.userId;
+        data["phoneNumber"] = this.phoneNumber;
         return data;
     }
 
@@ -31077,6 +32975,7 @@ export class TicketDto implements ITicketDto {
 export interface ITicketDto {
     id: number;
     comment: string | undefined;
+    customerName: string | undefined;
     description: string | undefined;
     email: string | undefined;
     date: Date;
@@ -31085,18 +32984,22 @@ export interface ITicketDto {
     imageUrl: string | undefined;
     status: string | undefined;
     activityId: number;
-    groupId: number | undefined;
-    employeeId: number | undefined;
     creatorUserId: number | undefined;
     creationTime: Date;
     solutionNote: string | undefined;
     ticketNumber: string | undefined;
-    group: Group;
-    users: TicketUser[] | undefined;
     isExpanded: boolean;
     customerId: number | undefined;
-    faults: FaultDto[] | undefined;
-    notes: NoteDto[] | undefined;
+    tenantId: number | undefined;
+    tenantName: string | undefined;
+    memberNumber: string | undefined;
+    customerNo: string | undefined;
+    telephoneFax: string | undefined;
+    clubName: string | undefined;
+    problemTypeId: number | undefined;
+    solutionTypeId: number | undefined;
+    userId: number | undefined;
+    phoneNumber: string | undefined;
 }
 
 export class TicketDtoPagedResultDto implements ITicketDtoPagedResultDto {
@@ -31154,21 +33057,19 @@ export interface ITicketDtoPagedResultDto {
     totalCount: number;
 }
 
-export enum TicketStatus {
-    _1 = 1,
-    _2 = 2,
-    _3 = 3,
-}
-
-export class TicketUser implements ITicketUser {
+export class TicketFile implements ITicketFile {
     id!: number;
-    ticketId!: number | undefined;
+    creationTime!: Date;
+    creatorUserId!: number | undefined;
+    ticketId!: number;
     ticket!: Ticket;
-    userId!: number | undefined;
-    ticketAssignee!: User;
-    status!: number;
+    imagePublicKey!: string;
+    imageUrl!: string;
+    name!: string;
+    size!: number;
+    type!: string;
 
-    constructor(data?: ITicketUser) {
+    constructor(data?: ITicketFile) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -31180,17 +33081,21 @@ export class TicketUser implements ITicketUser {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.creationTime = _data["creationTime"] ? new Date(_data["creationTime"].toString()) : undefined as any;
+            this.creatorUserId = _data["creatorUserId"];
             this.ticketId = _data["ticketId"];
             this.ticket = _data["ticket"] ? Ticket.fromJS(_data["ticket"]) : undefined as any;
-            this.userId = _data["userId"];
-            this.ticketAssignee = _data["ticketAssignee"] ? User.fromJS(_data["ticketAssignee"]) : undefined as any;
-            this.status = _data["status"];
+            this.imagePublicKey = _data["imagePublicKey"];
+            this.imageUrl = _data["imageUrl"];
+            this.name = _data["name"];
+            this.size = _data["size"];
+            this.type = _data["type"];
         }
     }
 
-    static fromJS(data: any): TicketUser {
+    static fromJS(data: any): TicketFile {
         data = typeof data === 'object' ? data : {};
-        let result = new TicketUser();
+        let result = new TicketFile();
         result.init(data);
         return result;
     }
@@ -31198,29 +33103,43 @@ export class TicketUser implements ITicketUser {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : undefined as any;
+        data["creatorUserId"] = this.creatorUserId;
         data["ticketId"] = this.ticketId;
         data["ticket"] = this.ticket ? this.ticket.toJSON() : undefined as any;
-        data["userId"] = this.userId;
-        data["ticketAssignee"] = this.ticketAssignee ? this.ticketAssignee.toJSON() : undefined as any;
-        data["status"] = this.status;
+        data["imagePublicKey"] = this.imagePublicKey;
+        data["imageUrl"] = this.imageUrl;
+        data["name"] = this.name;
+        data["size"] = this.size;
+        data["type"] = this.type;
         return data;
     }
 
-    clone(): TicketUser {
+    clone(): TicketFile {
         const json = this.toJSON();
-        let result = new TicketUser();
+        let result = new TicketFile();
         result.init(json);
         return result;
     }
 }
 
-export interface ITicketUser {
+export interface ITicketFile {
     id: number;
-    ticketId: number | undefined;
+    creationTime: Date;
+    creatorUserId: number | undefined;
+    ticketId: number;
     ticket: Ticket;
-    userId: number | undefined;
-    ticketAssignee: User;
-    status: number;
+    imagePublicKey: string;
+    imageUrl: string;
+    name: string;
+    size: number;
+    type: string;
+}
+
+export enum TicketStatus {
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
 }
 
 export class UpdateActivityDto implements IUpdateActivityDto {
@@ -31236,6 +33155,9 @@ export class UpdateActivityDto implements IUpdateActivityDto {
     customerId!: number;
     followUpByEmployeeId!: number | undefined;
     roomId!: number | undefined;
+    acceptedCount!: number | undefined;
+    willRegisterCount!: number | undefined;
+    description!: string | undefined;
 
     constructor(data?: IUpdateActivityDto) {
         if (data) {
@@ -31260,6 +33182,9 @@ export class UpdateActivityDto implements IUpdateActivityDto {
             this.customerId = _data["customerId"];
             this.followUpByEmployeeId = _data["followUpByEmployeeId"];
             this.roomId = _data["roomId"];
+            this.acceptedCount = _data["acceptedCount"];
+            this.willRegisterCount = _data["willRegisterCount"];
+            this.description = _data["description"];
         }
     }
 
@@ -31284,6 +33209,9 @@ export class UpdateActivityDto implements IUpdateActivityDto {
         data["customerId"] = this.customerId;
         data["followUpByEmployeeId"] = this.followUpByEmployeeId;
         data["roomId"] = this.roomId;
+        data["acceptedCount"] = this.acceptedCount;
+        data["willRegisterCount"] = this.willRegisterCount;
+        data["description"] = this.description;
         return data;
     }
 
@@ -31308,6 +33236,9 @@ export interface IUpdateActivityDto {
     customerId: number;
     followUpByEmployeeId: number | undefined;
     roomId: number | undefined;
+    acceptedCount: number | undefined;
+    willRegisterCount: number | undefined;
+    description: string | undefined;
 }
 
 export class UpdateBookingEmployeeStatusInputDto implements IUpdateBookingEmployeeStatusInputDto {
@@ -32223,12 +34154,11 @@ export interface IUpdateSubPackageDto {
     employeeId: number | undefined;
 }
 
-export class UpdateTicketFollowUpDto implements IUpdateTicketFollowUpDto {
+export class UpdateTicketProblemTypeDto implements IUpdateTicketProblemTypeDto {
     id!: number;
-    groupId!: number | undefined;
-    employeeId!: number | undefined;
+    problemTypeId!: number | undefined;
 
-    constructor(data?: IUpdateTicketFollowUpDto) {
+    constructor(data?: IUpdateTicketProblemTypeDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -32240,14 +34170,13 @@ export class UpdateTicketFollowUpDto implements IUpdateTicketFollowUpDto {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
-            this.groupId = _data["groupId"];
-            this.employeeId = _data["employeeId"];
+            this.problemTypeId = _data["problemTypeId"];
         }
     }
 
-    static fromJS(data: any): UpdateTicketFollowUpDto {
+    static fromJS(data: any): UpdateTicketProblemTypeDto {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateTicketFollowUpDto();
+        let result = new UpdateTicketProblemTypeDto();
         result.init(data);
         return result;
     }
@@ -32255,23 +34184,21 @@ export class UpdateTicketFollowUpDto implements IUpdateTicketFollowUpDto {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
-        data["groupId"] = this.groupId;
-        data["employeeId"] = this.employeeId;
+        data["problemTypeId"] = this.problemTypeId;
         return data;
     }
 
-    clone(): UpdateTicketFollowUpDto {
+    clone(): UpdateTicketProblemTypeDto {
         const json = this.toJSON();
-        let result = new UpdateTicketFollowUpDto();
+        let result = new UpdateTicketProblemTypeDto();
         result.init(json);
         return result;
     }
 }
 
-export interface IUpdateTicketFollowUpDto {
+export interface IUpdateTicketProblemTypeDto {
     id: number;
-    groupId: number | undefined;
-    employeeId: number | undefined;
+    problemTypeId: number | undefined;
 }
 
 export class UpdateTicketSolutionNote implements IUpdateTicketSolutionNote {
@@ -32321,6 +34248,53 @@ export interface IUpdateTicketSolutionNote {
     solutionNote: string | undefined;
 }
 
+export class UpdateTicketSolutionTypeDto implements IUpdateTicketSolutionTypeDto {
+    id!: number;
+    solutionTypeId!: number | undefined;
+
+    constructor(data?: IUpdateTicketSolutionTypeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.solutionTypeId = _data["solutionTypeId"];
+        }
+    }
+
+    static fromJS(data: any): UpdateTicketSolutionTypeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateTicketSolutionTypeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["solutionTypeId"] = this.solutionTypeId;
+        return data;
+    }
+
+    clone(): UpdateTicketSolutionTypeDto {
+        const json = this.toJSON();
+        let result = new UpdateTicketSolutionTypeDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateTicketSolutionTypeDto {
+    id: number;
+    solutionTypeId: number | undefined;
+}
+
 export class UpdateTicketStatusDto implements IUpdateTicketStatusDto {
     id!: number;
     ticketStatus!: number;
@@ -32366,6 +34340,49 @@ export class UpdateTicketStatusDto implements IUpdateTicketStatusDto {
 export interface IUpdateTicketStatusDto {
     id: number;
     ticketStatus: number;
+}
+
+export class UploadUsersFromExcelInput implements IUploadUsersFromExcelInput {
+    file!: string | undefined;
+
+    constructor(data?: IUploadUsersFromExcelInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.file = _data["file"];
+        }
+    }
+
+    static fromJS(data: any): UploadUsersFromExcelInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new UploadUsersFromExcelInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["file"] = this.file;
+        return data;
+    }
+
+    clone(): UploadUsersFromExcelInput {
+        const json = this.toJSON();
+        let result = new UploadUsersFromExcelInput();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUploadUsersFromExcelInput {
+    file: string | undefined;
 }
 
 export class User implements IUser {
@@ -33376,6 +35393,8 @@ export class UserPoliciesDto implements IUserPoliciesDto {
     annualPremium!: string | undefined;
     policyPdfPath!: string | undefined;
     policyPdfPublicKey!: string | undefined;
+    certificatePdfPath!: string | undefined;
+    certifivatePdfPublicKey!: string | undefined;
     creationTime!: Date;
     creatorId!: number | undefined;
     isActive!: boolean;
@@ -33401,6 +35420,8 @@ export class UserPoliciesDto implements IUserPoliciesDto {
             this.annualPremium = _data["annualPremium"];
             this.policyPdfPath = _data["policyPdfPath"];
             this.policyPdfPublicKey = _data["policyPdfPublicKey"];
+            this.certificatePdfPath = _data["certificatePdfPath"];
+            this.certifivatePdfPublicKey = _data["certifivatePdfPublicKey"];
             this.creationTime = _data["creationTime"] ? new Date(_data["creationTime"].toString()) : undefined as any;
             this.creatorId = _data["creatorId"];
             this.isActive = _data["isActive"];
@@ -33426,6 +35447,8 @@ export class UserPoliciesDto implements IUserPoliciesDto {
         data["annualPremium"] = this.annualPremium;
         data["policyPdfPath"] = this.policyPdfPath;
         data["policyPdfPublicKey"] = this.policyPdfPublicKey;
+        data["certificatePdfPath"] = this.certificatePdfPath;
+        data["certifivatePdfPublicKey"] = this.certifivatePdfPublicKey;
         data["creationTime"] = this.creationTime ? this.creationTime.toISOString() : undefined as any;
         data["creatorId"] = this.creatorId;
         data["isActive"] = this.isActive;
@@ -33451,6 +35474,8 @@ export interface IUserPoliciesDto {
     annualPremium: string | undefined;
     policyPdfPath: string | undefined;
     policyPdfPublicKey: string | undefined;
+    certificatePdfPath: string | undefined;
+    certifivatePdfPublicKey: string | undefined;
     creationTime: Date;
     creatorId: number | undefined;
     isActive: boolean;
@@ -33784,6 +35809,11 @@ export class UserTypeDto implements IUserTypeDto {
 export interface IUserTypeDto {
     id: number;
     name: string | undefined;
+}
+
+export interface FileParameter {
+    data: any;
+    fileName: string;
 }
 
 export class ApiException extends Error {

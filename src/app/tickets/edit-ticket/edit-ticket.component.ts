@@ -1,4 +1,5 @@
 import { DatePipe } from "@angular/common";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import {
   Component,
   EventEmitter,
@@ -11,15 +12,21 @@ import { AppComponentBase } from "@shared/app-component-base";
 import { DateHelper } from "@shared/helpers/DateHelper";
 import { Base64Image } from "@shared/modals/base64image";
 import {
+  API_BASE_URL,
   CreateERPTicketDto,
   GroupDto,
   GroupServiceProxy,
   TicketDto,
   TicketServiceProxy,
-  UpdateTicketFollowUpDto,
   UserDto,
   UserServiceProxy,
 } from "@shared/service-proxies/service-proxies";
+
+interface UpdateTicketFollowUpDto {
+  id: number;
+  groupId: number;
+  employeeId: number;
+}
 import { BsModalRef } from "ngx-bootstrap/modal";
 
 @Component({
@@ -43,6 +50,9 @@ export class EditTicketComponent extends AppComponentBase implements OnInit {
   customerId: number;
   isGroupRadioActive = true;
 
+  private _http: HttpClient;
+  private _baseUrl: string;
+
   constructor(
     injector: Injector,
     public bsModalRef: BsModalRef,
@@ -52,6 +62,8 @@ export class EditTicketComponent extends AppComponentBase implements OnInit {
     private _datePipe: DatePipe
   ) {
     super(injector);
+    this._http = injector.get(HttpClient);
+    this._baseUrl = injector.get(API_BASE_URL, '');
   }
 
   ngOnInit(): void {
@@ -66,9 +78,10 @@ export class EditTicketComponent extends AppComponentBase implements OnInit {
       .toISOString()
       .slice(0, 16);
     this.createTicketDto.email = this.ticket.email;
-    this.createTicketDto.groupId = this.ticket.groupId;
+    this.createTicketDto.groupId = (this.ticket as any).groupId;
+    const users = (this.ticket as any).users;
     this.createTicketDto.employeeId =
-      this.ticket.users.length == 1 ? this.ticket.users[0].userId : null;
+      users?.length == 1 ? users[0].userId : null;
     this.createTicketDto.comment = this.ticket.comment;
     this.isGroupRadioActive = this.createTicketDto.groupId > 0 ? true : false;
 
@@ -94,8 +107,11 @@ export class EditTicketComponent extends AppComponentBase implements OnInit {
   }
 
   async editTicket() {
-    var inputModel = new UpdateTicketFollowUpDto();
-    inputModel.id = this.ticket.id;
+    var inputModel: UpdateTicketFollowUpDto = {
+      id: this.ticket.id,
+      groupId: 0,
+      employeeId: 0,
+    };
     if (this.createTicketDto.groupId < 1 && this.isGroupRadioActive) {
       this.notify.error(this.l("Select Group"));
       return true;
@@ -117,7 +133,11 @@ export class EditTicketComponent extends AppComponentBase implements OnInit {
     }
 
     try {
-      await this._ticketService.updateTicketFollowType(inputModel).toPromise();
+      await this._http.put(
+        this._baseUrl + '/api/services/app/Ticket/UpdateTicketFollowType',
+        inputModel,
+        { headers: new HttpHeaders({ 'Content-Type': 'application/json-patch+json' }) }
+      ).toPromise();
       this.notify.success(this.l("SavedSuccessfully"));
     } catch (error) {
       this.notify.error(this.l("Error in creating fault"));

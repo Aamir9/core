@@ -36,6 +36,7 @@ export class CreateUserPolicyComponent extends AppComponentBase implements OnIni
   ngOnInit(): void {
     this.createDto.userId = this.userId;
     this.createDto.files = [];
+    this.createDto.isActive = true;
   }
 
 
@@ -44,7 +45,7 @@ export class CreateUserPolicyComponent extends AppComponentBase implements OnIni
 
     this.uploadedFile.name = file.fileName || ''; // default name if not provided
     this.uploadedFile.type = file.fileType;
-    this.uploadedFile.size = file.fileBase64.length; 
+    this.uploadedFile.size = file.fileSize; 
     this.uploadedFile.base64 = file.fileBase64;
   }
 
@@ -52,14 +53,13 @@ export class CreateUserPolicyComponent extends AppComponentBase implements OnIni
     this.uploadedCertificateFile = new CreateUserPolicyFileDto();
     this.uploadedCertificateFile.name = file.fileName || '';
     this.uploadedCertificateFile.type = file.fileType;
-    this.uploadedCertificateFile.size = file.fileBase64.length;
+    this.uploadedCertificateFile.size = file.fileSize;
     this.uploadedCertificateFile.base64 = file.fileBase64;
   }
 
 save(): void {
   this.saving = true;
 
-  debugger
   if (this.createDto.renewalDate) {
     this.createDto.renewalDate = new Date(this.createDto.renewalDate);
   }

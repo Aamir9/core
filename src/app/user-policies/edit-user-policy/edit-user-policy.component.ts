@@ -22,6 +22,7 @@ export class EditUserPolicyComponent extends AppComponentBase implements OnInit 
   @Input() userId!: number;
 
   uploadedFile: CreateUserPolicyFileDto | null = null;
+  uploadedCertificateFile: CreateUserPolicyFileDto | null = null;
   userPolicy = new UserPoliciesDto();
   updateDto = new CreateUpdateUserPoliciesDto();
 
@@ -65,6 +66,15 @@ ngOnInit(): void {
       this.uploadedFile.base64 = '';
     }
 
+    // Pre-fill certificate PDF if exists
+    if (result.certificatePdfPath) {
+      this.uploadedCertificateFile = new CreateUserPolicyFileDto();
+      this.uploadedCertificateFile.name = result.certificatePdfPath.split('/').pop() || '';
+      this.uploadedCertificateFile.type = '';
+      this.uploadedCertificateFile.size = 0;
+      this.uploadedCertificateFile.base64 = '';
+    }
+
     this.loading = false;
   });
 }
@@ -96,9 +106,18 @@ private toDateInputValue(date: any): string | null {
     const newFile = new CreateUserPolicyFileDto();
     newFile.name = file.fileName;
     newFile.type = file.fileType;
-    newFile.size = file.fileBase64.length; 
+    newFile.size = file.fileSize; 
     newFile.base64 = file.fileBase64;
     this.uploadedFile = newFile;
+  }
+
+  onCertificatePdfUploaded(file: Base64File) {
+    const newFile = new CreateUserPolicyFileDto();
+    newFile.name = file.fileName;
+    newFile.type = file.fileType;
+    newFile.size = file.fileSize;
+    newFile.base64 = file.fileBase64;
+    this.uploadedCertificateFile = newFile;
   }
 
   save(): void {
@@ -121,6 +140,18 @@ private toDateInputValue(date: any): string | null {
       this.updateDto.policyPdf.type = this.uploadedFile.type;
       this.updateDto.policyPdf.size = this.uploadedFile.size;
       this.updateDto.policyPdf.base64 = base64Content;
+    }
+
+    if (this.uploadedCertificateFile && this.uploadedCertificateFile.base64) {
+      const certBase64 = this.uploadedCertificateFile.base64.includes(',')
+        ? this.uploadedCertificateFile.base64.split(',')[1]
+        : this.uploadedCertificateFile.base64;
+
+      this.updateDto.certificatePdfPath = new CreateUserPolicyFileDto();
+      this.updateDto.certificatePdfPath.name = this.uploadedCertificateFile.name;
+      this.updateDto.certificatePdfPath.type = this.uploadedCertificateFile.type;
+      this.updateDto.certificatePdfPath.size = this.uploadedCertificateFile.size;
+      this.updateDto.certificatePdfPath.base64 = certBase64;
     }
 
     this._userPolicyService
