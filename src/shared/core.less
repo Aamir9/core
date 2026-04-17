@@ -235,7 +235,7 @@ table-card-footer * {
 }
 .sidebar-logo {
   // height: 200px;
-  width: 250px;
+  width: 200px;
   // border-radius: 50%;
   //  margin-top: 12px;
 }
@@ -796,7 +796,7 @@ select.form-control {
     color: #fff !important;                   /* text color on hover */
     background-color:  var(--primary)  !important;     /* highlight background */
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* subtle shadow */
-    padding-left: calc(1rem + 5px);           /* smooth slide effect */
+    // padding-left: calc(1rem + 5px);           /* smooth slide effect */
 }
 
 /* Active link */
@@ -819,8 +819,12 @@ select.form-control {
 
 /* Optional: nested submenu links slightly indented on hover */
 .nav-sidebar .nav-treeview .nav-link:hover {
-    padding-left: calc(2rem + 5px);
+    // padding-left: calc(2rem + 5px);
     background-color: var(--primary) !important;
+}
+.nav-sidebar .nav-item>.nav-link {
+    margin-bottom: .2rem;
+    width: 190px;
 }
 
 

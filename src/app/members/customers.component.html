@@ -29,17 +29,20 @@
     </div>
 
     <div class="col-md-6 col-12 d-flex align-items-end">
-      <input
-        type="text"
-        class="form-control mr-3"
-        name="keyword"
-        [placeholder]="'SearchWithThreeDot' | localize"
-        [(ngModel)]="keyword"
-        (ngModelChange)="getDataPage(1)"
-      />
-      <button type="button" class="btn btn-primary" (click)="getDataPage(1)">
-        {{ "Search" | localize }}
-      </button>
+      <div class="search-bar-container position-relative w-100">
+        <input
+          type="text"
+          class="search-input pl-5 pr-4"
+          name="keyword"
+          [placeholder]="'Søg...'"
+          [(ngModel)]="keyword"
+          (ngModelChange)="getDataPage(1)"
+          autocomplete="off"
+        />
+        <span class="search-icon">
+          <i class="fas fa-search"></i>
+        </span>
+      </div>
     </div>
   </div>
   <!-- Filters End -->
@@ -59,8 +62,8 @@
             <th>{{ "Town/City" | localize }}</th>
             <th>{{ "Address" | localize }}</th>
           
-
-            <th style="" >{{ "Actions" | localize }}</th> 
+<!-- 
+            <th style="" >{{ "Actions" | localize }}</th>  -->
           </tr>
         </thead>
         <tbody>
@@ -77,27 +80,24 @@
             "
           >
             <tr [ngClass]="{ 'table-row-active': customer.isSubCustomerOpen }">
-              <td style="cursor: pointer;" (click)="customerDetails(customer)">
-                <div
-                  class="table-cell d-flex align-items-center justify-content-start font-weight-bold"
-                >
-                  <a
-                    (click)="
-                      customer.isSubCustomerOpen = !customer.isSubCustomerOpen
-                    "
+              <td style="cursor: pointer;">
+                <div class="table-cell d-flex align-items-center justify-content-start font-weight-bold">
+                  <span
+                    (click)="$event.stopPropagation(); customer.isSubCustomerOpen = !customer.isSubCustomerOpen"
+                    style="display: inline-flex; align-items: center;"
                   >
                     <i
-                      title="View Customers"
+                      title="Expand"
                       *ngIf="!customer.isSubCustomerOpen"
                       class="fas fa-chevron-down mr-2 pointer"
                     ></i>
                     <i
-                      title="View  Customers"
+                      title="Collapse"
                       *ngIf="customer.isSubCustomerOpen"
                       class="fas fa-chevron-up mr-2 pointer"
                     ></i>
-                  </a>
-                  {{ customer.name }}
+                  </span>
+                  <span (click)="customerDetails(customer)" style="flex:1;">{{ customer.name }}</span>
                 </div>
               </td>
                <td style="cursor: pointer;" (click)="customerDetails(customer)">
@@ -116,7 +116,7 @@
               <td style="cursor: pointer;" (click)="customerDetails(customer)">
                 {{ customer.address }}
               </td>
-              <td> 
+              <!-- <td> 
                       <button *ngIf="!isCustomer" type="button" 
                         href="javascript:;"
                        class="btn btn-sm bg-primary "
@@ -137,16 +137,16 @@
 </button>
  &nbsp;
                      
-          <!-- <button *ngIf="!isCustomer" type="button" class="btn btn-sm bg-secondary"
+          <button *ngIf="!isCustomer" type="button" class="btn btn-sm bg-secondary"
            (click)="resetPassword(customer)"
                      data-bs-toggle="tooltip"
                       data-bs-placement="top"
                        title="Reset Password">
                      <i class="fas fa-lock"></i>
                     {{ "ResetPassword" | localize }}
-                    </button>   -->
+                    </button>   
               </td> 
-             
+              -->
 
               <!-- <td>
                 <ng-container
@@ -172,8 +172,8 @@
                               <th>{{ "UserName" | localize }}</th>
                               <th>{{ "Email" | localize }}</th>
                               <th>{{ "Phone" | localize }}</th>
-                              <th> {{ "Active" | localize }}</th> 
-                               <th  style="width: 240px;">{{ "Actions" | localize }}</th> 
+                              <!-- <th> {{ "Active" | localize }}</th> 
+                               <th  style="width: 240px;">{{ "Actions" | localize }}</th>  -->
 
                             </tr>
                             </thead>
@@ -188,12 +188,12 @@
                           <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.userName }}</td>
                           <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.emailAddress }}</td>
                           <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.telephoneFax }}</td>
-                           <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">
+                           <!-- <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">
                             <span class="badge" [ngClass]="subCustomer.isActive ? 'bg-success' : 'bg-secondary'">
                                {{ subCustomer.isActive ? 'Active' : 'Inactive' }}
-                </span></td> 
+                </span></td>  -->
 
-                          <td>
+                          <!-- <td>
                              <button *ngIf="!isCustomer" type="button" class="btn btn-sm bg-secondary"
            (click)="resetPassword(subCustomer)"
                      data-bs-toggle="tooltip"
@@ -220,21 +220,9 @@
         title="{{ 'Delete' | localize }}">
     <i class="fas fa-trash"></i>
 </button>
- 
-                     
-         
 
-
-
-
-                            <!-- <ng-container
-                              [ngTemplateOutlet]="tableActionMenu"
-                              [ngTemplateOutletContext]="{
-                                customer: customer,
-                                subCustomer: subCustomer
-                              }"
-                            ></ng-container> -->
-                          </td> 
+                           
+                          </td>  -->
                         </tr>
                       </tbody>
                     </table>
@@ -255,9 +243,9 @@
         </button>
       </div>
       <div class="col-sm-4 col-12 text-center">
-        <p class="mb-0 my-2">
+        <!-- <p class="mb-0 my-2">
           {{ "TotalRecordsCount" | localize : totalItems }}
-        </p>
+        </p> -->
       </div>
       <div class="col-sm-4 col-12">
         <div class="float-sm-right m-auto">

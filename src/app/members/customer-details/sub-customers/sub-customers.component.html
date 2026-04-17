@@ -42,8 +42,8 @@
               <th>{{ "FullName" | localize }}</th>
               <th>{{ "EmailAddress" | localize }}</th>
               <th>{{ "Telephone" | localize }}</th>
-              <th>{{ "Active" | localize }}</th>
-              <th>{{ "Actions" | localize }}</th>
+              <!-- <th>{{ "Active" | localize }}</th>
+              <th>{{ "Actions" | localize }}</th> -->
             </tr>
           </thead>
           <tbody>
@@ -62,7 +62,7 @@
               <td>{{ customer.emailAddress }}</td>
               <td>{{ customer.telephoneFax }}</td>
 
-              <td>
+              <!-- <td>
                 <span class="badge" [ngClass]="customer.isActive ? 'bg-success' : 'bg-secondary'">
                   {{ customer.isActive ? 'Active' : 'Inactive' }}
                 </span>
@@ -75,7 +75,7 @@
                 <button type="button" class="btn btn-sm btn-danger" (click)="delete(customer)" title="{{ 'Delete' | localize }}">
                   <i class="fas fa-trash"></i>
                 </button>
-              </td>
+              </td> -->
             </tr>
           </tbody>
         </table>

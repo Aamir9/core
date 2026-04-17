@@ -113,10 +113,11 @@ if (this._appSessionService.isCustomerUser()) {
    
      new MenuItem(this.l("Companies"), "/app/customers",  "fas fa-building"),
       
-      new MenuItem( this.l("Reminders"),"/app/employee-remember-reports", "fas fa-bell"),
+     
       new MenuItem(this.l("Policies"), "/app/policies", "fas fa-scroll"),
       
        new MenuItem(this.l("Not Use"), "", "fas fa-list", "", [
+         new MenuItem( this.l("Reminders"),"/app/employee-remember-reports", "fas fa-bell"),
         new MenuItem(this.l("Groups"), "/app/groups", "fas fa-user-friends"),
         new MenuItem(this.l("Activities"), "/app/activities", "fas fa-running"), 
        new MenuItem(this.l("Package Receive"), "/app/package-receive", "fas fa-gift"),

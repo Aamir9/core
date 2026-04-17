@@ -19,6 +19,7 @@ export class CreateUserPolicyComponent extends AppComponentBase implements OnIni
   saving = false;
   userId!: number; // passed from parent
   uploadedFile: CreateUserPolicyFileDto | null = null;
+  uploadedCertificateFile: CreateUserPolicyFileDto | null = null;
 
   createDto = new CreateUpdateUserPoliciesDto();
   
@@ -45,7 +46,14 @@ export class CreateUserPolicyComponent extends AppComponentBase implements OnIni
     this.uploadedFile.type = file.fileType;
     this.uploadedFile.size = file.fileBase64.length; 
     this.uploadedFile.base64 = file.fileBase64;
+  }
 
+  onCertificatePdfUploaded(file: Base64File) {
+    this.uploadedCertificateFile = new CreateUserPolicyFileDto();
+    this.uploadedCertificateFile.name = file.fileName || '';
+    this.uploadedCertificateFile.type = file.fileType;
+    this.uploadedCertificateFile.size = file.fileBase64.length;
+    this.uploadedCertificateFile.base64 = file.fileBase64;
   }
 
 save(): void {
@@ -66,6 +74,18 @@ save(): void {
     this.createDto.policyPdf.type = this.uploadedFile.type;
     this.createDto.policyPdf.size = this.uploadedFile.size;
     this.createDto.policyPdf.base64 = base64Content;
+  }
+
+  if (this.uploadedCertificateFile && this.uploadedCertificateFile.base64) {
+    const certBase64 = this.uploadedCertificateFile.base64.includes(',')
+      ? this.uploadedCertificateFile.base64.split(',')[1]
+      : this.uploadedCertificateFile.base64;
+
+    this.createDto.certificatePdfPath = new CreateUserPolicyFileDto();
+    this.createDto.certificatePdfPath.name = this.uploadedCertificateFile.name;
+    this.createDto.certificatePdfPath.type = this.uploadedCertificateFile.type;
+    this.createDto.certificatePdfPath.size = this.uploadedCertificateFile.size;
+    this.createDto.certificatePdfPath.base64 = certBase64;
   }
 
   this.submitData();

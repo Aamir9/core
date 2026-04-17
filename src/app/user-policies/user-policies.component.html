@@ -16,7 +16,7 @@
     </div>
      <!-- Status Filter -->
 <div class="col-md-4 col-12 d-flex justify-content-center align-items-center">
-  <strong class=" fw-bold p-1 text-center ">{{ 'Status' | localize }}: </strong> <!-- Added label -->
+  <!-- <strong class=" fw-bold p-1 text-center ">{{ 'Status' | localize }}: </strong> 
 
   <div class="form-check form-check-inline">
     <input class="form-check-input" type="radio" name="statusFilter" id="statusAll"
@@ -34,7 +34,8 @@
     <input class="form-check-input" type="radio" name="statusFilter" id="statusInactive"
            [value]="false" [(ngModel)]="isActiveFilter" (change)="getDataPage(1)">
     <label class="form-check-label text-danger" for="statusInactive">{{ 'Inactive' | localize }}</label>
-  </div>
+  </div> -->
+
 </div>
 
 
@@ -83,12 +84,13 @@
             <td>
               <a *ngIf="policy.policyPdfPath" [href]="policy.policyPdfPath" target="_blank">
                 View PDF
-              </a> <br>
+              </a> 
+              <!-- <br>
                <span
     class="badge"
     [ngClass]="policy.isActive ? 'bg-success' : 'bg-danger'">
     {{ policy.isActive ? 'Active' : 'Inactive' }}
-  </span>
+  </span> -->
 
             </td>
             <td>
@@ -120,7 +122,8 @@
         </button>
       </div>
       <div class="col-sm-4 col-12 text-center">
-        <p class="mb-0 my-2">{{ "TotalRecordsCount" | localize : totalItems }}</p>
+        <!-- <p class="mb-0 my-2">{{ "TotalRecordsCount" | localize : totalItems }}</p>
+       -->
       </div>
       <div class="col-sm-4 col-12 p-2">
         <div class="float-sm-right m-auto">

@@ -37,7 +37,7 @@ import {
   UserDto,
 } from "../../../shared/service-proxies/service-proxies";
 import { AddCustomerToGroupDialogComponent } from "./AddCustomerToGroupDialog/AddCustomerToGroupDialog.component";
-import { SubCustomerComponent } from "../sub-customer/sub-customer.component";
+import { SubCustomerComponent } from "./sub-customers/sub-customer/sub-customer.component";
 import { Location } from "@angular/common";
 import { LayoutStoreService } from "@shared/layout/layout-store.service";
 

@@ -9,8 +9,8 @@
   </abp-modal-header>
 
   <div class="modal-body" style="height: 60vh; overflow-y: auto;">
- <tabset>
-  <tab heading="{{ 'General' | localize }}">
+ <!-- <tabset> -->
+  <!-- <tab heading="{{ 'General' | localize }}"> -->
     <div class="row">
       <div class="col-md-12  d-flex justify-content-end"*ngIf="!isLoading">
         <!-- Active Status Toggle -->
@@ -20,14 +20,15 @@
     class="custom-control-input"
     id="isActive"
     name="isActive"
-    [(ngModel)]="customer.isActive">
+      [(ngModel)]="customer.isActive"
+      autocomplete="off">
   
   <label class="custom-control-label" for="isActive">
     <span [ngClass]="{
       'text-success': customer.isActive,
       'text-danger': !customer.isActive
     }">
-      {{ customer.isActive ? ('Active' | localize) : ('Inactive' | localize) }}
+      {{ customer.isActive ? ('Enabled' | localize) : ('Disabled' | localize) }}
     </span>
   </label>
 </div>
@@ -141,6 +142,7 @@
             reverse="true"
             [(ngModel)]="customer.password"
             #passwordModel="ngModel" #passwordEl />
+            autocomplete="off"
           <abp-validation-summary 
             [control]="passwordModel"
             [controlEl]="passwordEl"
@@ -162,6 +164,7 @@
             reverse="false"
             ngModel
             #confirmPasswordModel="ngModel" #confirmPasswordEl />
+            autocomplete="off"
           <abp-validation-summary 
             [control]="confirmPasswordModel"
             [controlEl]="confirmPasswordEl"
@@ -193,7 +196,7 @@
     </app-custom-fields> -->
     </div>
 
-<!-- <div class="col-md-6">
+ <div class="col-md-6">
   <label class="form-label">Password</label>
   <div class="position-relative">
     <input 
@@ -217,12 +220,12 @@
     (click)="updatePassword()">
     Update Password
   </button>
-</div> -->
+</div> 
 
 
 </div>
-</tab>
-   <tab [heading]="'Activies' | localize" class="pt-3 px-2">
+<!-- </tab> -->
+   <!-- <tab [heading]="'Activies' | localize" class="pt-3 px-2">
           <div class="  row mb-0 w-100">
             <div *ngIf="customer.userId > 0" class="w-100">
               <app-activities [customerId]="customer.userId"></app-activities>
@@ -238,9 +241,9 @@
             </div>
           </div>
         </tab> 
-       
+        -->
 
-</tabset>
+<!-- </tabset> -->
   </div>
 
   <abp-modal-footer 

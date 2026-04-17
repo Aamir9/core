@@ -4,7 +4,7 @@ import { CustomerDto, CustomerServiceProxy, CustomerTypeDto, RoleDto, UserDto, U
 import { AppComponentBase } from '@shared/app-component-base';
 import { ActivatedRoute } from '@node_modules/@angular/router';
 import { EventService } from '@shared/service-custom/event.service';
-import { SubCustomerComponent } from '@app/members/sub-customer/sub-customer.component';
+
 import { CreateTicketComponent } from '@app/tickets/create-ticket/create-ticket.component';
 import { AddCustomerToGroupDialogComponent } from '@app/members/customer-details/AddCustomerToGroupDialog/AddCustomerToGroupDialog.component';
 import { CreateProductItemActivityDialogComponent } from '@app/activities/create-product-item-activity-dialog/create-product-item-activity-dialog.component';
@@ -20,6 +20,7 @@ import {
   map as _map,
 } from "lodash-es";
 import { UserTypes } from '@shared/AppConsts';
+import { SubCustomerComponent } from '@app/members/customer-details/sub-customers/sub-customer/sub-customer.component';
 
 @Component({
   selector: 'app-reminder-customer-supplier-dailog-component',

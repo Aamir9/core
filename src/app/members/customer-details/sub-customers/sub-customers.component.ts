@@ -5,10 +5,12 @@ import { PagedListingComponentBase, PagedRequestDto } from '@shared/paged-listin
 import { CustomerDto, CustomerDtoPagedResultDto, CustomerServiceProxy, CustomerTypeDto, SubCustomerDto, SubCustomerDtoPagedResultDto, SubCustomerServiceProxy } from '@shared/service-proxies/service-proxies';
 import { AppSessionService } from '@shared/session/app-session.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { SubCustomerComponent } from '../../sub-customer/sub-customer.component';
+
 import { finalize } from 'rxjs/operators';
 import { EventService } from '@shared/service-custom/event.service';
 import { EditSubCustomerComponent } from './edit-sub-customer/edit-sub-customer.component';
+import { SubCustomerComponent } from './sub-customer/sub-customer.component';
+
 
 class PagedCustomerRequestDto extends PagedRequestDto {
   keyword: string;

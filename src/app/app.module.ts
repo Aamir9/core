@@ -120,7 +120,7 @@ import { EditCategoryComponent } from './categories/edit-category/edit-category.
 import { CustomerChatComponent } from './members/customer-details/customer-chat/customer-chat.component';
 import { AddCustomerToGroupDialogComponent } from './members/customer-details/AddCustomerToGroupDialog/AddCustomerToGroupDialog.component';
 import { SubCustomersComponent} from './members/customer-details/sub-customers/sub-customers.component';
-import { SubCustomerComponent} from './members/sub-customer/sub-customer.component';
+import { SubCustomerComponent} from './members/customer-details/sub-customers/sub-customer/sub-customer.component';
 import { DetailTicketComponent } from './tickets/detail-ticket/detail-ticket.component';
 import { CreateTicketComponent } from './tickets/create-ticket/create-ticket.component';
 import { EditTicketComponent } from './tickets/edit-ticket/edit-ticket.component';

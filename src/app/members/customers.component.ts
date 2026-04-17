@@ -153,9 +153,8 @@ export class CustomersComponent
       )
       .subscribe((result: CustomerDtoPagedResultDto) => {
         this.customers = result.items.map((c) => {
-          return { ...c, isSubCustomerOpen: this.searchSubCustomers } as CustomerDto;
+          return { ...c, isSubCustomerOpen: false } as CustomerDto;
         });
-        this.expandAll();
         this.showPaging(result, pageNumber);
       });
   }

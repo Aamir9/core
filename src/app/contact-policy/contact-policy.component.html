@@ -56,12 +56,12 @@
             <td>
               <a *ngIf="policy.policyPdfPath" [href]="policy.policyPdfPath" target="_blank">
                 View PDF
-              </a> <br>
-                <span
+              </a> 
+                <!-- <span
     class="badge"
     [ngClass]="policy.isActive ? 'bg-success' : 'bg-danger'">
     {{ policy.isActive ? 'Active' : 'Inactive' }}
-  </span>
+  </span> -->
             </td>
             <!-- <td>
               <button class="btn btn-sm btn-info " (click)="showCreateOrEditDialog(policy.id)"*ngIf="!_appSessionService.isCustomerUser()">
@@ -92,7 +92,8 @@
         </button>
       </div>
       <div class="col-md-4 col-12 text-center">
-        <p class="mb-0 my-2">{{ "TotalRecordsCount" | localize : totalItems }}</p>
+        <!-- <p class="mb-0 my-2">{{ "TotalRecordsCount" | localize : totalItems }}</p>
+       -->
       </div>
       <div class="col-md-4 col-12 p-2">
         <div class="float-sm-right m-auto">

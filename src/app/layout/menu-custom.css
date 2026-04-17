@@ -47,7 +47,8 @@
   background-color: var(--light); /* Light background */
   color: #000000; /* Black text */
   height: 100vh; /* Full viewport height */
- 
+ width: 210px; /* Adjust width as necessary */
+  transition: width 0.3s; /* Smooth transition for collapsing */
 
 }
 
