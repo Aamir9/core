@@ -57,7 +57,8 @@
             <td>
               <a *ngIf="policy.certificatePdfPath" [href]="policy.certificatePdfPath" target="_blank">
                 <i class="fas fa-file-pdf text-danger mr-1"></i>
-                {{ policy.certifivatePdfPublicKey ? policy.certifivatePdfPublicKey.split('/').pop() : 'View PDF' }}
+                View PDF
+
               </a>
               <span *ngIf="!policy.certificatePdfPath" class="text-muted">—</span>
             </td>

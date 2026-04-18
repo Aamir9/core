@@ -17,12 +17,10 @@ import { NgxFileDropEntry, FileSystemFileEntry } from 'ngx-file-drop';
 })
 export class CreateUserPolicyComponent extends AppComponentBase implements OnInit {
   saving = false;
-  userId!: number; // passed from parent
+  userId!: number;
   uploadedFile: CreateUserPolicyFileDto | null = null;
   uploadedCertificateFile: CreateUserPolicyFileDto | null = null;
-
   createDto = new CreateUpdateUserPoliciesDto();
-  
   @Output() onSave = new EventEmitter<any>();
 
   constructor(
@@ -42,12 +40,12 @@ export class CreateUserPolicyComponent extends AppComponentBase implements OnIni
 
   onPdfUploaded(file: Base64File) {
     this.uploadedFile = new CreateUserPolicyFileDto();
-
-    this.uploadedFile.name = file.fileName || ''; // default name if not provided
+    this.uploadedFile.name = file.fileName || '';
     this.uploadedFile.type = file.fileType;
-    this.uploadedFile.size = file.fileSize; 
+    this.uploadedFile.size = file.fileSize;
     this.uploadedFile.base64 = file.fileBase64;
   }
+
 
   onCertificatePdfUploaded(file: Base64File) {
     this.uploadedCertificateFile = new CreateUserPolicyFileDto();
@@ -57,39 +55,44 @@ export class CreateUserPolicyComponent extends AppComponentBase implements OnIni
     this.uploadedCertificateFile.base64 = file.fileBase64;
   }
 
-save(): void {
-  this.saving = true;
+  save(): void {
+    this.saving = true;
 
-  if (this.createDto.renewalDate) {
-    this.createDto.renewalDate = new Date(this.createDto.renewalDate);
+    if (this.createDto.renewalDate) {
+      this.createDto.renewalDate = new Date(this.createDto.renewalDate);
+    }
+
+    if (this.uploadedFile && this.uploadedFile.base64) {
+      const base64Content = this.uploadedFile.base64.includes(',')
+        ? this.uploadedFile.base64.split(',')[1]
+        : this.uploadedFile.base64;
+
+      this.createDto.policyPdf = new CreateUserPolicyFileDto();
+      this.createDto.policyPdf.name = this.uploadedFile.name;
+      this.createDto.policyPdf.type = this.uploadedFile.type;
+      this.createDto.policyPdf.size = this.uploadedFile.size;
+      this.createDto.policyPdf.base64 = base64Content;
+    }
+
+    if (this.uploadedCertificateFile && this.uploadedCertificateFile.base64) {
+      const base64CertificateContent = this.uploadedCertificateFile && this.uploadedCertificateFile.base64
+        ? (this.uploadedCertificateFile.base64.includes(',')
+          ? this.uploadedCertificateFile.base64.split(',')[1]
+          : this.uploadedCertificateFile.base64)
+        : null;
+
+      if (base64CertificateContent) {
+        this.createDto.certificatePdfPath = new CreateUserPolicyFileDto();
+        this.createDto.certificatePdfPath.name = this.uploadedCertificateFile.name;
+        this.createDto.certificatePdfPath.type = this.uploadedCertificateFile.type;
+        this.createDto.certificatePdfPath.size = this.uploadedCertificateFile.size;
+        this.createDto.certificatePdfPath.base64 = base64CertificateContent;
+      }
+    }
+
+
+    this.submitData();
   }
-
-  if (this.uploadedFile && this.uploadedFile.base64) {
-    const base64Content = this.uploadedFile.base64.includes(',')
-      ? this.uploadedFile.base64.split(',')[1]
-      : this.uploadedFile.base64;
-
-    this.createDto.policyPdf = new CreateUserPolicyFileDto();
-    this.createDto.policyPdf.name = this.uploadedFile.name;
-    this.createDto.policyPdf.type = this.uploadedFile.type;
-    this.createDto.policyPdf.size = this.uploadedFile.size;
-    this.createDto.policyPdf.base64 = base64Content;
-  }
-
-  if (this.uploadedCertificateFile && this.uploadedCertificateFile.base64) {
-    const certBase64 = this.uploadedCertificateFile.base64.includes(',')
-      ? this.uploadedCertificateFile.base64.split(',')[1]
-      : this.uploadedCertificateFile.base64;
-
-    this.createDto.certificatePdfPath = new CreateUserPolicyFileDto();
-    this.createDto.certificatePdfPath.name = this.uploadedCertificateFile.name;
-    this.createDto.certificatePdfPath.type = this.uploadedCertificateFile.type;
-    this.createDto.certificatePdfPath.size = this.uploadedCertificateFile.size;
-    this.createDto.certificatePdfPath.base64 = certBase64;
-  }
-
-  this.submitData();
-}
 
 
   private submitData(): void {
@@ -103,7 +106,7 @@ save(): void {
       });
   }
 
-    public dropped(files: NgxFileDropEntry[]) {
+  public dropped(files: NgxFileDropEntry[]) {
     for (const droppedFile of files) {
       if (droppedFile.fileEntry.isFile) {
         const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
@@ -128,18 +131,19 @@ save(): void {
       }
     }
   }
-  public fileOver(event) {
+  public fileOver(event: any) {
     console.log('File over drop zone:', event);
   }
 
-  public fileLeave(event) {
+  public fileLeave(event: any) {
     console.log('File left drop zone:', event);
   }
 
-    removeFile(i: number): void {
-    this.createDto.files.splice(i, 1);
+  removeFile(i: number): void {
+    if (this.createDto.files) {
+      this.createDto.files.splice(i, 1);
+    }
   }
 
-  uploadFiles(): void {
-  }
+
 }

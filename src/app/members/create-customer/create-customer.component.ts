@@ -136,7 +136,6 @@ export class CreateCustomerComponent extends AppComponentBase implements OnInit 
     this.customer.password = 'Defualt@123';
     this.customer.site= this.customer.name + " " + this.customer.surname;
     this.customer.roleNames = ['ADMIN'];
-    debugger;
     this._customerService.create(this.customer).subscribe(
       () => {
         abp.message.info(this.l('Company Saved Successfully'));

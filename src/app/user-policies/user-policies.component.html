@@ -74,31 +74,23 @@
             <td>{{ policy.policyNumber }}</td>
             <td>{{ policy.renewalDate | date:'shortDate' }}</td>
             <td>{{ policy.annualPremium }}</td>
-            <!-- <td>
-  <span
-    class="badge"
-    [ngClass]="policy.isActive ? 'bg-success' : 'bg-danger'">
-    {{ policy.isActive ? 'Active' : 'Inactive' }}
-  </span>
-</td> -->
+
 
             <td>
               <a *ngIf="policy.certificatePdfPath" [href]="policy.certificatePdfPath" target="_blank">
                 <i class="fas fa-file-pdf text-danger mr-1"></i>
-                {{ policy.certifivatePdfPublicKey ? policy.certifivatePdfPublicKey.split('/').pop() : 'View PDF' }}
+                View PDF
+                <!-- {{ policy.certifivatePdfPublicKey ? policy.certifivatePdfPublicKey.split('/').pop() : 'View PDF' }} -->
               </a>
               <span *ngIf="!policy.certificatePdfPath" class="text-muted">—</span>
             </td>
             <td>
               <a *ngIf="policy.policyPdfPath" [href]="policy.policyPdfPath" target="_blank">
+                                <i class="fas fa-file-pdf text-danger mr-1"></i>
+
                 View PDF
               </a> 
-              <!-- <br>
-               <span
-    class="badge"
-    [ngClass]="policy.isActive ? 'bg-success' : 'bg-danger'">
-    {{ policy.isActive ? 'Active' : 'Inactive' }}
-  </span> -->
+        
 
             </td>
             <td>

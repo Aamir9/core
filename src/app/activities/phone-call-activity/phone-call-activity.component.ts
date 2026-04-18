@@ -209,7 +209,6 @@ export class PhoneCallActivityComponent
 
   private async getActivityById() {
     this._activityService.get(this.activityId).subscribe((result) => {
-      debugger
       this.noteActivityInput.description = result.note;
       this.activity = result;
       this.activityDate = this._datePipe.transform(

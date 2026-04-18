@@ -441,7 +441,7 @@ UserIdGetDetail:any;
     }
  
   console.log("Save Received this.createPackageDto",this.createPackageDto);
-   debugger;
+   
     if (this.save) {
       this._packageSrvice.create(this.createPackageDto).subscribe(
         () => {
