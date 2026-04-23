@@ -169,7 +169,7 @@
                        <thead>
                             <tr class="table-secondary">
                               <th>{{ "ContactPerson" | localize }}</th>
-                              <th>{{ "UserName" | localize }}</th>
+                             <th>{{ "Title" | localize }}</th> 
                               <th>{{ "Email" | localize }}</th>
                               <th>{{ "Phone" | localize }}</th>
                               <!-- <th> {{ "Active" | localize }}</th> 
@@ -185,7 +185,7 @@
                            
                         
                           <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)"> {{ subCustomer.name }}</td>
-                          <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.userName }}</td>
+                          <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.titel }}</td>
                           <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.emailAddress }}</td>
                           <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.telephoneFax }}</td>
                            <!-- <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">

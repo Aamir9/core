@@ -4,38 +4,59 @@
       (ngSubmit)="save()">
 
   <abp-modal-header 
-      [title]="'ContactPerson  ' | localize"
+      [title]="'Contact Person  ' | localize"
       (onCloseClick)="bsModalRef.hide()">
   </abp-modal-header>
 
   <div class="modal-body" style="height: 60vh; overflow-y: auto;">
+    <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center" style="height: 50vh;">
+      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading">
  <!-- <tabset> -->
   <!-- <tab heading="{{ 'General' | localize }}"> -->
     <div class="row">
-      <div class="col-md-12  d-flex justify-content-end"*ngIf="!isLoading">
-        <!-- Active Status Toggle -->
-<div class="custom-control custom-switch">
-  <input 
-    type="checkbox"
-    class="custom-control-input"
-    id="isActive"
-    name="isActive"
-      [(ngModel)]="customer.isActive"
-      autocomplete="off">
-  
-  <label class="custom-control-label" for="isActive">
-    <span [ngClass]="{
-      'text-success': customer.isActive,
-      'text-danger': !customer.isActive
-    }">
-      {{ customer.isActive ? ('Enabled' | localize) : ('Disabled' | localize) }}
-    </span>
-  </label>
-</div>
+      <div class="col-md-12 d-flex justify-content-end">
+        <div class="d-flex align-items-center" style="gap: 12px; margin-bottom: 8px;">
+          <!-- Active Status Toggle -->
+          <div class="custom-control custom-switch">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="isActive"
+              name="isActive"
+              [(ngModel)]="customer.isActive"
+              autocomplete="off">
 
+            <label class="custom-control-label" for="isActive">
+              <span [ngClass]="{
+                'text-success': customer.isActive,
+                'text-danger': !customer.isActive
+              }">
+                {{ customer.isActive ? ('Enabled' | localize) : ('Disabled' | localize) }}
+              </span>
+            </label>
+          </div>
+
+          <button
+            *ngIf="id"
+            type="button"
+            class="btn btn-outline-danger btn-sm d-flex align-items-center"
+            (click)="deleteSubCustomer(customer)"
+            [disabled]="saving"
+            title="Delete Person">
+            <span class="icon-wrapper">
+              <i class="fas fa-trash"></i>
+            </span>
+            <span class="delete-text">{{ 'Delete' | localize }}</span>
+          </button>
+        </div>
       </div>
       <!-- First Name -->
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="form-group required">
           <label>{{ "FirstName" | localize }}</label>
           <input 
@@ -54,7 +75,7 @@
       </div>
 
       <!-- Last Name -->
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="form-group required">
           <label>{{ "LastName" | localize }}</label>
           <input 
@@ -72,11 +93,30 @@
         </div>
       </div>
 
+      <!-- Title -->
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>{{ "Title" | localize }}</label>
+          <input 
+            type="text"
+            class="form-control"
+            name="titel"
+            maxlength="32"
+            [(ngModel)]="customer.titel"
+            placeholder="{{ 'EnterTitle' | localize }}"
+            #titelModel="ngModel" #titelEl />
+          <abp-validation-summary 
+            [control]="titelModel"
+            [controlEl]="titelEl">
+          </abp-validation-summary>
+        </div>
+      </div>
+
       <!-- Username -->
-      <div class="col-md-6">
+      <!-- <div class="col-md-4">
         <div class="form-group required">
           <label>{{ "UserName" | localize }}</label>
-          <!-- making username field disabled -->
+        
           <input 
             type="text" disabled readonly
             class="form-control disabled"
@@ -90,10 +130,10 @@
             [controlEl]="userNameEl">
           </abp-validation-summary>
         </div>
-      </div>
+      </div> -->
 
       <!-- Email Address -->
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="form-group required">
           <label>{{ "Email" | localize }}</label>
           <input 
@@ -112,7 +152,7 @@
       </div>
 
       <!-- Phone Number -->
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="form-group required">
           <label>{{ "Phone" | localize }}</label>
           <input
@@ -130,7 +170,7 @@
       </div>
 
       <!-- Password (only for new sub-customer) -->
-      <div class="col-md-6" *ngIf="!id">
+      <div class="col-md-4" *ngIf="!id">
         <div class="form-group required">
           <label>{{ "Password" | localize }}</label>
           <input 
@@ -152,7 +192,7 @@
       </div>
 
       <!-- Confirm Password -->
-      <div class="col-md-6" *ngIf="!id">
+      <div class="col-md-4" *ngIf="!id">
         <div class="form-group required">
           <label>{{ "ConfirmPassword" | localize }}</label>
           <input 
@@ -174,7 +214,7 @@
       </div>
 
     
-<div class="col-md-6">
+<div class="col-md-4">
    <div class="form-field">
         <label for="description">{{ "Note" | localize }}</label>
         <textarea
@@ -196,7 +236,7 @@
     </app-custom-fields> -->
     </div>
 
- <div class="col-md-6">
+ <div class="col-md-4">
   <label class="form-label">Password</label>
   <div class="position-relative">
     <input 
@@ -245,10 +285,11 @@
 
 <!-- </tabset> -->
   </div>
+  </div>
 
   <abp-modal-footer 
       [cancelDisabled]="saving"
-      [saveDisabled]="!editUserModal.form.valid || saving"
+      [saveDisabled]="isLoading || !editUserModal.form.valid || saving"
       (onCancelClick)="bsModalRef.hide()">
   </abp-modal-footer>
 

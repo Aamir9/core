@@ -13,6 +13,7 @@ import { getuid } from 'process';
 })
 export class SubCustomerComponent extends AppComponentBase implements OnInit {
   saving = false;
+  isLoading = true;
   customer = new CreateCustomerDto();
   customerId: number;
   id: number;
@@ -61,60 +62,75 @@ export class SubCustomerComponent extends AppComponentBase implements OnInit {
     this.customer.website = 'n/a';
     this.customer.currency = 'n/a';
 
+    try {
+      await this.loadCustomer();
 
-    if (this.id) {
-      this._customerService.get(this.id).subscribe(res => {
-        this.customer.userName = res.userName;
-        this.customer.name = res.name;
-        this.customer.surname = res.surname;
-        this.customer.emailAddress = res.emailAddress;
-        this.customer.isActive = res.isActive;
-        this.customer.roleNames = res.roleNames;
-        this.customer.userTypeId = res.userTypeId;
-        // this.customer.customerNo = res.customerNo;
-        this.customer.address = res.address;
-        this.customer.postcode = res.postcode;
-        this.customer.townCity = res.townCity;
-        this.customer.country = res.country;
-        this.customer.telephoneFax = res.telephoneFax;
-        this.customer.website = res.website;
-        this.customer.currency = res.currency;
-        this.customer.responsibleEmployeeId = res.responsibleEmployeeId;
-        this.customer.customeTypeId = res.customerTypeId;
-        this.customer.parentId = res.parentId;
-        this.customer.isSubCustomer = res.isSubCustomer;
-        this.originalCustomer = res;
-      });
-    }
+      if (!this.customer?.customerNo) {
+        const id = Math.random().toString(36).slice(2).toUpperCase().substring(0, 9);
+        this.customer.customerNo = 'CUST-' + id;
+      }
 
-    if (!this.customer?.customerNo) {
-      const id = Math.random().toString(36).slice(2).toUpperCase().substring(0, 9);
-      this.customer.customerNo = 'CUST-' + id;
-    }
-    this._userService.getRoles().subscribe((result) => {
-      this.roles = result.items;
-      this.setInitialRolesStatus();
-    });
-
-    this._customerService.getCustomerTypes().subscribe(res => {
-      console.log(res);
-      res.items.forEach(res => {
-        if (res.type == 'SubCustomer') {
-          this.originalCustomer.customerTypeId = res.id;
-          this.customer.customeTypeId = res.id;
-        }
-        if (res.type !== 'Customer') {
-          this.customerTypes.push(res);
-        }
-      });
+      await Promise.all([
+        this.loadRoles(),
+        this.loadCustomerTypes(),
+        this.setCustomerUserType(),
+        this.loadEmployees()
+      ]);
+    } finally {
+      this.isLoading = false;
       this.changeDetecter.detectChanges();
-      this.customer.parentId = this.customerId
+    }
+  }
+
+  private async loadCustomer() {
+    if (!this.id) {
+      return;
+    }
+
+    const res = await this._customerService.get(this.id).toPromise();
+    this.customer.userName = res.userName;
+    this.customer.name = res.name;
+    this.customer.surname = res.surname;
+    this.customer.emailAddress = res.emailAddress;
+    this.customer.isActive = res.isActive;
+    this.customer.roleNames = res.roleNames;
+    this.customer.userTypeId = res.userTypeId;
+    this.customer.address = res.address;
+    this.customer.postcode = res.postcode;
+    this.customer.townCity = res.townCity;
+    this.customer.country = res.country;
+    this.customer.telephoneFax = res.telephoneFax;
+    this.customer.website = res.website;
+    this.customer.currency = res.currency;
+    this.customer.responsibleEmployeeId = res.responsibleEmployeeId;
+    this.customer.customeTypeId = res.customerTypeId;
+    this.customer.parentId = res.parentId;
+    this.customer.isSubCustomer = res.isSubCustomer;
+    this.customer.titel = res.titel;
+    this.originalCustomer = res;
+  }
+
+  private async loadRoles() {
+    const result = await this._userService.getRoles().toPromise();
+    this.roles = result.items;
+    this.setInitialRolesStatus();
+  }
+
+  private async loadCustomerTypes() {
+    const result = await this._customerService.getCustomerTypes().toPromise();
+    this.customerTypes = [];
+
+    result.items.forEach((item) => {
+      if (item.type == 'SubCustomer') {
+        this.originalCustomer.customerTypeId = item.id;
+        this.customer.customeTypeId = item.id;
+      }
+      if (item.type !== 'Customer') {
+        this.customerTypes.push(item);
+      }
     });
 
-    this.setCustomerUserType();
-    // this.setCustomerNo();
-    // this.loadCustomFields();
-    await this.loadEmployees();
+    this.customer.parentId = this.customerId;
   }
   loadCustomFields() {
     this._customFieldService.getScreenCustomFields(Screen.Customer).subscribe((result) => {
@@ -129,13 +145,11 @@ export class SubCustomerComponent extends AppComponentBase implements OnInit {
     );
   }
 
-  setCustomerUserType() {
-    this._userTypeService.getAll().subscribe((result) => {
-      this.userTypes = result.items;
-      var userType = this.userTypes.find(x => x.name === UserTypes.Customer);
-      this.ifCustomerUserTypeFoundThenSetCustomerUserTypeValue(userType);
-    }
-    );
+  async setCustomerUserType() {
+    const result = await this._userTypeService.getAll().toPromise();
+    this.userTypes = result.items;
+    var userType = this.userTypes.find(x => x.name === UserTypes.Customer);
+    this.ifCustomerUserTypeFoundThenSetCustomerUserTypeValue(userType);
   }
 
   private ifCustomerUserTypeFoundThenSetCustomerUserTypeValue(userType: UserTypeDto) {
@@ -176,7 +190,8 @@ export class SubCustomerComponent extends AppComponentBase implements OnInit {
     this.customer.roleNames = ['ADMIN'];
     this.customer.parentId = this.customerId;
     this.customer.isSubCustomer = true;
-    this.originalCustomer.userName = this.customer.userName;
+    this.customer.userName = this.customer.emailAddress;
+    this.originalCustomer.userName = this.customer.emailAddress;
     this.originalCustomer.name = this.customer.name;
     this.originalCustomer.surname = this.customer.surname;
     this.originalCustomer.emailAddress = this.customer.emailAddress;
@@ -198,6 +213,7 @@ export class SubCustomerComponent extends AppComponentBase implements OnInit {
     this.originalCustomer.isSubCustomer = true;
     this.originalCustomer.id = this.id;
     this.originalCustomer.description = this.customer.description;
+    this.originalCustomer.titel = this.customer.titel;
     if (this.customer.customerNo == null || this.customer.customerNo === '') {
       this.setCustomerNo();
     }
@@ -227,5 +243,28 @@ export class SubCustomerComponent extends AppComponentBase implements OnInit {
     if (this.customer.responsibleEmployeeId == null && this.employees.length > 0) {
       this.customer.responsibleEmployeeId = this.employees[0].id;
     }
+  }
+
+  deleteSubCustomer(subCustomer: any): void {
+    const deleteId = subCustomer?.userId;
+
+    if (!deleteId) {
+      abp.notify.error('The Person ID not found. Cannot delete.');
+      return;
+    }
+
+    abp.message.confirm(
+      `Are you sure you want to delete "${subCustomer.name || subCustomer.userName}"?`,
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this._customerService.delete(deleteId).subscribe(() => {
+            abp.notify.success('Successfully Deleted');
+            this.bsModalRef.hide();
+            this.onSave.emit();
+          });
+        }
+      }
+    );
   }
 }

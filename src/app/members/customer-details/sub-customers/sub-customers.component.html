@@ -38,8 +38,9 @@
         <table class="table table-bordered parent-table mb-0" [busy]="isTableLoading">
           <thead >
             <tr>
-              <th>{{ "UserName" | localize }}</th>
+              <!-- <th>{{ "UserName" | localize }}</th> -->
               <th>{{ "FullName" | localize }}</th>
+              <th>{{ "Title" | localize }}</th>
               <th>{{ "EmailAddress" | localize }}</th>
               <th>{{ "Telephone" | localize }}</th>
               <!-- <th>{{ "Active" | localize }}</th>
@@ -57,10 +58,11 @@
                         totalItems: totalItems
                       }
               ">
-              <td>{{ customer.userName }}</td>
-              <td>{{ customer.fullName }}</td>
-              <td>{{ customer.emailAddress }}</td>
-              <td>{{ customer.telephoneFax }}</td>
+              <!-- <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ customer.userName }}</td> -->
+              <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ customer.fullName }}</td>
+              <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ customer.titel }}</td>
+              <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ customer.emailAddress }}</td>
+              <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ customer.telephoneFax }}</td>
 
               <!-- <td>
                 <span class="badge" [ngClass]="customer.isActive ? 'bg-success' : 'bg-secondary'">

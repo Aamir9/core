@@ -20795,6 +20795,7 @@ export class CreateCustomerDto implements ICreateCustomerDto {
     tenantId!: number;
     vatNumber!: string | undefined;
     description!: string | undefined;
+    titel!: string | undefined;
     bridgeClubNumber!: string | undefined;
     dbfMemberNumber!: string | undefined;
 
@@ -20847,6 +20848,7 @@ export class CreateCustomerDto implements ICreateCustomerDto {
             this.tenantId = _data["tenantId"];
             this.vatNumber = _data["vatNumber"];
             this.description = _data["description"];
+            this.titel = _data["titel"];
             this.bridgeClubNumber = _data["bridgeClubNumber"];
             this.dbfMemberNumber = _data["dbfMemberNumber"];
         }
@@ -20899,6 +20901,7 @@ export class CreateCustomerDto implements ICreateCustomerDto {
         data["tenantId"] = this.tenantId;
         data["vatNumber"] = this.vatNumber;
         data["description"] = this.description;
+        data["titel"] = this.titel;
         data["bridgeClubNumber"] = this.bridgeClubNumber;
         data["dbfMemberNumber"] = this.dbfMemberNumber;
         return data;
@@ -20943,6 +20946,7 @@ export interface ICreateCustomerDto {
     tenantId: number;
     vatNumber: string | undefined;
     description: string | undefined;
+    titel: string | undefined;
     bridgeClubNumber: string | undefined;
     dbfMemberNumber: string | undefined;
 }
@@ -23088,6 +23092,7 @@ export class Customer implements ICustomer {
     description!: string | undefined;
     bridgeClubNumber!: string | undefined;
     dbfMemberNumber!: string | undefined;
+    titel!: string | undefined;
 
     constructor(data?: ICustomer) {
         if (data) {
@@ -23134,6 +23139,7 @@ export class Customer implements ICustomer {
             this.description = _data["description"];
             this.bridgeClubNumber = _data["bridgeClubNumber"];
             this.dbfMemberNumber = _data["dbfMemberNumber"];
+            this.titel = _data["titel"];
         }
     }
 
@@ -23180,6 +23186,7 @@ export class Customer implements ICustomer {
         data["description"] = this.description;
         data["bridgeClubNumber"] = this.bridgeClubNumber;
         data["dbfMemberNumber"] = this.dbfMemberNumber;
+        data["titel"] = this.titel;
         return data;
     }
 
@@ -23218,6 +23225,7 @@ export interface ICustomer {
     description: string | undefined;
     bridgeClubNumber: string | undefined;
     dbfMemberNumber: string | undefined;
+    titel: string | undefined;
 }
 
 export class CustomerDto implements ICustomerDto {
@@ -23259,6 +23267,7 @@ export class CustomerDto implements ICustomerDto {
     customFields!: EntityFieldMappingDto[] | undefined;
     vatNumber!: string | undefined;
     description!: string | undefined;
+    titel!: string | undefined;
     parentCustomer!: CustomerDto;
     bridgeClubNumber!: string | undefined;
     dbfMemberNumber!: string | undefined;
@@ -23324,6 +23333,7 @@ export class CustomerDto implements ICustomerDto {
             }
             this.vatNumber = _data["vatNumber"];
             this.description = _data["description"];
+            this.titel = _data["titel"];
             this.parentCustomer = _data["parentCustomer"] ? CustomerDto.fromJS(_data["parentCustomer"]) : undefined as any;
             this.bridgeClubNumber = _data["bridgeClubNumber"];
             this.dbfMemberNumber = _data["dbfMemberNumber"];
@@ -23389,6 +23399,7 @@ export class CustomerDto implements ICustomerDto {
         }
         data["vatNumber"] = this.vatNumber;
         data["description"] = this.description;
+        data["titel"] = this.titel;
         data["parentCustomer"] = this.parentCustomer ? this.parentCustomer.toJSON() : undefined as any;
         data["bridgeClubNumber"] = this.bridgeClubNumber;
         data["dbfMemberNumber"] = this.dbfMemberNumber;
@@ -23442,6 +23453,7 @@ export interface ICustomerDto {
     customFields: EntityFieldMappingDto[] | undefined;
     vatNumber: string | undefined;
     description: string | undefined;
+    titel: string | undefined;
     parentCustomer: CustomerDto;
     bridgeClubNumber: string | undefined;
     dbfMemberNumber: string | undefined;
@@ -23572,6 +23584,7 @@ export class CustomerListDto implements ICustomerListDto {
     userTypeId!: number | undefined;
     vatNumber!: string | undefined;
     description!: string | undefined;
+    titel!: string | undefined;
     customerTypeId!: number | undefined;
     roleName!: string | undefined;
 
@@ -23604,6 +23617,7 @@ export class CustomerListDto implements ICustomerListDto {
             this.userTypeId = _data["userTypeId"];
             this.vatNumber = _data["vatNumber"];
             this.description = _data["description"];
+            this.titel = _data["titel"];
             this.customerTypeId = _data["customerTypeId"];
             this.roleName = _data["roleName"];
         }
@@ -23636,6 +23650,7 @@ export class CustomerListDto implements ICustomerListDto {
         data["userTypeId"] = this.userTypeId;
         data["vatNumber"] = this.vatNumber;
         data["description"] = this.description;
+        data["titel"] = this.titel;
         data["customerTypeId"] = this.customerTypeId;
         data["roleName"] = this.roleName;
         return data;
@@ -23668,6 +23683,7 @@ export interface ICustomerListDto {
     userTypeId: number | undefined;
     vatNumber: string | undefined;
     description: string | undefined;
+    titel: string | undefined;
     customerTypeId: number | undefined;
     roleName: string | undefined;
 }

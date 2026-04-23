@@ -10,10 +10,30 @@
 
   <div class="modal-body" style="height: 60vh; overflow-y: auto;">
 
-    <div class="row">
+    <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center" style="height: 50vh;">
+      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end mb-2" *ngIf="!isLoading && id">
+      <button
+        type="button"
+        class="btn btn-outline-danger btn-sm d-flex align-items-center"
+        (click)="deleteSubCustomer(originalCustomer?.userId ? originalCustomer : customer)"
+        [disabled]="saving"
+        title="Delete Person">
+        <span class="icon-wrapper">
+          <i class="fas fa-trash text-danger"></i>
+        </span>
+        <span class="delete-text">{{ "Delete" | localize }}</span>
+      </button>
+    </div>
+
+    <div class="row" *ngIf="!isLoading">
 
       <!-- First Name -->
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="form-group required">
           <label>{{ "FirstName" | localize }}</label>
           <input 
@@ -32,7 +52,7 @@
       </div>
 
       <!-- Last Name -->
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="form-group required">
           <label>{{ "LastName" | localize }}</label>
           <input 
@@ -50,8 +70,27 @@
         </div>
       </div>
 
+      <!-- Title -->
+      <div class="col-md-4">
+        <div class="form-group">
+          <label>{{ "Title" | localize }}</label>
+          <input 
+            type="text"
+            class="form-control"
+            name="titel"
+            maxlength="32"
+            [(ngModel)]="customer.titel"
+            #titelModel="ngModel" #titelEl
+            placeholder="{{ 'EnterTitle' | localize }}" />
+          <abp-validation-summary 
+            [control]="titelModel"
+            [controlEl]="titelEl">
+          </abp-validation-summary>
+        </div>
+      </div>
+
       <!-- Username -->
-      <div class="col-md-6">
+      <!-- <div class="col-md-4">
         <div class="form-group required">
           <label>{{ "UserName" | localize }}</label>
           <input 
@@ -67,11 +106,11 @@
             [controlEl]="userNameEl">
           </abp-validation-summary>
         </div>
-      </div>
+      </div> -->
 
       
       <!-- Email Address -->
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="form-group required">
           <label>{{ "EmailAddress" | localize }}</label>
           <input 
@@ -90,7 +129,7 @@
       </div>
 
       <!-- phone number-->
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="form-group required">
         <label for="telephoneFax">{{ "Phone" | localize }}</label>
         <input
@@ -111,7 +150,7 @@
       </div>
 
       <!-- Password -->
-      <div class="col-md-6" *ngIf="!id">
+      <div class="col-md-4" *ngIf="!id">
         <div class="form-group required">
           <label>{{ "Password" | localize }}</label>
           <input 
@@ -133,7 +172,7 @@
       </div>
 
       <!-- Confirm Password -->
-      <div class="col-md-6" *ngIf="!id">
+      <div class="col-md-4" *ngIf="!id">
         <div class="form-group required">
           <label>{{ "ConfirmPassword" | localize }}</label>
           <input 
@@ -157,7 +196,7 @@
 
    
   
-    <div class="col-md-6">
+    <div class="col-md-4">
          <div class="form-field">
         <label for="description">{{ "Note" | localize }}</label>
         <textarea
@@ -184,7 +223,7 @@
  </div>
   <abp-modal-footer 
       [cancelDisabled]="saving"
-      [saveDisabled]="!createUserModal.form.valid || saving"
+      [saveDisabled]="isLoading || !createUserModal.form.valid || saving"
       (onCancelClick)="bsModalRef.hide()">
   </abp-modal-footer>
 

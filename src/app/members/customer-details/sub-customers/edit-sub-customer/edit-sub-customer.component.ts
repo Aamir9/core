@@ -54,35 +54,41 @@ export class EditSubCustomerComponent extends AppComponentBase implements OnInit
   }
 
   ngOnInit(): void {
-    this.loadCustomer();
-    this.loadRoles();
-    this.loadEmployees();
+    this.initializeFormData();
     // this.loadCustomFields();
 
   }
 
-  private loadCustomer(): void {
-    if (this.id) {
-      this.isLoading = true;
-      this._customerService.get(this.id).subscribe(res => {
-        this.customer = res;
-        this.originalCustomer = res;
-        this.isLoading = false; // <- move here
-        this.changeDetector.detectChanges(); // optional, to force view update
-      }, () => {
-        this.isLoading = false; // <- also handle error
-      });
-    } else {
+  private async initializeFormData(): Promise<void> {
+    this.isLoading = true;
+    try {
+      await this.loadCustomer();
+      await Promise.all([
+        this.loadRoles(),
+        this.loadEmployees()
+      ]);
+    } finally {
       this.isLoading = false;
+      this.changeDetector.detectChanges();
     }
+
+  }
+
+  private async loadCustomer(): Promise<void> {
+    if (!this.id) {
+      return;
+    }
+
+    const res = await this._customerService.get(this.id).toPromise();
+    this.customer = res;
+    this.originalCustomer = res;
   }
 
 
-  private loadRoles(): void {
-    this._userService.getRoles().subscribe(res => {
-      this.roles = res.items;
-      this.setInitialRolesStatus();
-    });
+  private async loadRoles(): Promise<void> {
+    const res = await this._userService.getRoles().toPromise();
+    this.roles = res.items;
+    this.setInitialRolesStatus();
   }
 
 
@@ -184,5 +190,28 @@ export class EditSubCustomerComponent extends AppComponentBase implements OnInit
       this.customer.customFields = res.items;
       this.isCustomFieldsAvailable = true;
     });
+  }
+
+  deleteSubCustomer(subCustomer: any): void {
+    const deleteId = subCustomer?.userId;
+
+    if (!deleteId) {
+      abp.notify.error('The Person ID not found. Cannot delete.');
+      return;
+    }
+
+    abp.message.confirm(
+      `Are you sure you want to delete "${subCustomer.name || subCustomer.userName}"?`,
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this._customerService.delete(deleteId).subscribe(() => {
+            abp.notify.success('Successfully Deleted');
+            this.bsModalRef.hide();
+            this.onSave.emit();
+          });
+        }
+      }
+    );
   }
 }

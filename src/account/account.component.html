@@ -1,46 +1,65 @@
-﻿<div class="d-flex justify-content-center align-items-center min-vh-100"
-     style="background-image:   url('https://core.beckit.dk/wp-content/uploads/2025/11/Uden-titel-4.png');
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;">
-  
-  <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4 px-3" 
-  style="">
-    <div class="mx-auto" style="max-width: 20rem; background-color: transparent;">
-      
-      <!-- Account Header -->
-      <div class="text-center mb-4">
-        <account-header></account-header>
+﻿<!-- Styles live in account.component.css -->
+
+<div class="acc-page">
+  <div class="acc-shell">
+    <div>
+      <div class="acc-grid">
+
+        <!-- Left: Brand panel -->
+        <aside class="acc-brand"> 
+          <div class="acc-brand__logo">
+            <account-header></account-header>
+          </div>
+
+          <div class="acc-brand__copy">
+            <div class="acc-brand__eyebrow">Forsikringsmæglere</div>
+            <h1 class="acc-brand__title">Velkommen til Core</h1>
+            <p class="acc-brand__subtitle">
+              Log ind for at administrere policer, kunder og aktiviteter i ét moderne CRM bygget til forsikringsbranchen.
+            </p>
+
+            <ul class="acc-brand__list">
+              <li><span class="acc-brand__dot"><i class="fas fa-shield-alt"></i></span> Sikker og GDPR‑venlig platform</li>
+              <li><span class="acc-brand__dot"><i class="fas fa-bolt"></i></span> Hurtig adgang til alle dine data</li>
+              <li><span class="acc-brand__dot"><i class="fas fa-headset"></i></span> Dedikeret support når du har brug for det</li>
+            </ul>
+          </div>
+
+          <div class="acc-brand__footer">
+            <account-footer></account-footer>
+          </div>
+        </aside>
+
+        <!-- Right: Form panel -->
+        <section class="acc-form">
+          <div class="acc-form__head">
+            <div class="acc-form__kicker">Konto</div>
+            <h2 class="acc-form__title">Log ind på din konto</h2>
+            <p class="acc-form__hint">Indtast dine oplysninger for at fortsætte.</p>
+          </div>
+
+          <!-- Tenant Change (kept as original, commented) -->
+          <!--  <div *ngIf="showTenantChange()" class="card-header text-white text-center rounded-top" style="background-color: #3aa6b9;">
+         <tenant-change></tenant-change>
+          {{ "CurrentTenant" | localize }}: <strong>Core</strong>
+           </div>-->
+
+          <div class="acc-form-host">
+            <router-outlet></router-outlet>
+          </div>
+
+          <div class="acc-languages">
+            <!-- <span class="acc-languages__label">{{ 'Language' | localize }}</span> -->
+            <account-languages></account-languages>
+          </div>
+        </section>
+
       </div>
 
-
-      
-
-      <!-- Card -->
-      <div class="card shadow-lg rounded" style="background-color: #ffffff; border: none;">
-        
-        <!-- Tenant Change -->
-        <div *ngIf="showTenantChange()" class="card-header text-white text-center rounded-top" style="background-color: #3aa6b9;">
-        <!-- <tenant-change></tenant-change> -->
-        {{ "CurrentTenant" | localize }}: <strong>Core</strong>
-         </div>
-
-        <!-- Main Content -->
-        <div class="card-body p-4" style="background-color: #e6f2f1;">
-          <router-outlet></router-outlet>
-        </div>
-
-        <!-- Card Footer -->
-        <div class="card-footer text-center rounded-bottom" style="background-color: #f8f9fa;">
-          <account-languages></account-languages>
-        </div>
-      </div>
-
-      <!-- Account Footer -->
-      <div class="text-center mt-4">
+      <!-- Copyright on mobile (under the card) -->
+      <div class="acc-mobile-footer">
         <account-footer></account-footer>
       </div>
-      
     </div>
   </div>
 </div>
