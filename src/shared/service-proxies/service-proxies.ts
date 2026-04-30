@@ -21465,6 +21465,7 @@ export interface ICreateFaultFileDto {
 export class CreateGroupDto implements ICreateGroupDto {
     name!: string | undefined;
     userIds!: number[] | undefined;
+    createForUserId!: number | undefined;
 
     constructor(data?: ICreateGroupDto) {
         if (data) {
@@ -21483,6 +21484,7 @@ export class CreateGroupDto implements ICreateGroupDto {
                 for (let item of _data["userIds"])
                     this.userIds!.push(item);
             }
+            this.createForUserId = _data["createForUserId"];
         }
     }
 
@@ -21501,6 +21503,7 @@ export class CreateGroupDto implements ICreateGroupDto {
             for (let item of this.userIds)
                 data["userIds"].push(item);
         }
+        data["createForUserId"] = this.createForUserId;
         return data;
     }
 
@@ -21515,6 +21518,7 @@ export class CreateGroupDto implements ICreateGroupDto {
 export interface ICreateGroupDto {
     name: string | undefined;
     userIds: number[] | undefined;
+    createForUserId: number | undefined;
 }
 
 export class CreateInviteDto implements ICreateInviteDto {
@@ -25582,6 +25586,7 @@ export class Group implements IGroup {
     creatorUserId!: number | undefined;
     tenantId!: number;
     name!: string | undefined;
+    createForUserId!: number | undefined;
     responsibleGroups!: ProductResponsibleGroup[] | undefined;
 
     constructor(data?: IGroup) {
@@ -25600,6 +25605,7 @@ export class Group implements IGroup {
             this.creatorUserId = _data["creatorUserId"];
             this.tenantId = _data["tenantId"];
             this.name = _data["name"];
+            this.createForUserId = _data["createForUserId"];
             if (Array.isArray(_data["responsibleGroups"])) {
                 this.responsibleGroups = [] as any;
                 for (let item of _data["responsibleGroups"])
@@ -25622,6 +25628,7 @@ export class Group implements IGroup {
         data["creatorUserId"] = this.creatorUserId;
         data["tenantId"] = this.tenantId;
         data["name"] = this.name;
+        data["createForUserId"] = this.createForUserId;
         if (Array.isArray(this.responsibleGroups)) {
             data["responsibleGroups"] = [];
             for (let item of this.responsibleGroups)
@@ -25644,6 +25651,7 @@ export interface IGroup {
     creatorUserId: number | undefined;
     tenantId: number;
     name: string | undefined;
+    createForUserId: number | undefined;
     responsibleGroups: ProductResponsibleGroup[] | undefined;
 }
 

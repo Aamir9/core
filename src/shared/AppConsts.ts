@@ -81,7 +81,13 @@ export class TicketStatuses {
     static readonly RMA = 2;
     static readonly Resolved = 3;
 }
-
+export class CustomerTypeIds {
+    static readonly BridgeTeacher = 1;
+    static readonly Helper = 2;
+    static readonly Secretary = 3;
+    // static readonly Teacher = 2;
+    // static readonly Student = 3;
+}
 export class TenancyNames {
     static readonly Test = 'Alert-it';
     static readonly Optician = 'Alert-it';

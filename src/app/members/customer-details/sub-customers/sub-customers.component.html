@@ -39,8 +39,10 @@
           <thead >
             <tr>
               <!-- <th>{{ "UserName" | localize }}</th> -->
-              <th>{{ "FullName" | localize }}</th>
+              <th>{{ "FirstName" | localize }}</th>
+              <th>{{ "LastName" | localize }}</th>
               <th>{{ "Title" | localize }}</th>
+              <th>{{ "Role" | localize }}</th>
               <th>{{ "EmailAddress" | localize }}</th>
               <th>{{ "Telephone" | localize }}</th>
               <!-- <th>{{ "Active" | localize }}</th>
@@ -59,8 +61,10 @@
                       }
               ">
               <!-- <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ customer.userName }}</td> -->
-              <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ customer.fullName }}</td>
+              <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ customer.name }}</td>
+              <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ customer.surname }}</td>
               <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ customer.titel }}</td>
+              <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ getCustomerTypeName(customer.customerTypeId || customer.customeTypeId) }}</td>
               <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ customer.emailAddress }}</td>
               <td (click)="showEditSubCustomerDialog(customer)" style="cursor: pointer;">{{ customer.telephoneFax }}</td>
 

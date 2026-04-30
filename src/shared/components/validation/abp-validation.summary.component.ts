@@ -64,23 +64,43 @@ export class AbpValidationSummaryComponent extends AppComponentBase implements O
     }
   }
 
+  private getNativeEl(): any {
+    const el: any = this.controlEl as any;
+    if (!el) {
+      return null;
+    }
+    // Case 1: ElementRef -> use nativeElement
+    if (el.nativeElement) {
+      return el.nativeElement;
+    }
+    // Case 2: real DOM element (template ref on a plain element)
+    if (typeof el.nodeType === 'number' && el.classList) {
+      return el;
+    }
+    // Case 3: template ref on an Angular component (e.g. ng-select) -> not a DOM element
+    return null;
+  }
+
   ngOnInit() {
-    console.log('this.controlEl',this.controlEl)
-    if (this.controlEl) {
+    if (this.controlEl && this.control) {
       this.control.valueChanges.subscribe(() => {
         if (
           this.control.valid &&
           (this.control.dirty || this.control.touched)
         ) {
-          this._renderer.removeClass(this.controlEl, 'is-invalid');
+          const nativeEl = this.getNativeEl();
+          if (nativeEl) {
+            this._renderer.removeClass(nativeEl, 'is-invalid');
+          }
         }
       });
     }
   }
 
   getValidationErrorMessage(error: AbpValidationError): string {
-    if (this.controlEl) {
-      this._renderer.addClass(this.controlEl, 'is-invalid');
+    const nativeEl = this.getNativeEl();
+    if (nativeEl) {
+      this._renderer.addClass(nativeEl, 'is-invalid');
     }
 
     const propertyValue = this.control.errors[error.name][error.propertyKey];

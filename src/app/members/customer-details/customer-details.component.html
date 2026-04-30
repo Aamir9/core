@@ -41,6 +41,18 @@
           <div class="tab-wrapper">
             <div class="tab-body">
               <!-- Basic Information -->
+              <div class="row mt-2 mb-2">
+                <div class="col-12 d-flex justify-content-end">
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger d-flex align-items-center"
+                    (click)="delete(customer)">
+                    <i class="fas fa-trash mr-2"></i>
+                    {{ "Delete" | localize }}
+                  </button>
+                </div>
+              </div>
+               
               <div class="row mt-2">
 <div class="col-md-4 col-12">
                   <div class="  required">
@@ -203,10 +215,12 @@
                       {{ "Note" | localize }}
                     </label>
                     <div>
-                      <input type="text"  class="sleek-input" name="description" id="description" required maxlength="250"
+                      <textarea class="sleek-input" name="description" id="description" 
+                        rows="3"
+                        maxlength="1000"
                         [(ngModel)]="customer.description"
                         placeholder="Enter Note here"
-                         #descriptionModel="ngModel" #descriptionEl />
+                        #descriptionModel="ngModel" #descriptionEl></textarea>
                      <abp-validation-summary [control]="descriptionModel" [controlEl]="descriptionEl"></abp-validation-summary>
                     </div>
                   </div>

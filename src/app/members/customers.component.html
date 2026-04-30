@@ -168,7 +168,9 @@
                     <table class="table  child-table">
                        <thead>
                             <tr class="table-secondary">
-                              <th>{{ "ContactPerson" | localize }}</th>
+                              <!-- <th>{{ "ContactPerson" | localize }}</th> -->
+                              <th>{{ " FirstName" | localize }}</th>
+                              <th>{{ "LastName" | localize }}</th>
                              <th>{{ "Title" | localize }}</th> 
                               <th>{{ "Email" | localize }}</th>
                               <th>{{ "Phone" | localize }}</th>
@@ -184,7 +186,9 @@
                            <!-- table header also add  -->
                            
                         
-                          <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)"> {{ subCustomer.name }}</td>
+                          <!-- <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)"> {{ subCustomer.name }}</td> -->
+                          <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.name }}</td>
+                          <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.surname }}</td>
                           <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.titel }}</td>
                           <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.emailAddress }}</td>
                           <td style="cursor: pointer;" (click)="showEditSubCustomerDialog(subCustomer)">{{ subCustomer.telephoneFax }}</td>

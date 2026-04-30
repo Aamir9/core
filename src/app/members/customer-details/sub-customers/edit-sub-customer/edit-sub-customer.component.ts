@@ -65,13 +65,23 @@ export class EditSubCustomerComponent extends AppComponentBase implements OnInit
       await this.loadCustomer();
       await Promise.all([
         this.loadRoles(),
+        this.loadCustomerTypes(),
         this.loadEmployees()
       ]);
     } finally {
       this.isLoading = false;
       this.changeDetector.detectChanges();
     }
+  }
 
+  private async loadCustomerTypes() {
+    const result = await this._customerService.getCustomerTypes().toPromise();
+    this.customerTypes = [];
+    result.items.forEach((item) => {
+      if (item.type !== 'Customer' && item.type !== 'SubCustomer') {
+        this.customerTypes.push(item);
+      }
+    });
   }
 
   private async loadCustomer(): Promise<void> {
@@ -167,10 +177,11 @@ export class EditSubCustomerComponent extends AppComponentBase implements OnInit
   save(): void {
     this.saving = true;
 
+    // Only use customerTypeId, as customeTypeId does not exist on CustomerDto
+
     this.customer.roleNames = ['ADMIN'];
     this.customer.parentId = this.customerId;
     this.customer.isSubCustomer = true;
-
 
     Object.assign(this.originalCustomer, this.customer);
 
@@ -193,10 +204,10 @@ export class EditSubCustomerComponent extends AppComponentBase implements OnInit
   }
 
   deleteSubCustomer(subCustomer: any): void {
-    const deleteId = subCustomer?.userId;
+    const deleteId = subCustomer?.id;
 
     if (!deleteId) {
-      abp.notify.error('The Person ID not found. Cannot delete.');
+      abp.notify.error('The Customer ID not found. Cannot delete.');
       return;
     }
 

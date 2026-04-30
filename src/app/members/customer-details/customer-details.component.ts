@@ -241,6 +241,28 @@ ngOnDestroy() {
     ).items;
   }
 
+  delete(customer: CustomerDto): void {
+    const deleteId = customer?.id;
+
+    if (!deleteId) {
+      abp.notify.error("Delete failed: customer id not found.");
+      return;
+    }
+
+    abp.message.confirm(
+      `Are you sure you want to delete "${customer.name || customer.userName}"?`,
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this._customerService.delete(deleteId).subscribe(() => {
+            abp.notify.success("Successfully Deleted");
+            this.location.back();
+          });
+        }
+      }
+    );
+  }
+
   save(): void {
     this.saving = true;
 

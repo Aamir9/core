@@ -118,17 +118,33 @@ export class SubCustomerComponent extends AppComponentBase implements OnInit {
 
   private async loadCustomerTypes() {
     const result = await this._customerService.getCustomerTypes().toPromise();
+    console.log('[SubCustomer] getCustomerTypes raw response:', result);
+    console.log('[SubCustomer] items:', result?.items);
     this.customerTypes = [];
+    let subCustomerTypeId: number | undefined;
 
     result.items.forEach((item) => {
-      if (item.type == 'SubCustomer') {
-        this.originalCustomer.customerTypeId = item.id;
-        this.customer.customeTypeId = item.id;
+      console.log('[SubCustomer] item ->', { id: item.id, type: item.type, objectType: (item as any).objectType });
+      if (item.type === 'SubCustomer') {
+        subCustomerTypeId = item.id;
+        if (!this.id && !this.customer.customeTypeId) {
+          this.originalCustomer.customerTypeId = item.id;
+          this.customer.customeTypeId = item.id;
+        }
       }
-      if (item.type !== 'Customer') {
+      if (item.type !== 'Customer' && item.type !== 'SubCustomer') {
         this.customerTypes.push(item);
       }
     });
+
+    // Legacy records may have customeTypeId pointing to "SubCustomer"
+    // which is no longer a selectable option. Clear it so the placeholder shows.
+    if (this.id && subCustomerTypeId && this.customer.customeTypeId === subCustomerTypeId) {
+      this.customer.customeTypeId = undefined;
+    }
+
+    console.log('[SubCustomer] dropdown customerTypes:', this.customerTypes);
+    console.log('[SubCustomer] selected customer.customeTypeId:', this.customer.customeTypeId);
 
     this.customer.parentId = this.customerId;
   }
@@ -184,10 +200,61 @@ export class SubCustomerComponent extends AppComponentBase implements OnInit {
     return roles;
   }
 
+  /**
+   * Returns a list of role names that are guaranteed to exist on the server.
+   * - On update: keep the existing roleNames returned by the API.
+   * - On create: try to match the selected customer-type label against a
+   *   real role (by name or normalizedName). If none matches, fall back to
+   *   the first available role so the backend never receives an unknown
+   *   role name like "Helper".
+   */
+  private resolveRoleNames(): string[] {
+    // Update: preserve whatever the user already had.
+    if (this.id && this.originalCustomer && this.originalCustomer.roleNames && this.originalCustomer.roleNames.length > 0) {
+      return this.originalCustomer.roleNames;
+    }
+
+    const selectedType = this.customerTypes.find(t => t.id === this.customer.customeTypeId);
+    const candidate = (selectedType?.type || '').trim();
+
+    if (candidate && this.roles && this.roles.length > 0) {
+      const normalizedCandidate = candidate.toUpperCase();
+      const match = this.roles.find(r =>
+        (r.name && r.name.toUpperCase() === normalizedCandidate) ||
+        (r.normalizedName && r.normalizedName.toUpperCase() === normalizedCandidate)
+      );
+      if (match) {
+        return [match.name];
+      }
+    }
+
+    // Fallback: prefer a role literally named "Customer", otherwise the first
+    // available role. This ensures we always send a valid, existing role.
+    if (this.roles && this.roles.length > 0) {
+      const customerRole = this.roles.find(r =>
+        (r.name && r.name.toUpperCase() === 'CUSTOMER') ||
+        (r.normalizedName && r.normalizedName.toUpperCase() === 'CUSTOMER')
+      );
+      return [(customerRole || this.roles[0]).name];
+    }
+
+    return [];
+  }
+
   save(): void {
+    console.log('============================================');
+    console.log('[SubCustomer.save] CALLED at', new Date().toISOString());
+    console.log('[SubCustomer.save] this.id =', this.id);
+    console.log('[SubCustomer.save] this.customerId (parent) =', this.customerId);
+    console.log('[SubCustomer.save] customer (before any mutation) =', JSON.parse(JSON.stringify(this.customer)));
+    console.log('[SubCustomer.save] originalCustomer (before any mutation) =', JSON.parse(JSON.stringify(this.originalCustomer)));
+    console.log('============================================');
+
     this.saving = true;
 
-    this.customer.roleNames = ['ADMIN'];
+    
+    this.customer.roleNames = this.resolveRoleNames();
+
     this.customer.parentId = this.customerId;
     this.customer.isSubCustomer = true;
     this.customer.userName = this.customer.emailAddress;
@@ -214,23 +281,36 @@ export class SubCustomerComponent extends AppComponentBase implements OnInit {
     this.originalCustomer.id = this.id;
     this.originalCustomer.description = this.customer.description;
     this.originalCustomer.titel = this.customer.titel;
+
     if (this.customer.customerNo == null || this.customer.customerNo === '') {
       this.setCustomerNo();
     }
+
     if (this.id) {
-      this._customerService.update(this.originalCustomer).subscribe(res => {
-        abp.message.success(this.l('Contact person saved successfully'));
-        this.bsModalRef.hide();
-        this.onSave.emit();
-      });
-    } else {
-      this._customerService.create(this.customer).subscribe(
-        () => {
+      console.log('[SubCustomer.save] UPDATE payload =', this.originalCustomer);
+      this._customerService.update(this.originalCustomer).subscribe(
+        (result) => {
+          console.log('[SubCustomer.save] UPDATE result =', result);
           abp.message.success(this.l('Contact person saved successfully'));
           this.bsModalRef.hide();
           this.onSave.emit();
         },
-        () => {
+        (err) => {
+          console.error('[SubCustomer.save] UPDATE error =', err);
+          this.saving = false;
+        }
+      );
+    } else {
+      console.log('[SubCustomer.save] CREATE payload =', this.customer);
+      this._customerService.create(this.customer).subscribe(
+        (result) => {
+          console.log('[SubCustomer.save] CREATE result =', result);
+          abp.message.success(this.l('Contact person saved successfully'));
+          this.bsModalRef.hide();
+          this.onSave.emit();
+        },
+        (err) => {
+          console.error('[SubCustomer.save] CREATE error =', err);
           this.saving = false;
         }
       );

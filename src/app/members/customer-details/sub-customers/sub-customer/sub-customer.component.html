@@ -127,7 +127,25 @@
           </abp-validation-summary>
         </div>
       </div>
-
+<div class="col-md-4">
+        <div class="form-group">
+          <label>{{ "Role" | localize }}</label>
+          <ng-select 
+            name="customeTypeId" 
+            [(ngModel)]="customer.customeTypeId" 
+            #roleModel="ngModel" 
+            #roleEl
+            placeholder="Select Role"
+            [clearable]="true"
+            [searchable]="true">
+           <!-- <ng-option [value]="null" disabled>-- Select Role --</ng-option> -->
+            <ng-option *ngFor="let customerType of customerTypes" [value]="customerType.id">
+              {{ customerType.type }}
+            </ng-option>
+          </ng-select>
+          <abp-validation-summary [control]="roleModel" [controlEl]="roleEl"></abp-validation-summary>
+        </div>
+      </div>
       <!-- phone number-->
       <div class="col-md-4">
         <div class="form-group required">

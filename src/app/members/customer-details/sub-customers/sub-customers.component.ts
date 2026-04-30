@@ -144,6 +144,17 @@ export class SubCustomersComponent extends PagedListingComponentBase<CustomerDto
         customerId: this.customerId,
       },
     });
-    this._eventService.emitEvent("RefreshData", null);
+    // Refresh ONLY after the save actually succeeds, not when the dialog opens.
+    createSubCustomerDialog.content.onSave.subscribe(() => {
+      this.refresh();
+    });
+  }
+
+  getCustomerTypeName(customerTypeId: number): string {
+    if (customerTypeId == null) {
+      return '';
+    }
+    const match = this.customerTypes.find(t => t.id === customerTypeId);
+    return match?.type || '';
   }
 }
