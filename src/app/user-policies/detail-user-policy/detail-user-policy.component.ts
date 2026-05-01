@@ -1,7 +1,8 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AppComponentBase } from '@shared/app-component-base';
-import { CreateUserFileDto, UserPoliciesDto, UserPoliciesServiceProxy } from '@shared/service-proxies/service-proxies';
+import { Base64File } from '@shared/components/upload-file/upload-file.component';
+import { CreateUserFileDto, CreateUserPolicyFileDto, UserPoliciesDto, UserPoliciesServiceProxy } from '@shared/service-proxies/service-proxies';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { EditUserPolicyComponent } from '../edit-user-policy/edit-user-policy.component';
 import { Location } from '@angular/common';
@@ -21,6 +22,8 @@ export class DetailUserPolicyComponent extends AppComponentBase implements OnIni
  files:any[] = [];
 
   pdfUrl: string | null = null;
+
+  uploadedCertificateFile: CreateUserPolicyFileDto | null = null;
   
 
   constructor(
@@ -91,6 +94,35 @@ base64ToBlob(base64: string, type: string): Blob {
     modalRef.content.onSave.subscribe(() => this.loadPolicy());
   }
 
-  
+  onCertificatePdfUploaded(file: Base64File): void {
+    const newFile = new CreateUserPolicyFileDto();
+    newFile.name = file.fileName;
+    newFile.type = file.fileType;
+    newFile.size = file.fileSize;
+    newFile.base64 = file.fileBase64;
+    this.uploadedCertificateFile = newFile;
+  }
+
+  removeCertificateFile(uploader?: any): void {
+    this.uploadedCertificateFile = null;
+    if (uploader && typeof uploader.removeFile === 'function') {
+      uploader.removeFile();
+    }
+  }
+
+  delete(policy: UserPoliciesDto): void {
+    abp.message.confirm(
+      this.l('UserDeleteWarningMessage', policy.company),
+      undefined,
+      (result: boolean) => {
+        if (result) {
+          this._policyService.delete(policy.id).subscribe(() => {
+            abp.notify.success(this.l('SuccessfullyDeleted'));
+            this.goBack();
+          });
+        }
+      }
+    );
+  }
 
 }

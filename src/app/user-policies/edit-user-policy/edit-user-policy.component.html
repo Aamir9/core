@@ -1,6 +1,6 @@
 <form class="form-horizontal" autocomplete="off" #editUserPolicyModal="ngForm" (ngSubmit)="save()">
   <abp-modal-header 
-    [title]="'Edit User Policy' | localize" 
+    [title]="'Edit User Policy ' | localize" 
     (onCloseClick)="bsModalRef.hide()">
   </abp-modal-header>
 
@@ -75,7 +75,8 @@
               <label for="policyPdf">{{ "Policy PDF" | localize }}</label>
 
               <!-- File Upload Component -->
-              <app-upload-file (onFileUpload)="onPdfUploaded($event)"></app-upload-file>
+              <app-upload-file #policyUploader
+                               (onFileUpload)="onPdfUploaded($event)"></app-upload-file>
 
               <!-- Show existing uploaded file or selected file -->
               <div *ngIf="uploadedFile">
@@ -84,7 +85,7 @@
                   <span *ngIf="uploadedFile.size"> ({{ uploadedFile.size | number }} bytes)</span>
                   <span *ngIf="uploadedFile.type"> [{{ uploadedFile.type }}]</span>
                 </p>
-                <button type="button" class="btn btn-sm btn-outline-danger" (click)="uploadedFile = null">
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="removePolicyFile(policyUploader)">
                   Remove File
                 </button>
               </div>
@@ -101,12 +102,16 @@
             <i class="fas fa-file-pdf fa-3x mb-3" style="color: #dc3545;"></i>
             <p class="mb-1 font-weight-bold">{{ "Upload Policy PDF" | localize }}</p>
             <p class="text-muted small mb-3">Accepted format: PDF (max 10 MB)</p>
-            <app-upload-file (onFileUpload)="onCertificatePdfUploaded($event)"></app-upload-file>
+            <app-upload-file #certificateUploader
+                             (onFileUpload)="onCertificatePdfUploaded($event)"></app-upload-file>
           </div>
           <div *ngIf="uploadedCertificateFile" class="mt-3">
             <div class="d-flex align-items-center p-2 border rounded" style="background: #f0fdf4;">
               <i class="fas fa-check-circle text-success mr-2"></i>
               <span class="text-truncate flex-grow-1" style="font-size: 0.9rem;">{{ uploadedCertificateFile.name }}</span>
+              <button type="button" class="btn btn-sm btn-outline-danger ml-2" (click)="removeCertificateFile(certificateUploader)">
+                {{ "Remove File" | localize }}
+              </button>
             </div>
           </div>
         </div>

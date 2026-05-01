@@ -19,6 +19,11 @@
       <button class="btn btn-primary" (click)="editPolicy()" *ngIf="!_appSessionService.isCustomerUser()">
         <i class="fas fa-edit me-2"></i> Edit
       </button>
+
+      <button class="btn btn-danger ml-2" (click)="delete(policy)" *ngIf="!_appSessionService.isCustomerUser()">
+        <i class="fas fa-trash me-2"></i> Delete
+      </button>
+      
     </div>
   </div>
  <tabset class="">
@@ -138,6 +143,31 @@
   </div>
 </tab>
 
+  <!-- POLICY PDF -->
+  <tab heading="Policy PDF">
+    <div class="mt-4">
+      <strong class="text-muted">Policy PDF</strong>
+
+      <div class="p-3 bg-light border rounded mt-2 d-flex justify-content-between align-items-center">
+        <div>
+          <small class="text-muted">PDF File</small>
+        </div>
+
+        <a
+          *ngIf="policy.policyPdfPath"
+          [href]="policy.policyPdfPath"
+          target="_blank"
+          class="btn btn-sm btn-outline-info"
+        >
+          <i class="fas fa-file-pdf"></i> View PDF
+        </a>
+
+        <div *ngIf="!policy.policyPdfPath" class="text-muted fst-italic">
+          No Policy PDF uploaded
+        </div>
+      </div>
+    </div>
+  </tab>
 
 </tabset>
 </div>

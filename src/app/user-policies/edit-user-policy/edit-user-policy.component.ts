@@ -23,6 +23,10 @@ export class EditUserPolicyComponent extends AppComponentBase implements OnInit 
 
   uploadedFile: CreateUserPolicyFileDto | null = null;
   uploadedCertificateFile: CreateUserPolicyFileDto | null = null;
+  // Flags so the backend (or save() payload) can tell the difference between
+  // "no change" and "user explicitly removed the existing file".
+  removePolicyPdf = false;
+  removeCertificatePdf = false;
   userPolicy = new UserPoliciesDto();
   updateDto = new CreateUpdateUserPoliciesDto();
 
@@ -111,6 +115,38 @@ private toDateInputValue(date: any): string | null {
     this.uploadedFile = newFile;
   }
 
+  removePolicyFile(uploader?: any): void {
+    console.log('[EditUserPolicy] removePolicyFile clicked. Before:', {
+      uploadedFile: this.uploadedFile,
+      existingPath: this.userPolicy?.policyPdfPath
+    });
+
+    this.uploadedFile = null;
+    this.removePolicyPdf = true;
+    // Sentinel empty DTO so backend doesn't NRE on input.PolicyPdf.Base64
+    this.updateDto.policyPdf = this.buildEmptyFileDto(true);
+
+    if (uploader && typeof uploader.removeFile === 'function') {
+      uploader.removeFile();
+    }
+
+    console.log('[EditUserPolicy] removePolicyFile done. After:', {
+      uploadedFile: this.uploadedFile,
+      removePolicyPdf: this.removePolicyPdf,
+      policyPdfDto: this.updateDto.policyPdf
+    });
+  }
+
+  private buildEmptyFileDto(asDeleteSentinel = false): CreateUserPolicyFileDto {
+    const empty = new CreateUserPolicyFileDto();
+    // '__DELETE__' is a sentinel the backend can check to clear the stored path.
+    empty.name = asDeleteSentinel ? '__DELETE__' : '';
+    empty.type = '';
+    empty.size = 0;
+    empty.base64 = '';
+    return empty;
+  }
+
   onCertificatePdfUploaded(file: Base64File) {
     const newFile = new CreateUserPolicyFileDto();
     newFile.name = file.fileName;
@@ -118,6 +154,28 @@ private toDateInputValue(date: any): string | null {
     newFile.size = file.fileSize;
     newFile.base64 = file.fileBase64;
     this.uploadedCertificateFile = newFile;
+  }
+
+  removeCertificateFile(uploader?: any): void {
+    console.log('[EditUserPolicy] removeCertificateFile clicked. Before:', {
+      uploadedCertificateFile: this.uploadedCertificateFile,
+      existingPath: this.userPolicy?.certificatePdfPath
+    });
+
+    this.uploadedCertificateFile = null;
+    this.removeCertificatePdf = true;
+    // Sentinel empty DTO so backend doesn't NRE on input.CertificatePdfPath.Base64
+    this.updateDto.certificatePdfPath = this.buildEmptyFileDto(true);
+
+    if (uploader && typeof uploader.removeFile === 'function') {
+      uploader.removeFile();
+    }
+
+    console.log('[EditUserPolicy] removeCertificateFile done. After:', {
+      uploadedCertificateFile: this.uploadedCertificateFile,
+      removeCertificatePdf: this.removeCertificatePdf,
+      certificatePdfDto: this.updateDto.certificatePdfPath
+    });
   }
 
   save(): void {
@@ -140,6 +198,9 @@ private toDateInputValue(date: any): string | null {
       this.updateDto.policyPdf.type = this.uploadedFile.type;
       this.updateDto.policyPdf.size = this.uploadedFile.size;
       this.updateDto.policyPdf.base64 = base64Content;
+    } else {
+      // No new upload. If user explicitly removed -> send delete sentinel.
+      this.updateDto.policyPdf = this.buildEmptyFileDto(this.removePolicyPdf);
     }
 
     if (this.uploadedCertificateFile && this.uploadedCertificateFile.base64) {
@@ -152,7 +213,17 @@ private toDateInputValue(date: any): string | null {
       this.updateDto.certificatePdfPath.type = this.uploadedCertificateFile.type;
       this.updateDto.certificatePdfPath.size = this.uploadedCertificateFile.size;
       this.updateDto.certificatePdfPath.base64 = certBase64;
+    } else {
+      this.updateDto.certificatePdfPath = this.buildEmptyFileDto(this.removeCertificatePdf);
     }
+
+    console.log('[EditUserPolicy] save() payload:', {
+      removePolicyPdf: this.removePolicyPdf,
+      removeCertificatePdf: this.removeCertificatePdf,
+      policyPdf: this.updateDto.policyPdf,
+      certificatePdfPath: this.updateDto.certificatePdfPath,
+      updateDto: this.updateDto
+    });
 
     this._userPolicyService
       .update(this.id, this.updateDto)
